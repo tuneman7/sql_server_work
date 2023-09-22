@@ -89,7 +89,7 @@ class Utility:
                 subdirectories_dict[item] = self.get_subdirectories_dict(item_path,filetype=filetype,parent_item_path=item_path)
                 
 
-        file_name = os.path.join(self.get_this_dir(),"debug_text_output","queries.json")
+        file_name = os.path.join(self.get_this_dir(),"debug_text_output","get_subdirectories_dict.json")
         if not os.path.exists(os.path.dirname(file_name)):
             os.makedirs(os.path.dirname(file_name))
 
