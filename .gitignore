@@ -1,9 +1,10 @@
+sql_data_files/
+sql_server_env/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
 *$py.class
-sql_data_files/*
-sql_server_env/*
 
 # C extensions
 *.so
