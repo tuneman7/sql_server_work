@@ -1,5 +1,7 @@
 #!/bin/bash
 
+source ./chk_dps.sh
+
 VENV_NAME=sql_server_env
 
 

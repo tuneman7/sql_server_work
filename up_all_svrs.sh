@@ -1,6 +1,11 @@
 #!/bin/bash
 source ./env.sh
 
+if [ $all_deps -eq 0 ]; then
+echo ""
+return
+fi
+
 echo "****************"
 echo "Bringing up SQL Servers in Docker"
 echo "****************"
