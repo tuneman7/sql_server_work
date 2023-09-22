@@ -1,6 +1,6 @@
 #!/bin/bash
 
-all_deps=1
+export all_deps=1
 
 jq --version>/dev/null
 if [ $? -eq 0 ]; then
