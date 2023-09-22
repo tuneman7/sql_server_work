@@ -40,5 +40,3 @@ server_down_dkr_l_cmds+=("down_mysql1_dkr.sh")
 a_sql_dkr_img=($mssql1_name)
 a_sql_dkr_img+=($mysql1_name)
 
-
-

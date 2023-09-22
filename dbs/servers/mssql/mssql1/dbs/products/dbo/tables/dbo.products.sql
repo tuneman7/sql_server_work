@@ -12,7 +12,8 @@ CREATE TABLE [dbo].[products](
 	[created_by] [char](100) NULL,
 	[created_dt] [datetime] NULL,
 	[updated_by] [char](100) NULL,
-	[updated_dt] [datetime] NULL
+	[updated_dt] [datetime] NULL,
+	parent_product_id int NULL
 ) ON [PRIMARY]
 GO
 ALTER TABLE [dbo].[products] ADD PRIMARY KEY CLUSTERED 
