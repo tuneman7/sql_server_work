@@ -1,0 +1,46 @@
+{
+   "servers": {
+      "mssql": {
+         "mssql1": {
+            "dbs": {
+               "products": {
+                  "dbo": {
+                     "tables": {
+                        "dbo.product_type.sql": "/data/school/MIDS/sql_server_work/dbs/servers/mssql/mssql1/dbs/products/dbo/tables/dbo.product_type.sql",
+                        "dbo.product_type.sql_content": "IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[product_type]') AND type in (N'U'))\nDROP TABLE [dbo].[product_type]\nGO\nSET ANSI_NULLS ON\nGO\nSET QUOTED_IDENTIFIER ON\nGO\nCREATE TABLE [dbo].[product_type](\n\t[id] [int] IDENTITY(1,1) NOT NULL,\n\t[product_type] [char](100) NULL,\n\t[create_dt] [datetime] default GETDATE(),\n\t[created_by] [char](100) default SYSTEM_USER,\n\t[update_dt] [datetime] NULL,\n\t[updated_by] [char](100) NULL\n) ON [PRIMARY]\nGO\nALTER TABLE [dbo].[product_type] ADD PRIMARY KEY CLUSTERED \n(\n\t[id] ASC\n)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]\nGO\n\n-- Create a trigger on the 'product_type' table\nCREATE TRIGGER tr_ProductType_Update\nON product_type\nAFTER UPDATE\nAS\nBEGIN\n\n    -- Update the 'update_dt' field with the current date and time\n    UPDATE product_type\n    SET update_dt = GETDATE(),\n    updated_by = SYSTEM_USER\n    FROM product_type pt\n    INNER JOIN inserted i ON pt.id = i.id\nEND;\n",
+                        "dbo.products.sql": "/data/school/MIDS/sql_server_work/dbs/servers/mssql/mssql1/dbs/products/dbo/tables/dbo.products.sql",
+                        "dbo.products.sql_content": "IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[products]') AND type in (N'U'))\nDROP TABLE [dbo].[products]\ngo\nSET ANSI_NULLS ON\nGO\nSET QUOTED_IDENTIFIER ON\nGO\nCREATE TABLE [dbo].[products](\n\t[id] [int] NOT NULL,\n\t[product_name] [varchar](100) NULL,\n\t[product_type] [int] NULL,\n\t[created_by] [char](100) NULL,\n\t[created_dt] [datetime] NULL,\n\t[updated_by] [char](100) NULL,\n\t[updated_dt] [datetime] NULL,\n\tparent_product_id int NULL\n) ON [PRIMARY]\nGO\nALTER TABLE [dbo].[products] ADD PRIMARY KEY CLUSTERED \n(\n\t[id] ASC\n)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]\nGO\nALTER TABLE [dbo].[products] ADD  DEFAULT (getdate()) FOR [created_dt]\nGO\nALTER TABLE products\nADD CONSTRAINT FK_ProductType\nFOREIGN KEY (product_type)\nREFERENCES product_type(id);\ngo\nSET ANSI_NULLS ON\nGO\nSET QUOTED_IDENTIFIER ON\nGO\n-- Create the trigger to update updated_dt\nCREATE TRIGGER [dbo].[UpdateProducts]\nON [dbo].[products]\nAFTER UPDATE\nAS\nBEGIN\n    UPDATE products\n    SET updated_dt = GETDATE(),\n\tupdated_by = system_user\n    FROM products\n    INNER JOIN inserted ON products.id = inserted.id;\nEND;\nGO\nALTER TABLE [dbo].[products] ENABLE TRIGGER [UpdateProducts]\nGO\n"
+                     }
+                  },
+                  "create_db": {
+                     "create_db.sql": "/data/school/MIDS/sql_server_work/dbs/servers/mssql/mssql1/dbs/products/create_db/create_db.sql",
+                     "create_db.sql_content": "CREATE DATABASE products;\n"
+                  }
+               }
+            }
+         }
+      },
+      "mysql": {
+         "mysql1": {
+            "dbs": {
+               "customers": {
+                  "create_db": {
+                     "create_db.sql": "/data/school/MIDS/sql_server_work/dbs/servers/mysql/mysql1/dbs/customers/create_db/create_db.sql",
+                     "create_db.sql_content": "CREATE DATABASE customers;"
+                  },
+                  "customers": {
+                     "tables": {
+                        "customer_info.sql": "/data/school/MIDS/sql_server_work/dbs/servers/mysql/mysql1/dbs/customers/customers/tables/customer_info.sql",
+                        "customer_info.sql_content": "DROP TABLE IF EXISTS customers.customer_info;\n\nCREATE TABLE customers.customer_info (\n    id INT AUTO_INCREMENT PRIMARY KEY,\n    f_name CHAR(100),\n    l_name CHAR(100),\n    email_address CHAR(200),\n    created_by CHAR(100),\n    created_dt DATETIME DEFAULT CURRENT_TIMESTAMP,\n    updated_by CHAR(100),\n    updated_dt DATETIME\n);\n\nCREATE TRIGGER customers_before_update\nBEFORE UPDATE ON customers.customer_info FOR EACH ROW\nBEGIN\n    SET NEW.updated_by = CURRENT_USER();\n    SET NEW.updated_dt = CURRENT_TIMESTAMP;    \nEND;\n\n\nCREATE TRIGGER customers_insert_trigger\nBEFORE INSERT ON customers.customer_info\nFOR EACH ROW\nBEGIN\n    SET NEW.created_by = CURRENT_USER();\nEND;\n\n",
+                        "customer_product.sql": "/data/school/MIDS/sql_server_work/dbs/servers/mysql/mysql1/dbs/customers/customers/tables/customer_product.sql",
+                        "customer_product.sql_content": "",
+                        "customer_product_history.sql": "/data/school/MIDS/sql_server_work/dbs/servers/mysql/mysql1/dbs/customers/customers/tables/customer_product_history.sql",
+                        "customer_product_history.sql_content": ""
+                     }
+                  }
+               }
+            }
+         }
+      }
+   }
+}
