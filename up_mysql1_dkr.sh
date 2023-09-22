@@ -24,7 +24,7 @@ sudo chmod -R 777 $mysql1_loc_dir
 
 #back things up if they're there
 this_day_id=$(date +"%Y%m%d")
-backup_dir=$(pwd)/backups_sql_df/mssql/${mysql1_name}/${this_day_id}
+backup_dir=$(pwd)/backups_sql_df/mysql/${mysql1_name}/${this_day_id}
 echo backup_dir=$backup_dir
 mkdir -vp $backup_dir
 
@@ -44,19 +44,14 @@ docker run -v $mysql1_loc_dir:/var/lib/mysql -e "MYSQL_ROOT_PASSWORD=${mysql1_pw
 echo "updating firewall rules for port:$mysql1_port"
 sudo ufw allow $mysql1_port
 
-#add it to the array of docker images
-a_sql_dkr_img+=($mysql1_name)
-export a_sql_dkr_img=$a_sql_dkr_img
-
-
 
 #create a connector based on template
-cnctr_dir=$(pwd)/cnctr/mssql
+cnctr_dir=$(pwd)/cnctr/mysql
 
 mkdir -vp $cnctr_dir
 
-export mssql_pw=$mysql1_pwd
-export mssql_svr=$mysql1_sn
+export mysql_pw=$mysql1_pwd
+export mysql_svr=$mysql1_sn
 
 config_file=$(pwd)/templates/cnctr_template_sql.txt
 

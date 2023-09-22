@@ -29,13 +29,16 @@ mysql1_sn=localhost
 mssql_servers=($mssql1)
 
 #array of all bash files to create docker instances
-server_up_dkr_l_cmds=("up_mssql1_dkr.sh","up_mysql1_dkr.sh")
+server_up_dkr_l_cmds=("up_mssql1_dkr.sh")
+server_up_dkr_l_cmds+=("up_mysql1_dkr.sh")
 
 #array of all bash files to destroy docker instances
 server_down_dkr_l_cmds=("down_mssql1_dkr.sh")
+server_down_dkr_l_cmds+=("down_mysql1_dkr.sh")
 
 #array all docker images
-a_sql_dkr_img=()
+a_sql_dkr_img=($mssql1_name)
+a_sql_dkr_img+=($mysql1_name)
 
 
 

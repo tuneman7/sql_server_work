@@ -43,8 +43,7 @@ all_deps=0
 
 fi
 
-
-if [ $? -eq 0 ]; then
+if [ $all_deps -eq 0 ]; then
     echo "zip is installed"
 cat ./scr/msgs/deps_fail.txt
 echo ""

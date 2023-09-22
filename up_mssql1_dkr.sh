@@ -46,7 +46,7 @@ sudo ufw allow $mssql1_port
 
 #add it to the array of docker images
 a_sql_dkr_img+=($mssql1_name)
-export a_sql_dkr_img=$a_sql_dkr_img
+#export a_sql_dkr_img=$a_sql_dkr_img
 
 
 
