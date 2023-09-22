@@ -1,4 +1,7 @@
 #!/bin/bash
+
+#get all variables not declared within file
+#check dependencies
 source ./env.sh
 
 if [ $all_deps -eq 0 ]; then
