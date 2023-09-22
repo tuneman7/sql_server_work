@@ -1,0 +1,14 @@
+
+Setting up sql client on Ubuntu 22.04 LTS.
+https://dba.stackexchange.com/questions/174277/getting-sqlcmd-sqlcmd-command-not-found-in-linux
+
+This is not the greatest no help with 22.04
+https://learn.microsoft.com/en-us/sql/linux/quickstart-install-connect-docker?view=sql-server-ver16&pivots=cs1-bash
+
+Docker container sql server setup.
+https://learn.microsoft.com/en-us/sql/linux/sql-server-linux-docker-container-configure?view=sql-server-ver16&pivots=cs1-bash
+
+#the link says you need to run the docker run as sa -- inaccurate.
+
+#Getting it to work on 22.04:
+https://askubuntu.com/questions/1407533/microsoft-odbc-v18-is-not-find-by-apt

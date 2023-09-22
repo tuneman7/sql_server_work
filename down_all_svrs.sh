@@ -1,0 +1,30 @@
+#!/bin/bash
+source ./env.sh
+
+echo "****************"
+echo "Tearing down SQL Servers in Docker"
+echo "****************"
+for m_mc in "${server_down_dkr_l_cmds[@]}"
+do
+echo "****************"
+echo "Tearing down SQL Server"
+echo "****************"
+	. $m_mc
+done
+
+#docker ps --filter "name=${mssql1_name}"
+
+#wait for a few seoncds then query docker to make sure they're up.
+
+echo "****************"
+echo "Looking at servers in docker"
+echo "****************"
+
+for m_i_nm in "${a_sql_dkr_img[@]}"
+do
+echo "****************"
+echo "Looking looking at $m_i_nm"
+echo "****************"
+    echo "docker ps -a --filter \"name=$m_i_nm\" "
+    docker ps -a --filter "name=$m_i_nm"
+done
