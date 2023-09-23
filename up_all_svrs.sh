@@ -38,3 +38,63 @@ echo "****************"
     echo "docker ps -a --filter \"name=$m_i_nm\" "
     docker ps -a --filter "name=$m_i_nm"
 done
+
+echo "****************"
+echo "Checking if database servers are up"
+echo "****************"
+
+
+# for u_c in "${a_sql_inline_command[@]}"
+# do
+#     #run the bash command
+#     echo "$u_c"
+#     #add return code to array
+
+
+# done
+# return
+
+finished=false
+while ! $finished; do
+
+    declare -a s_up=()
+
+    for u_c in "${a_sql_inline_command[@]}"
+    do
+        echo "#!/bin/bash">my_runner.sh
+        echo "$u_c">>my_runner.sh
+        . my_runner.sh >/dev/null
+        #add return code to array
+        s_up+=($?)
+
+    done
+    rm my_runner.sh
+
+    allup=true
+    #loop through my return codes
+    for i in "${s_up[@]}"
+    do
+        #echo "$i"
+
+        if [[ $i -eq 1 ]]
+        then
+            allup=false
+        fi
+
+    done
+
+    finished=$allup
+
+done
+echo""
+echo "****************"
+echo "All databases servers up"
+echo "****************"
+
+echo""
+
+echo "****************"
+echo "Setting up databases"
+echo "****************"
+
+python setup_dbs.py -a dbsetup

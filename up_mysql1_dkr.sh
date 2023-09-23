@@ -68,6 +68,9 @@ of=${cnctr_dir}/${mysql1_hostname}.sh
 
 envsubst < $config_file > $of
 
+my_sql_up="$(envsubst < $config_file) -e'exit;'"
+echo my_sql_up=$my_sql_up
+
 echo cf=$of
 
 cat $of

@@ -66,3 +66,4 @@ papermill
 xlsxwriter
 openpyxl
 randomname
+mysqlclient==2.1.1

@@ -1,6 +1,7 @@
 from libraries.utility import Utility as Util
 import os
 import subprocess
+import argparse
 
 mu=Util()
 
@@ -48,13 +49,25 @@ def setup_sql_server_dbs(server,server_type):
         create_sql_db(servername,server[servername],server_type)
 
 
-def main():
+def setup_dbs():
     dbs_d = os.path.join(mu.get_this_dir(),"dbs")
     m_dict = mu.get_subdirectories_dict(dbs_d,filetype=".sql")
     setup_sql_server_dbs(m_dict["servers"]["mssql"],"mssql")
     setup_sql_server_dbs(m_dict["servers"]["mysql"],"mysql")
 
 
+def main():
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-a", "--Action", help = "Action to Perform")
+
+    args = parser.parse_args()
+    print(args)
+
+    if args.Action:
+        print("Action is : {}".format(args.Action))
+        if args.Action.lower() == "dbsetup":
+            setup_dbs()
 
 
 

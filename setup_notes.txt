@@ -16,3 +16,7 @@ the link says you need to run the docker run as sa -- inaccurate.
 #Azure Data Studio
 https://learn.microsoft.com/en-us/sql/azure-data-studio/download-azure-data-studio?view=sql-server-ver16&tabs=ubuntu-install%2Credhat-uninstall
 
+
+#mysql client
+sudo apt install libmysqlclient-de
+
