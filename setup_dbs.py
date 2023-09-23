@@ -1,4 +1,5 @@
 from libraries.utility import Utility as Util
+from libraries.db_base import db_base
 import os
 import subprocess
 import argparse
@@ -55,6 +56,9 @@ def setup_dbs():
     setup_sql_server_dbs(m_dict["servers"]["mssql"],"mssql")
     setup_sql_server_dbs(m_dict["servers"]["mysql"],"mysql")
 
+def test_database():
+    products = db_base("products")
+
 
 def main():
 
@@ -68,6 +72,9 @@ def main():
         print("Action is : {}".format(args.Action))
         if args.Action.lower() == "dbsetup":
             setup_dbs()
+        if args.Action.lower() == "testdb":
+            test_database()
+
 
 
 

@@ -1,0 +1,6 @@
+Driver={ODBC Driver 18 for SQL Server};
+Server=127.0.0.1;
+Database=products;
+uid=sa;
+pwd=Python2028;
+TrustServerCertificate=yes;
