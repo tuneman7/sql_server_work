@@ -10,7 +10,7 @@ from datetime import timedelta
 fake = Faker()
 
 # Define custom provider for generating unique names
-class CustomNameProvider:
+class MovieGameTV_NameProvider:
     def __init__(self, faker):
         self.fake = faker
         self.used_names = set()
@@ -54,13 +54,19 @@ class fake_data_to_db(db_base):
             self.populate_products(count)
         if table_name=="product_price":
             self.populate_product_price()
+        if table_name=="product_price_history":
+            self.populate_product_price_history()
+
+    def populate_product_price_history(self):
+        self.run_update_query("populate_product_price_history")
     
     def populate_product_price(self):
         l_pids = self.get_list_from_sql()
         conn = self.get_connection()
         cursor = conn.cursor()
-        for i in range(len(l_pids)):  # Insert 1000 rows as an example
-            product_id = l_pids[i]  # Replace with your product ID logic
+        #For all products populate product_price
+        for i in range(len(l_pids)):  
+            product_id = l_pids[i] 
             usd_price = round(random.uniform(2.99, 34.99), 2)
             pricing_start_dt = datetime.now() - timedelta(days=random.randint(1, 365))
             pricing_end_dt = pricing_start_dt + timedelta(days=365)
@@ -95,7 +101,7 @@ class fake_data_to_db(db_base):
         
         fake = Faker()
         fake_pn = Faker()
-        fake_pn.add_provider(CustomNameProvider)
+        fake_pn.add_provider(MovieGameTV_NameProvider)
         product_names = [fake_pn.unique_movie_game_tv_name() for _ in range(count)]
 
         for i in range(count):  

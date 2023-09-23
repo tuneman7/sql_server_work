@@ -97,5 +97,5 @@ echo "****************"
 echo "Setting up databases"
 echo "****************"
 
-python setup_dbs.py -a dbsetup
+python setup_dbs.py -a setup_dbs
 python setup_dbs.py -a populate_dbs

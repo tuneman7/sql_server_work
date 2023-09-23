@@ -65,6 +65,7 @@ def populate_dbs():
     fdi.populate_fake_data(table_name='product_type',count=0)
     fdi.populate_fake_data(table_name='products',count=1000)
     fdi.populate_fake_data(table_name='product_price',count=1000)
+    fdi.populate_fake_data(table_name='product_price_history',count=1000)
 
 
 def main():
@@ -77,7 +78,7 @@ def main():
 
     if args.Action:
         print("Action is : {}".format(args.Action))
-        if args.Action.lower() == "dbsetup":
+        if args.Action.lower() == "setup_dbs":
             setup_dbs()
         if args.Action.lower() == "testdb":
             test_database()

@@ -210,6 +210,30 @@ class db_base(Utility):
         for i in cursor:
             return(i[0])
 
+    def run_update_query(self,query_key=None,query_text=None,current_database=None):
+
+        global QUERIES
+        CURRENT_DATABASE = self.CURRENT_DATABASE
+
+        if current_database is None and CURRENT_DATABASE is None:
+            print("no database specified")
+            return
+        if current_database is not None:
+            CURRENT_DATABASE = current_database
+        
+        my_conn = self.get_connection(CURRENT_DATABASE)
+
+        if query_key is not None:
+            for item in QUERIES[CURRENT_DATABASE]:
+                sql_query_key = "{}{}".format(query_key,".sql_content")
+                if sql_query_key in item.keys():
+                    query_text = item[sql_query_key]
+    
+        connection = self.get_connection()
+        cursor = connection.cursor()
+        cursor.execute(query_text)
+        connection.commit()
+
 
 
     def run_and_print_raw_results(self, connection=None, query=None):

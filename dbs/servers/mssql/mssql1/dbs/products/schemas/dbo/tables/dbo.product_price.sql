@@ -28,8 +28,6 @@ ADD CONSTRAINT FK_product_price_product
 FOREIGN KEY (product_id)
 REFERENCES products(id);
 go
-ALTER TABLE [dbo].[product_price] ADD  DEFAULT (getdate()) FOR [created_dt]
-GO
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
