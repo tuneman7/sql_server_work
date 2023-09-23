@@ -4,6 +4,7 @@ from itertools import count
 import os
 import sys
 import json
+import ast
 from datetime import datetime
 from os import system, name
 from time import sleep
@@ -26,7 +27,7 @@ import pyodbc
 pyodbc. pooling=False
 from sqlalchemy import create_engine
 from sqlalchemy.engine import URL
-import mysql.connector as mysqlcon
+import mysql.connector
 import re
 
 class db_base(Utility):
@@ -36,11 +37,13 @@ class db_base(Utility):
     CONNECTION_STRINGS = None
     CURRENT_DATABASE = None
     QUERIES = None
+    SERVERTYPE = None
 
     def __init__(self,current_database=None,svr_type='mssql',artifact_dir='db_artifacts'):
         super().__init__()
         global CONNECTION_STRINGS
         self.CURRENT_DATABASE = current_database
+        self.SERVERTYPE = svr_type
         
         connection_string_dir = os.path.join(self.get_this_dir(),artifact_dir,svr_type,"connections")
 
@@ -64,7 +67,13 @@ class db_base(Utility):
         query_dir = os.path.join(self.get_this_dir(),artifact_dir,svr_type,"queries")
         QUERIES = self.load_subdirs_into_dict(parent_directory=query_dir,filetype="sql",get_content=True)
 
-        self.test_db_connection()
+        test_sql = ""
+        if self.SERVERTYPE=="mssql":
+            test_sql="select top 10 * from sysobjects"
+        if self.SERVERTYPE=="mysql":
+            test_sql="SHOW PROCESSLIST"
+        self.test_db_connection(sql_text_test=test_sql)
+        
 
     def test_db_connection(self,current_database=None,sql_text_test="select top 10 * from sysobjects"):
         global CONNECTION_STRINGS
@@ -97,8 +106,14 @@ class db_base(Utility):
         if current_database is not None:
             CURRENT_DATABASE = current_database
 
-        str_con = CONNECTION_STRINGS[CURRENT_DATABASE].replace("\n","")            
-        return pyodbc.connect(r'{}'.format(str_con))
+        str_con = CONNECTION_STRINGS[CURRENT_DATABASE].replace("\n","")
+        #print(r'{}'.format(str_con))
+        if self.SERVERTYPE=="mssql":
+            return pyodbc.connect(r'{}'.format(str_con))
+        if self.SERVERTYPE=="mysql":
+            #print(r'{}'.format(str_con))
+            m_con=ast.literal_eval(str_con)
+            return mysql.connector.connect(**m_con)
 
     def get_connection_string(self,current_database=None):
         global CONNECTION_STRINGS
@@ -297,7 +312,6 @@ class db_base(Utility):
         if query_text is not None:
             return self.run_query_with_multiple_df_return(query_text=query_text)[0]
 
-        return df.DataFrame()
 
     def get_alchecmy_engine(self):
         connection_url = URL.create(

@@ -3,6 +3,7 @@ from libraries.db_base import db_base
 import os
 import subprocess
 import argparse
+from libraries.db_ins_fake_data import fake_data_to_db
 
 mu=Util()
 
@@ -59,6 +60,12 @@ def setup_dbs():
 def test_database():
     products = db_base("products")
 
+def populate_dbs():
+    fdi = fake_data_to_db("products",svr_type='mssql')
+    fdi.populate_fake_data(table_name='product_type',count=0)
+    fdi.populate_fake_data(table_name='products',count=1000)
+    fdi.populate_fake_data(table_name='product_price',count=1000)
+
 
 def main():
 
@@ -74,7 +81,8 @@ def main():
             setup_dbs()
         if args.Action.lower() == "testdb":
             test_database()
-
+        if args.Action.lower() == "populate_dbs":
+            populate_dbs()
 
 
 

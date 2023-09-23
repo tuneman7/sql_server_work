@@ -20,3 +20,8 @@ https://learn.microsoft.com/en-us/sql/azure-data-studio/download-azure-data-stud
 #mysql client
 sudo apt install libmysqlclient-de
 
+#problems with mysql
+('IM002', '[IM002] [unixODBC][Driver Manager]Data source name not found and no default driver specified (0) (SQLDriverConnect)')
+
+https://dev.mysql.com/downloads/connector/python/
+
