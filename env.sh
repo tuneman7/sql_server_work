@@ -23,7 +23,7 @@ mysql1=mysql1
 mysql1_pwd=Python2028
 mysql1_loc_dir=$(pwd)/sql_data_files/mysql/${mysql1}
 mysql1_port=3306
-mysql1_sn=localhost
+mysql1_sn=127.0.0.1
 
 
 mssql_servers=($mssql1)

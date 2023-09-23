@@ -1,2 +1,0 @@
-#!/bin/bash
-sqlcmd -S $mssql_svr -U SA -P $mssql_pw -C

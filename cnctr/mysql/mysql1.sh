@@ -1,2 +1,1 @@
-#!/bin/bash
-sqlcmd -S localhost -U SA -P Python2028 -C
+mysql -h 127.0.0.1 -u root -p'Python2028'

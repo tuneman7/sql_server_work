@@ -32,6 +32,15 @@ cp -rf $mysql1_loc_dir $backup_dir
 echo "Changing permissions on \$backup_dir"
 sudo chmod -R 777 $mysql1_loc_dir
 
+#remove the files so I can start from scratch
+rm -rf $mysql1_loc_dir
+mkdir -vp $mysql1_loc_dir
+echo mysql1_loc_dir=$mysql1_loc_dir
+
+echo "Changing permissions on \$mysql1_loc_dir"
+sudo chmod -R 777 $mysql1_loc_dir
+
+
 echo mysql1_pwd=$mysql1_pwd
 
 echo "about to create docker"
@@ -53,7 +62,7 @@ mkdir -vp $cnctr_dir
 export mysql_pw=$mysql1_pwd
 export mysql_svr=$mysql1_sn
 
-config_file=$(pwd)/templates/cnctr_template_sql.txt
+config_file=$(pwd)/templates/cnctr_template_mysql.txt
 
 of=${cnctr_dir}/${mysql1_hostname}.sh
 

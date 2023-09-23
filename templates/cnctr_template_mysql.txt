@@ -1,0 +1,1 @@
+mysql -h $mysql_svr -u root -p'$mysql_pw'

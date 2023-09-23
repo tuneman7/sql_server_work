@@ -32,6 +32,12 @@ cp -rf $mssql1_loc_dir $backup_dir
 echo "Changing permissions on \$backup_dir"
 sudo chmod -R 777 $mssql1_loc_dir
 
+#test
+get rid of db directory
+rm -rf $mssql1_loc_dir
+mkdir -vp $mssql1_loc_dir
+sudo chmod -R 777 $mssql1_loc_dir
+
 echo mssql1_pwd=$mssql1_pwd
 
 echo "about to create docker"
@@ -58,7 +64,7 @@ mkdir -vp $cnctr_dir
 export mssql_pw=$mssql1_pwd
 export mssql_svr=$mssql1_sn
 
-config_file=$(pwd)/templates/cnctr_template_sql.txt
+config_file=$(pwd)/templates/cnctr_template_mssql.txt
 
 of=${cnctr_dir}/${mssql1_hostname}.sh
 
