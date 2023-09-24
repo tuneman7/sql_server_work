@@ -1,8 +1,3 @@
 {
-   "products": [
-      {
-         "populate_product_price_history.sql": "/data/school/MIDS/sql_server_work/db_artifacts/mssql/queries/products/populate_product_price_history.sql",
-         "populate_product_price_history.sql_content": "-- Insert data into product_price_history from product_price\nINSERT INTO [dbo].[product_price_history] (product_id, usd_price, pricing_start_dt, pricing_end_dt, created_by, created_dt, updated_by, updated_dt)\nSELECT\n    p.product_id,\n    ROUND(p.usd_price * 0.8, 2), -- 20% lower usd_price\n    p.pricing_start_dt,\n    DATEADD(DAY, -1, p.pricing_start_dt) AS pricing_end_dt, -- One day before pricing_start_dt\n    p.created_by,\n    p.created_dt,\n    p.updated_by,\n    p.updated_dt\nFROM\n    [dbo].[product_price] p;\n"
-      }
-   ]
+   "": []
 }

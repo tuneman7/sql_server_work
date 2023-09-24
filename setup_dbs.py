@@ -77,6 +77,11 @@ def populate_dbs():
     fdi.populate_fake_data(table_name='products',count=1000)
     fdi.populate_fake_data(table_name='product_price',count=1000)
     fdi.populate_fake_data(table_name='product_price_history',count=1000)
+    finance = fake_data_to_db("finance",svr_type='postsql')
+    finance.populate_fake_data(table_name='geography',count=800)
+    finance.populate_fake_data(table_name='gl_accounts',count=800)
+
+
 
 
 def main():

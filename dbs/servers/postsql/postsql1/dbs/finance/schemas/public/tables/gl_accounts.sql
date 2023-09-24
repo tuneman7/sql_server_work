@@ -4,6 +4,7 @@
 -- Create the gl_accounts table
 CREATE TABLE gl_accounts (
     account_id serial PRIMARY KEY,
+    account_code VARCHAR(20) NOT NULL,
     account_name VARCHAR(255) NOT NULL,
     account_type VARCHAR(50) NOT NULL,
     account_balance NUMERIC(10, 2) DEFAULT 0.00,

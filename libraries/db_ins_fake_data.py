@@ -57,17 +57,20 @@ class fake_data_to_db(db_base):
             self.populate_gl_accounts(count)            
 
     def populate_gl_accounts(self,count):
+        names = ["Streaming","Production","Overhead","Capital","Theatrical","Marketing","Promotion","Sales","Printing","Music","Sound Track","Distribution"]
         fake = Faker()
         conn = self.get_connection()
         cursor = conn.cursor()
         try:
             for _ in range(count):
+
                 # Generate random account name and account code
-                account_name = fake.unique.word(ext_word_list=None)
                 account_code = fake.unique.random_number(digits=6, fix_len=True)
+                account_type = random.choice(["Asset", "Liability", "Equity", "Revenue", "Expense"])
+
+                account_name = random.choice(names) + " " + account_type + " " + str(account_code)
                 
                 # Generate other random account data
-                account_type = random.choice(["Asset", "Liability", "Equity", "Revenue", "Expense"])
                 account_balance = round(random.uniform(1000, 100000), 2)
                 created_by = fake.name()
                 updated_by = fake.name()
@@ -75,10 +78,10 @@ class fake_data_to_db(db_base):
                 # Insert the generated data into the database
                 cursor.execute(
                     """
-                    INSERT INTO gl_accounts (account_name, account_code, account_type, account_balance, created_by, updated_by)
+                    INSERT INTO gl_accounts (account_code, account_name, account_type, account_balance, created_by, updated_by)
                     VALUES (%s, %s, %s, %s, %s, %s)
                     """,
-                    (account_name, account_code, account_type, account_balance, created_by, updated_by)
+                    (account_code, account_name, account_type, account_balance, created_by, updated_by)
                 )
 
             conn.commit()
