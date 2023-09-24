@@ -19,8 +19,15 @@ def get_sql_server_key(d,parent_key='',target_key=''):
 
 def create_sql_db(servername,server_objects,server_type="mssql"):
     for db in server_objects["dbs"]:
+        print(db)
         #get myconnector
         cntr_path=os.path.join(mu.get_this_dir(),"cnctr",server_type,"{}.{}".format(servername,"sh"))
+        if not os.path.exists(cntr_path):
+            print("*"*30)
+            print("File does not exist:")
+            print(cntr_path)
+            print("*"*30)
+            return
         db_connector=mu.get_data_from_file(cntr_path).replace("\n","").replace("\r","")
 
         #get create cmd
@@ -30,6 +37,9 @@ def create_sql_db(servername,server_objects,server_type="mssql"):
             input_pipe="-i"
         if "mysql" in server_type:
             input_pipe="<"
+        if "postsql" in server_type:
+            input_pipe="-f"
+
         
         cmd="{} {} {}".format(db_connector,input_pipe,create_cmd_file)
         print(cmd)
@@ -56,6 +66,7 @@ def setup_dbs():
     m_dict = mu.get_subdirectories_dict(dbs_d,filetype=".sql")
     setup_sql_server_dbs(m_dict["servers"]["mssql"],"mssql")
     setup_sql_server_dbs(m_dict["servers"]["mysql"],"mysql")
+    setup_sql_server_dbs(m_dict["servers"]["postsql"],"postsql")
 
 def test_database():
     products = db_base("products")

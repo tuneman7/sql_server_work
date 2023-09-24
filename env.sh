@@ -48,7 +48,7 @@ server_up_dkr_l_cmds+=("up_postsql1_dkr.sh")
 #array of all bash files to destroy docker instances
 server_down_dkr_l_cmds=("down_mssql1_dkr.sh")
 server_down_dkr_l_cmds+=("down_mysql1_dkr.sh")
-server_down_dkr_l_cmds+=("down_postql1_dkr.sh")
+server_down_dkr_l_cmds+=("down_postsql1_dkr.sh")
 
 #array all docker images
 a_sql_dkr_img=($mssql1_name)

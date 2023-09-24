@@ -29,6 +29,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.engine import URL
 import mysql.connector
 import re
+import psycopg2
 
 class db_base(Utility):
     '''
@@ -72,6 +73,8 @@ class db_base(Utility):
             test_sql="select top 10 * from sysobjects"
         if self.SERVERTYPE=="mysql":
             test_sql="SHOW PROCESSLIST"
+        if self.SERVERTYPE=="postsql":
+            test_sql="SELECT version()"
         self.test_db_connection(sql_text_test=test_sql)
         
 
@@ -114,6 +117,9 @@ class db_base(Utility):
             #print(r'{}'.format(str_con))
             m_con=ast.literal_eval(str_con)
             return mysql.connector.connect(**m_con)
+        if self.SERVERTYPE=="postsql":
+            m_con=ast.literal_eval(str_con)
+            return psycopg2.connect(**m_con)
 
     def get_connection_string(self,current_database=None):
         global CONNECTION_STRINGS

@@ -142,29 +142,3 @@ class fake_data_to_db(db_base):
         # Commit the changes
         conn.commit()
 
-
-    def populate_fake_mysql_data(self,table_name,count):
-        
-        conn = self.get_connection()
-        cursor = conn.cursor()
-        cursor.execute(f"DESCRIBE {table_name}")
-        table_schema = cursor.fetchall()
-        fake = Faker()
-
-        # SQL query to insert data
-        insert_query = f"INSERT INTO {table_name} ("
-        insert_query += ", ".join(column[0] for column in table_schema)  # Column names
-        insert_query += ") VALUES ("
-        insert_query += ", ".join("%s" for _ in table_schema)  # Placeholders
-
-        for col in table_schema:
-            print(str(col[1]).replace('b','').replace("'",""))
-
-        for _ in range(count):
-            data_to_insert = [fake.random_element() if str(col[1]).replace('b','').replace("'","").startswith("enum") else fake.format(str(col[1]).replace('b','').replace("'","")) for col in table_schema]
-            cursor.execute(insert_query, data_to_insert)
-
-        # Commit the changes
-        conn.commit()
-        conn.close()
-

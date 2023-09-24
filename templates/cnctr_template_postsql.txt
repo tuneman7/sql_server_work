@@ -1,0 +1,1 @@
+PGPASSWORD=${postsql_pw} psql -h ${postsql_svr} -U postgres -p'5432'

@@ -26,6 +26,28 @@
             }
          }
       },
+      "postsql": {
+         "postsql1": {
+            "dbs": {
+               "finance": {
+                  "schemas": {
+                     "public": {
+                        "tables": {
+                           "geography.sql": "/data/school/MIDS/sql_server_work/dbs/servers/postsql/postsql1/dbs/finance/schemas/public/tables/geography.sql",
+                           "geography.sql_content": "-- Connect to the \"finance\" database (if not already connected)\n\\c finance\n\n-- Create the \"geography\" table with columns\nCREATE TABLE geography (\n    id serial PRIMARY KEY,\n    zipcode VARCHAR(10),\n    country VARCHAR(100),\n    county VARCHAR(100),\n    msa VARCHAR(100),\n    -- Add more columns as needed\n    created_by CHAR(100),\n    created_dt TIMESTAMP DEFAULT current_timestamp,\n    updated_by CHAR(100),\n    updated_dt TIMESTAMP\n);\n\n-- Create a trigger function to update created_by, created_dt, updated_by, and updated_dt on any insert or update\nCREATE OR REPLACE FUNCTION update_geography()\nRETURNS TRIGGER AS $$\nBEGIN\n    IF TG_OP = 'INSERT' THEN\n        NEW.created_by = current_user;\n        NEW.created_dt = current_timestamp;\n    ELSIF TG_OP = 'UPDATE' THEN\n        NEW.updated_by = current_user;\n        NEW.updated_dt = current_timestamp;\n    END IF;\n    RETURN NEW;\nEND;\n$$ LANGUAGE plpgsql;\n\n-- Create a trigger on insert or update of any column\nCREATE TRIGGER geography_insert_update_trigger\nBEFORE INSERT OR UPDATE ON geography\nFOR EACH ROW\nEXECUTE FUNCTION update_geography();\n",
+                           "gl_accounts.sql": "/data/school/MIDS/sql_server_work/dbs/servers/postsql/postsql1/dbs/finance/schemas/public/tables/gl_accounts.sql",
+                           "gl_accounts.sql_content": "-- Connect to the finance database\n\\c finance\n\n-- Create the gl_accounts table\nCREATE TABLE gl_accounts (\n    account_id serial PRIMARY KEY,\n    account_name VARCHAR(255) NOT NULL,\n    account_type VARCHAR(50) NOT NULL,\n    account_balance NUMERIC(10, 2) DEFAULT 0.00,\n    created_by CHAR(100),\n    created_dt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,\n    updated_by CHAR(100),\n    updated_dt TIMESTAMP\n);\n\n-- Create a trigger function to update updated_by and updated_dt on any column update\nCREATE OR REPLACE FUNCTION update_gl_accounts()\nRETURNS TRIGGER AS $$\nBEGIN\n    NEW.updated_by = current_user;\n    NEW.updated_dt = current_timestamp;\n    RETURN NEW;\nEND;\n$$ LANGUAGE plpgsql;\n\n-- Create a trigger on update of any column\nCREATE TRIGGER gl_accounts_update_trigger\nBEFORE UPDATE ON gl_accounts\nFOR EACH ROW\nEXECUTE FUNCTION update_gl_accounts();"
+                        }
+                     }
+                  },
+                  "create_db": {
+                     "create_db.sql": "/data/school/MIDS/sql_server_work/dbs/servers/postsql/postsql1/dbs/finance/create_db/create_db.sql",
+                     "create_db.sql_content": "CREATE DATABASE finance;"
+                  }
+               }
+            }
+         }
+      },
       "mysql": {
          "mysql1": {
             "dbs": {
