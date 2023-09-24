@@ -171,9 +171,6 @@ class db_base(Utility):
                     query = items[key]
                     if print_query_names:
                         print("query_name : {}".format(key.replace(".sql_content","")))
-                        #print("query_file : {}".format(items[key.replace("_content","")]))
-                    #self.run_and_print_raw_results(connection=my_conn,query=query)
-
 
     def print_all_internal_keys(self,current_database=None):
         global QUERIES

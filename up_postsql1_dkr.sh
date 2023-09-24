@@ -53,11 +53,6 @@ docker run -v $postsql1_loc_dir:/var/lib/postgresql/data  -e "POSTGRES_PASSWORD=
 echo "updating firewall rules for port:$postsql1_port"
 sudo ufw allow $postsql1_port
 
-#add it to the array of docker images
-a_sql_dkr_img+=($postsql1_name)
-#export a_sql_dkr_img=$a_sql_dkr_img
-
-
 
 #create a connector based on template
 cnctr_dir=$(pwd)/cnctr/postsql
