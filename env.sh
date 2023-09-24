@@ -27,22 +27,36 @@ mysql1_port=3306
 mysql1_sn=127.0.0.1
 mysql1_up="mysql -h ${mysql1_sn} -u root -p'${mysql1_pwd}' -e'SHOW PROCESSLIST' 2>/dev/null"
 
+#postgress
+postsql1_name=postsql1
+postsql1_hostname=postsql1
+postsql1=postsql1
+postsql1_pwd=Python2028
+postsql1_loc_dir=$(pwd)/sql_data_files/postsql/${postsql1}
+postsql1_port=5432
+postsql1_sn=127.0.0.1
+postsql1_up="PGPASSWORD=${postsql1_pwd} psql -h ${postsql1_sn} -U postgres -p'${postsql1_port}' -c'SELECT version()' >/dev/null"
 
 
 mssql_servers=($mssql1)
 
 #array of all bash files to create docker instances
-server_up_dkr_l_cmds=("up_mssql1_dkr.sh")
-server_up_dkr_l_cmds+=("up_mysql1_dkr.sh")
+server_up_dkr_l_cmds=("up_mysql1_dkr.sh")
+server_up_dkr_l_cmds+=("up_mssql1_dkr.sh")
+server_up_dkr_l_cmds+=("up_postsql1_dkr.sh")
 
 #array of all bash files to destroy docker instances
 server_down_dkr_l_cmds=("down_mssql1_dkr.sh")
 server_down_dkr_l_cmds+=("down_mysql1_dkr.sh")
+server_down_dkr_l_cmds+=("down_postql1_dkr.sh")
 
 #array all docker images
 a_sql_dkr_img=($mssql1_name)
 a_sql_dkr_img+=($mysql1_name)
+a_sql_dkr_img+=($postsql1_name)
 
 a_sql_inline_command=("${mssql1_up}")
 a_sql_inline_command+=("${mysql1_up}")
+a_sql_inline_command+=("${postsql1_up}")
+
 
