@@ -4,7 +4,9 @@
 #check dependencies
 source ./env.sh
 
-source ./env.sh
+#clear out pycache
+#find . -type d -name __pycache__ -exec rm -r {} \+
+
 if ! [ -n "$VIRTUAL_ENV" ]; then
     if [ -d "./${VENV_NAME}" ]; then
         source ./${VENV_NAME}/bin/activate

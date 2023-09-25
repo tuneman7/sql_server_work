@@ -71,7 +71,8 @@ class fake_data_to_db(db_base):
         try:
             p_db = fake_data_to_db("products")
             l_pi = p_db.get_list_from_sql(sql_text="select id from products")
-
+            df_p_types = p_db.run_query_with_single_df(query_key="get_product_id_and_product_type")
+            print(df_p_types.head())
             # Fetch the IDs of existing customers from the customer_info table
             cursor.execute("SELECT id FROM customer_info")
             customer_ids = [row[0] for row in cursor.fetchall()]
@@ -85,6 +86,8 @@ class fake_data_to_db(db_base):
 
                 # Generate other random data
                 product_id = random.choice(l_pi)
+                product_type = df_p_types.loc[df_p_types['product_id'] == product_id, 'product_type'].values[0]
+                
                 #product_type = fake.word()
                 created_by = fake.name()
                 # Generate purchase_dt in a range between two days and one year ago
@@ -97,10 +100,10 @@ class fake_data_to_db(db_base):
                 # Insert the generated data into the database
                 cursor.execute(
                     """
-                    INSERT INTO customer_product (product_id, customer_id, created_by, purchase_dt, expiration_dt)
-                    VALUES (%s, %s, %s, %s, %s)
+                    INSERT INTO customer_product (product_id, customer_id, created_by, purchase_dt, expiration_dt,product_type)
+                    VALUES (%s, %s, %s, %s, %s, %s)
                     """,
-                    (product_id, customer_id, created_by, purchase_dt, expiration_dt)
+                    (product_id, customer_id, created_by, purchase_dt, expiration_dt,product_type)
                 )
 
             conn.commit()
@@ -108,7 +111,7 @@ class fake_data_to_db(db_base):
             conn.close()
 
         except Exception as e:
-            print(f"Error: {e}")
+            print(f"Error: {str(e)}")
         finally:
             if conn:
                 conn.close()        

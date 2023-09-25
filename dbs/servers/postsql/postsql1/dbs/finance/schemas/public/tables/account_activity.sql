@@ -6,7 +6,7 @@ CREATE TABLE account_activity (
     id serial PRIMARY KEY,
     product_id INT NOT NULL,
     customer_id INT,
-    account_id VARCHAR(20) NOT NULL,
+    account_id int NOT NULL,
     post_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     amt_usd money,
     geography_id INT NOT NULL,
