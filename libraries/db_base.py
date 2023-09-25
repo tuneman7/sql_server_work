@@ -30,6 +30,7 @@ from sqlalchemy.engine import URL
 import mysql.connector
 import re
 import psycopg2
+import subprocess
 
 class db_base(Utility):
     '''
@@ -42,7 +43,6 @@ class db_base(Utility):
 
     def __init__(self,current_database=None,svr_type='mssql',artifact_dir='db_artifacts'):
         super().__init__()
-        global CONNECTION_STRINGS
         self.CURRENT_DATABASE = current_database
         self.SERVERTYPE = svr_type
         
@@ -57,16 +57,15 @@ class db_base(Utility):
                         skip_list=None,
                         load_data_files_into_strings=True)
 
-        CONNECTION_STRINGS = {}
+        self.CONNECTION_STRINGS = {}
         for key in file_content_dict.keys():
-            CONNECTION_STRINGS[key.replace(".txt","")] = file_content_dict[key]
+            self.CONNECTION_STRINGS[key.replace(".txt","")] = file_content_dict[key]
 
         if(current_database is not None):
             self.CURRENT_DATABASE = current_database
 
-        global QUERIES
         query_dir = os.path.join(self.get_this_dir(),artifact_dir,svr_type,"queries")
-        QUERIES = self.load_subdirs_into_dict(parent_directory=query_dir,filetype="sql",get_content=True)
+        self.QUERIES = self.load_subdirs_into_dict(parent_directory=query_dir,filetype="sql",get_content=True)
 
         test_sql = ""
         if self.SERVERTYPE=="mssql":
@@ -79,7 +78,6 @@ class db_base(Utility):
         
 
     def test_db_connection(self,current_database=None,sql_text_test="select top 10 * from sysobjects"):
-        global CONNECTION_STRINGS
         if current_database is None and self.CURRENT_DATABASE is None:
             print("no database specified")
             return
@@ -101,7 +99,6 @@ class db_base(Utility):
             return False
 
     def get_connection(self,current_database=None):
-        global CONNECTION_STRINGS
         CURRENT_DATABASE = self.CURRENT_DATABASE
         if current_database is None and CURRENT_DATABASE is None:
             print("no database specified")
@@ -109,7 +106,7 @@ class db_base(Utility):
         if current_database is not None:
             CURRENT_DATABASE = current_database
 
-        str_con = CONNECTION_STRINGS[CURRENT_DATABASE].replace("\n","")
+        str_con = self.CONNECTION_STRINGS[CURRENT_DATABASE].replace("\n","")
         #print(r'{}'.format(str_con))
         if self.SERVERTYPE=="mssql":
             return pyodbc.connect(r'{}'.format(str_con))
@@ -122,7 +119,6 @@ class db_base(Utility):
             return psycopg2.connect(**m_con)
 
     def get_connection_string(self,current_database=None):
-        global CONNECTION_STRINGS
         CURRENT_DATABASE = self.CURRENT_DATABASE
         if current_database is None and CURRENT_DATABASE is None:
             print("no database specified")
@@ -130,12 +126,11 @@ class db_base(Utility):
         if current_database is not None:
             CURRENT_DATABASE = current_database
 
-        str_con = CONNECTION_STRINGS[CURRENT_DATABASE].replace("\n","")            
+        str_con = self.CONNECTION_STRINGS[CURRENT_DATABASE].replace("\n","")            
         return r'{}'.format(str_con)
 
 
     def run_and_print_all_queries(self,current_database=None):
-        global QUERIES
         CURRENT_DATABASE = self.CURRENT_DATABASE
 
         if current_database is None and CURRENT_DATABASE is None:
@@ -146,7 +141,7 @@ class db_base(Utility):
         
         my_conn = self.get_connection(CURRENT_DATABASE)
 
-        for items in QUERIES[CURRENT_DATABASE]:
+        for items in self.QUERIES[CURRENT_DATABASE]:
             for key in items.keys():
                 if  "content" in key:
                     query = items[key]
@@ -154,7 +149,6 @@ class db_base(Utility):
                     self.run_and_print_raw_results(connection=my_conn,query=query)
 
     def get_all_queries(self,current_database=None,print_query_names=False):
-        global QUERIES
         CURRENT_DATABASE = self.CURRENT_DATABASE
 
         if current_database is None and CURRENT_DATABASE is None:
@@ -165,7 +159,7 @@ class db_base(Utility):
         
         my_conn = self.get_connection(CURRENT_DATABASE)
 
-        for items in QUERIES[CURRENT_DATABASE]:
+        for items in self.QUERIES[CURRENT_DATABASE]:
             for key in items.keys():
                 if  "content" in key:
                     query = items[key]
@@ -173,7 +167,6 @@ class db_base(Utility):
                         print("query_name : {}".format(key.replace(".sql_content","")))
 
     def print_all_internal_keys(self,current_database=None):
-        global QUERIES
         CURRENT_DATABASE = self.CURRENT_DATABASE
 
         if current_database is None and CURRENT_DATABASE is None:
@@ -182,14 +175,13 @@ class db_base(Utility):
         if current_database is not None:
             CURRENT_DATABASE = current_database
 
-        for items in QUERIES[CURRENT_DATABASE]:
+        for items in self.QUERIES[CURRENT_DATABASE]:
             for key in items.keys():
                 print(key)
 
 
     def run_count_query(self,query_key=None,query_text=None,current_database=None):
 
-        global QUERIES
         CURRENT_DATABASE = self.CURRENT_DATABASE
 
         if current_database is None and CURRENT_DATABASE is None:
@@ -201,7 +193,7 @@ class db_base(Utility):
         my_conn = self.get_connection(CURRENT_DATABASE)
 
         if query_key is not None:
-            for item in QUERIES[CURRENT_DATABASE]:
+            for item in self.QUERIES[CURRENT_DATABASE]:
                 sql_query_key = "{}{}".format(query_key,".sql_content")
                 if sql_query_key in item.keys():
                     query_text = item[sql_query_key]
@@ -211,11 +203,11 @@ class db_base(Utility):
         cursor.execute(query_text)
 
         for i in cursor:
-            return(i[0])
+            my_returner=i[0]
+        connection.close()
+        return my_returner
 
     def run_update_query(self,query_key=None,query_text=None,current_database=None):
-
-        global QUERIES
         CURRENT_DATABASE = self.CURRENT_DATABASE
 
         if current_database is None and CURRENT_DATABASE is None:
@@ -227,15 +219,16 @@ class db_base(Utility):
         my_conn = self.get_connection(CURRENT_DATABASE)
 
         if query_key is not None:
-            for item in QUERIES[CURRENT_DATABASE]:
+            for item in self.QUERIES[CURRENT_DATABASE]:
                 sql_query_key = "{}{}".format(query_key,".sql_content")
                 if sql_query_key in item.keys():
                     query_text = item[sql_query_key]
-    
-        connection = self.get_connection()
+
+        connection = self.get_connection(CURRENT_DATABASE)
         cursor = connection.cursor()
         cursor.execute(query_text)
         connection.commit()
+        connection.close();
 
 
 
@@ -250,7 +243,6 @@ class db_base(Utility):
         
     def run_query_with_multiple_df_return(self,query_key=None,query_text=None,current_database=None):
 
-        global QUERIES
         CURRENT_DATABASE = self.CURRENT_DATABASE
 
         if current_database is None and CURRENT_DATABASE is None:
@@ -258,11 +250,9 @@ class db_base(Utility):
             return
         if current_database is not None:
             CURRENT_DATABASE = current_database
-        
-        my_conn = self.get_connection(CURRENT_DATABASE)
 
         if query_key is not None:
-            for item in QUERIES[CURRENT_DATABASE]:
+            for item in self.QUERIES[CURRENT_DATABASE]:
                 sql_query_key = "{}{}".format(query_key,".sql_content")
                 if sql_query_key in item.keys():
                     query_text = item[sql_query_key]
@@ -274,7 +264,6 @@ class db_base(Utility):
         with connection:
             cursor = connection.cursor()
             rows = cursor.execute(query_text).fetchall()
-
             columns = [column[0] for column in cursor.description]
             df_list.append(pd.DataFrame.from_records(rows, columns=columns))
             
@@ -293,11 +282,55 @@ class db_base(Utility):
         connection.close()
 
         return df_list
+    
+    def get_df_from_mysql(self,query_key=None):
+        query_text=self.get_sql_query_from_query_key(query_key=query_key)
+        conn = self.get_connection()
+        df = pd.read_sql(query_text,conn)
+        conn.close()
+        return df
+    
+    def run_update_from_cli_connector(self,query_key=None):
+        conn = self.get_connection()
+        servername=""
+        if self.SERVERTYPE=="mysql":
+            servername = conn._host
+        if self.SERVERTYPE=="postsql":
+            servername = conn.info.host
+
+
+        cntr_path=os.path.join(self.get_this_dir(),"cnctr",self.SERVERTYPE,"{}.{}".format(servername,"sh"))
+        if not os.path.exists(cntr_path):
+            print("*"*30)
+            print("File does not exist:")
+            print(cntr_path)
+            print("*"*30)
+            return
+        db_connector=self.get_data_from_file(cntr_path).replace("\n","").replace("\r","")
+        if query_key is not None:
+            for item in self.QUERIES[self.CURRENT_DATABASE]:
+                sql_query_key = "{}{}".format(query_key,".sql")
+                if sql_query_key in item.keys():
+                    file = item[sql_query_key]
+
+        #get create cmd
+        cmd_file=file
+        input_pipe=None
+        if "mssql" in self.SERVERTYPE:
+            input_pipe="-i"
+        if "mysql" in self.SERVERTYPE:
+            input_pipe="<"
+        if "postsql" in self.SERVERTYPE:
+            input_pipe="-f"
+
+        
+        cmd="{} {} {}".format(db_connector,input_pipe,cmd_file)
+        print(cmd)
+        subprocess.run(cmd,shell=True)
 
     def get_sql_query_from_query_key(self,query_key=None,current_database=None):
 
         query_text = ""
-        global QUERIES
         CURRENT_DATABASE = self.CURRENT_DATABASE
 
         if current_database is None and CURRENT_DATABASE is None:
@@ -307,13 +340,12 @@ class db_base(Utility):
             CURRENT_DATABASE = current_database
         
         if query_key is not None:
-            for item in QUERIES[CURRENT_DATABASE]:
+            for item in self.QUERIES[CURRENT_DATABASE]:
                 sql_query_key = "{}{}".format(query_key,".sql_content")
                 if sql_query_key in item.keys():
                     query_text = item[sql_query_key] 
 
         return query_text
-
                
 
     def run_query_with_single_df_tokenify(self,query_key=None,query_text=None,current_database=None,token_replacements=dict()):
@@ -334,8 +366,10 @@ class db_base(Utility):
         return self.run_query_with_single_df(query_text=sql_query)
 
     def run_query_with_single_df(self,query_key=None,query_text=None,current_database=None):
+        if self.SERVERTYPE=="mysql":
+            return self.get_df_from_mysql(query_key=query_key)
         if query_key is not None:
-            return self.run_query_with_multiple_df_return(query_key)[0]
+            return self.run_query_with_multiple_df_return(query_key=query_key)[0]
         if query_text is not None:
             return self.run_query_with_multiple_df_return(query_text=query_text)[0]
 

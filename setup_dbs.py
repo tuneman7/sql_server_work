@@ -69,7 +69,7 @@ def setup_dbs():
     setup_sql_server_dbs(m_dict["servers"]["postsql"],"postsql")
 
 def test_database():
-    products = db_base("products")
+    products = db_base("customers")
 
 def populate_dbs():
     fdi = fake_data_to_db("products",svr_type='mssql')
@@ -80,9 +80,14 @@ def populate_dbs():
     finance = fake_data_to_db("finance",svr_type='postsql')
     finance.populate_fake_data(table_name='geography',count=800)
     finance.populate_fake_data(table_name='gl_accounts',count=800)
+    finance.populate_fake_data(table_name='distro_channel',count=800)
     ci = fake_data_to_db("customers",svr_type='mysql')
     ci.populate_fake_data(table_name="customer_info",count=3000)
-    ci.populate_fake_data(table_name="customer_products",count=30000)
+    print("customer_product")
+    ci.populate_fake_data(table_name="customer_product",count=30000)
+    print("customer_product_history")
+    ci = fake_data_to_db("customers",svr_type='mysql')
+    ci.populate_fake_data(table_name="customer_product_history")
 
 
 
@@ -103,7 +108,6 @@ def main():
             test_database()
         if args.Action.lower() == "populate_dbs":
             populate_dbs()
-
 
 
 main()

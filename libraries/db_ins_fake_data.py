@@ -43,7 +43,7 @@ class fake_data_to_db(db_base):
     def __init__(self,current_database=None,svr_type='mssql',artifact_dir='db_artifacts'):
         super().__init__(current_database=current_database,svr_type=svr_type,artifact_dir=artifact_dir)
 
-    def populate_fake_data(self,table_name,count):
+    def populate_fake_data(self,table_name,count=500):
         if self.SERVERTYPE=="mysql":
             return self.populate_fake_mysql_data(table_name=table_name,count=count)
         if self.SERVERTYPE=="mssql":
@@ -56,6 +56,13 @@ class fake_data_to_db(db_base):
             return self.populate_customer_info_table(count)
         if table_name=="customer_product":
             return self.populate_customer_products(count)
+        if table_name=="customer_product_history":
+            return self.populate_customer_product_history()
+        
+    def populate_customer_product_history(self):
+        #the adapter has difficulty running complex sql updates
+        #pipe the update file into the cli
+        self.run_update_from_cli_connector("populate_customer_product_history")
 
     def populate_customer_products(self,count):
         conn = self.get_connection()
@@ -80,19 +87,25 @@ class fake_data_to_db(db_base):
                 product_id = random.choice(l_pi)
                 #product_type = fake.word()
                 created_by = fake.name()
-                expiration_dt = fake.date_time_between(start_date="+1d", end_date="+1y")
+                # Generate purchase_dt in a range between two days and one year ago
+                purchase_dt = fake.date_time_between(start_date="-1y-2d", end_date="-2d")
+
+                end_date=purchase_dt + timedelta(days=random.choice([1, 30, 90, 365]))
+                # Generate expiration_dt as one day, one month, three months, or one year after purchase_dt
+                expiration_dt = fake.date_time_between_dates(purchase_dt,end_date)
 
                 # Insert the generated data into the database
                 cursor.execute(
                     """
-                    INSERT INTO customer_product (product_id, customer_id, created_by, expiration_dt)
+                    INSERT INTO customer_product (product_id, customer_id, created_by, purchase_dt, expiration_dt)
                     VALUES (%s, %s, %s, %s, %s)
                     """,
-                    (product_id, customer_id, created_by, expiration_dt)
+                    (product_id, customer_id, created_by, purchase_dt, expiration_dt)
                 )
 
             conn.commit()
             cursor.close()
+            conn.close()
 
         except Exception as e:
             print(f"Error: {e}")
@@ -130,6 +143,7 @@ class fake_data_to_db(db_base):
 
             conn.commit()
             cursor.close()
+            conn.close()
 
         except Exception as e:
             print(f"Error: {e}")
@@ -145,8 +159,13 @@ class fake_data_to_db(db_base):
             self.populate_gl_accounts(count)
         if table_name=="account_activity":
             self.populate_account_activity(count)
+        if table_name=="distro_channel":
+            self.populate_distro_channel()            
+    
+    def populate_distro_channel(self):
+        self.run_update_from_cli_connector("populate_distro_channel")
 
-    def populate_account_actitivity(self,count):
+    def populate_account_activity(self,count):
         this_obj = fake_data_to_db("products")
         p_list = this_obj.get_list_from_sql()
 
@@ -277,14 +296,12 @@ class fake_data_to_db(db_base):
 
 
     def get_list_from_sql(self,sql_text="SELECT id FROM product_type"):
-        id_list = []
+        
         conn = self.get_connection()
         cursor = conn.cursor()
         cursor.execute(sql_text)
 
-        for row in cursor.fetchall():
-            id_list.append(row[0])
-
+        id_list = [row[0] for row in cursor.fetchall()]
         return id_list
 
     def populate_products(self,count):

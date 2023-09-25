@@ -73,6 +73,7 @@ envsubst < $config_file > $of
 echo cf=$of
 
 cat $of
+cp $of $cnctr_dir/$postsql1_sn.sh
 echo ""
 
 

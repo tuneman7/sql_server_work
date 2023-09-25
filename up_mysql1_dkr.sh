@@ -74,6 +74,7 @@ echo my_sql_up=$my_sql_up
 echo cf=$of
 
 cat $of
+cp $of $cnctr_dir/$postsql1_sn.sh
 echo ""
 
 

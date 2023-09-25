@@ -31,3 +31,9 @@ sudo apt-get install -y postgresql-client
 #required for psycopg2
 https://stackoverflow.com/questions/61528483/error-pg-config-executable-not-found-i-try-to-pip3-psycopg2-with-python3-7
 
+
+
+#pgadmin on linux
+https://www.pgadmin.org/download/pgadmin-4-apt/
+
+#Start Through UI.

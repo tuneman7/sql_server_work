@@ -14,7 +14,7 @@ mssql1=mssql1
 mssql1_pwd=Python2028
 mssql1_loc_dir=$(pwd)/sql_data_files/mssql/${mssql1}
 mssql1_port=1433
-mssql1_sn=localhost
+mssql1_sn=127.0.0.1
 mssql1_up="sqlcmd -S ${mssql1_sn} -U SA -P ${mssql1_pwd} -C -Q 'exit()'"
 
 #mysql

@@ -43,7 +43,7 @@ mkdir -vp $cnctr_dir
 
 of=${cnctr_dir}/${mssql1_hostname}.sh
 
-rm -rf $of
+rm -rf $cnctr_dir
 
 echo ""
 
