@@ -161,7 +161,12 @@ class fake_data_to_db(db_base):
             self.populate_account_activity(count)
         if table_name=="distro_channel":
             self.populate_distro_channel()            
+        if table_name=="distro_channel_group":
+            self.populate_distro_channel_group()             
     
+    def populate_distro_channel_group(self):
+        self.run_update_from_cli_connector("populate_distro_channel_group")
+
     def populate_distro_channel(self):
         self.run_update_from_cli_connector("populate_distro_channel")
 

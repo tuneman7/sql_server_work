@@ -322,7 +322,6 @@ class db_base(Utility):
             input_pipe="<"
         if "postsql" in self.SERVERTYPE:
             input_pipe="-f"
-
         
         cmd="{} {} {}".format(db_connector,input_pipe,cmd_file)
         print(cmd)

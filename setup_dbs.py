@@ -81,11 +81,10 @@ def populate_dbs():
     finance.populate_fake_data(table_name='geography',count=800)
     finance.populate_fake_data(table_name='gl_accounts',count=800)
     finance.populate_fake_data(table_name='distro_channel',count=800)
+    finance.populate_fake_data(table_name='distro_channel_group',count=800)
     ci = fake_data_to_db("customers",svr_type='mysql')
     ci.populate_fake_data(table_name="customer_info",count=3000)
-    print("customer_product")
     ci.populate_fake_data(table_name="customer_product",count=30000)
-    print("customer_product_history")
     ci = fake_data_to_db("customers",svr_type='mysql')
     ci.populate_fake_data(table_name="customer_product_history")
 
