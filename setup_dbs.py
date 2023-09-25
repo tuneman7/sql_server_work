@@ -82,6 +82,7 @@ def populate_dbs():
     finance.populate_fake_data(table_name='gl_accounts',count=800)
     ci = fake_data_to_db("customers",svr_type='mysql')
     ci.populate_fake_data(table_name="customer_info",count=3000)
+    ci.populate_fake_data(table_name="customer_products",count=30000)
 
 
 
