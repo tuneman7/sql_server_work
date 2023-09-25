@@ -7,6 +7,7 @@ from datetime import datetime
 from datetime import timedelta
 import pandas as pd
 import os
+import numpy as np
 
 # Create an instance of the Faker generator
 fake = Faker()
@@ -50,11 +51,105 @@ class fake_data_to_db(db_base):
         if self.SERVERTYPE=="postsql":
             return self.populate_fake_postsql_data(table_name,count)
 
+    def populate_fake_mysql_data(self,table_name,count):
+        if table_name=="customer_info":
+            return self.populate_customer_info_table(count)
+        if table_name=="customer_product":
+            return self.populate_customer_products(count)
+
+    def populate_customer_products(self,count):
+        conn = self.get_connection()
+        cursor = conn.cursor()
+
+        try:
+            p_db = fake_data_to_db("products")
+            l_pi = p_db.get_list_from_sql(sql_text="select id from products")
+
+            # Fetch the IDs of existing customers from the customer_info table
+            cursor.execute("SELECT id FROM customer_info")
+            customer_ids = [row[0] for row in cursor.fetchall()]
+
+            for _ in range(count):
+                # Simulate normal distribution to select a random customer_id
+                customer_id = int(np.random.normal(loc=np.mean(customer_ids), scale=np.std(customer_ids)))
+
+                # Ensure the selected customer_id is within the range of available IDs
+                customer_id = max(min(customer_id, max(customer_ids)), min(customer_ids))
+
+                # Generate other random data
+                product_id = random.choice(l_pi)
+                #product_type = fake.word()
+                created_by = fake.name()
+                expiration_dt = fake.date_time_between(start_date="+1d", end_date="+1y")
+
+                # Insert the generated data into the database
+                cursor.execute(
+                    """
+                    INSERT INTO customer_product (product_id, customer_id, created_by, expiration_dt)
+                    VALUES (%s, %s, %s, %s, %s)
+                    """,
+                    (product_id, customer_id, created_by, expiration_dt)
+                )
+
+            conn.commit()
+            cursor.close()
+
+        except Exception as e:
+            print(f"Error: {e}")
+        finally:
+            if conn:
+                conn.close()        
+        
+    def populate_customer_info_table(self,count):
+        conn = self.get_connection()
+        cursor = conn.cursor()
+
+        try:
+
+            for _ in range(count):
+                # Generate random first and last names
+                f_name = fake.first_name()
+                l_name = fake.last_name()
+
+                # Generate a unique email address for the "irwinanalytics.com" domain
+                email_address = f"{f_name.lower()}.{l_name.lower()}@irwinanalytics.com"
+
+                # Generate a random created_dt within the last five years
+                today = datetime.now()
+                five_years_ago = today - timedelta(days=365 * 5)
+                created_dt = fake.date_time_between(start_date=five_years_ago, end_date=today)
+
+                # Insert the generated data into the database
+                cursor.execute(
+                    """
+                    INSERT INTO customer_info (f_name, l_name, email_address, created_dt)
+                    VALUES (%s, %s, %s, %s)
+                    """,
+                    (f_name, l_name, email_address, created_dt)
+                )
+
+            conn.commit()
+            cursor.close()
+
+        except Exception as e:
+            print(f"Error: {e}")
+        finally:
+            if conn:
+                conn.close()
+
+
     def populate_fake_postsql_data(self,table_name,count):
         if table_name=="geography":
             self.populate_geography()
         if table_name=="gl_accounts":
-            self.populate_gl_accounts(count)            
+            self.populate_gl_accounts(count)
+        if table_name=="account_activity":
+            self.populate_account_activity(count)
+
+    def populate_account_actitivity(self,count):
+        this_obj = fake_data_to_db("products")
+        p_list = this_obj.get_list_from_sql()
+
 
     def populate_gl_accounts(self,count):
         names = ["Streaming","Production","Overhead","Capital","Theatrical","Marketing","Promotion","Sales","Printing","Music","Sound Track","Distribution"]
@@ -144,17 +239,6 @@ class fake_data_to_db(db_base):
             print(f"Error reading the data: {e}")
             return None
 
-    def populate_fake_mysql_data(self,table_name,count):
-        return "bozo"
-        # if table_name=="product_type":
-        #     self.populate_product_types()
-        # if table_name=="products":
-        #     self.populate_products(count)
-        # if table_name=="product_price":
-        #     self.populate_product_price()
-        # if table_name=="product_price_history":
-        #     self.populate_product_price_history()
-
 
     def populate_fake_mssql_data(self,table_name,count):
         if table_name=="product_type":
@@ -170,7 +254,7 @@ class fake_data_to_db(db_base):
         self.run_update_query("populate_product_price_history")
     
     def populate_product_price(self):
-        l_pids = self.get_list_from_sql()
+        l_pids = self.get_list_from_sql("select id from products")
         conn = self.get_connection()
         cursor = conn.cursor()
         #For all products populate product_price

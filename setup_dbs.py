@@ -80,6 +80,8 @@ def populate_dbs():
     finance = fake_data_to_db("finance",svr_type='postsql')
     finance.populate_fake_data(table_name='geography',count=800)
     finance.populate_fake_data(table_name='gl_accounts',count=800)
+    ci = fake_data_to_db("customers",svr_type='mysql')
+    ci.populate_fake_data(table_name="customer_info",count=3000)
 
 
 
