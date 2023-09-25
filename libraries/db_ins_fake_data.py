@@ -78,15 +78,16 @@ class fake_data_to_db(db_base):
                 # Insert the generated data into the database
                 cursor.execute(
                     """
-                    INSERT INTO gl_accounts (account_code, account_name, account_type, created_by, updated_by)
-                    VALUES (%s, %s, %s, %s, %s, %s)
+                    INSERT INTO gl_accounts (account_code, account_name, account_type, created_by)
+                    VALUES (%s, %s, %s, %s)
                     """,
-                    (account_code, account_name, account_type,created_by, updated_by)
+                    (account_code, account_name, account_type,created_by)
                 )
 
             conn.commit()
             cursor.close()
         except Exception as e:
+            print(str(e))
             conn.close()
 
     def populate_geography(self):
