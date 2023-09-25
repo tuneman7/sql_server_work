@@ -71,17 +71,17 @@ class fake_data_to_db(db_base):
                 account_name = random.choice(names) + " " + account_type + " " + str(account_code)
                 
                 # Generate other random account data
-                account_balance = round(random.uniform(1000, 100000), 2)
+                #account_balance = round(random.uniform(10000000, 10000000), 2)
                 created_by = fake.name()
                 updated_by = fake.name()
                 
                 # Insert the generated data into the database
                 cursor.execute(
                     """
-                    INSERT INTO gl_accounts (account_code, account_name, account_type, account_balance, created_by, updated_by)
+                    INSERT INTO gl_accounts (account_code, account_name, account_type, created_by, updated_by)
                     VALUES (%s, %s, %s, %s, %s, %s)
                     """,
-                    (account_code, account_name, account_type, account_balance, created_by, updated_by)
+                    (account_code, account_name, account_type,created_by, updated_by)
                 )
 
             conn.commit()

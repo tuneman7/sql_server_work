@@ -7,7 +7,6 @@ CREATE TABLE gl_accounts (
     account_code VARCHAR(20) NOT NULL,
     account_name VARCHAR(255) NOT NULL,
     account_type VARCHAR(50) NOT NULL,
-    account_balance NUMERIC(10, 2) DEFAULT 0.00,
     created_by CHAR(100),
     created_dt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_by CHAR(100),
