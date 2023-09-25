@@ -82,6 +82,7 @@ def populate_dbs():
     finance.populate_fake_data(table_name='gl_accounts',count=800)
     finance.populate_fake_data(table_name='distro_channel',count=800)
     finance.populate_fake_data(table_name='distro_channel_group',count=800)
+    finance.populate_fake_data(table_name='population_by_postalcode',count=800)    
     ci = fake_data_to_db("customers",svr_type='mysql')
     ci.populate_fake_data(table_name="customer_info",count=3000)
     ci.populate_fake_data(table_name="customer_product",count=30000)
@@ -107,6 +108,11 @@ def main():
             test_database()
         if args.Action.lower() == "populate_dbs":
             populate_dbs()
+
+
+    
+
+        
 
 
 main()

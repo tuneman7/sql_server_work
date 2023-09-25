@@ -72,7 +72,7 @@ class fake_data_to_db(db_base):
             p_db = fake_data_to_db("products")
             l_pi = p_db.get_list_from_sql(sql_text="select id from products")
             df_p_types = p_db.run_query_with_single_df(query_key="get_product_id_and_product_type")
-            print(df_p_types.head())
+            #print(df_p_types.head())
             # Fetch the IDs of existing customers from the customer_info table
             cursor.execute("SELECT id FROM customer_info")
             customer_ids = [row[0] for row in cursor.fetchall()]
@@ -172,7 +172,7 @@ class fake_data_to_db(db_base):
     def populate_population_by_postalcode(self):
         file_path = os.path.join(self.get_this_dir(),"data","geography","cleaned_pop.csv")
         # Table name in PostgreSQL
-        table_name = 'population_by_postalcode'
+        table_name = 'public.poplation_by_postalcode'
 
         # Connect to the database
         connection = self.get_connection()
