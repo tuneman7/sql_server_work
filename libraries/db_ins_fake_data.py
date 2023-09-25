@@ -165,7 +165,35 @@ class fake_data_to_db(db_base):
         if table_name=="distro_channel":
             self.populate_distro_channel()            
         if table_name=="distro_channel_group":
-            self.populate_distro_channel_group()             
+            self.populate_distro_channel_group()
+        if table_name=="population_by_postalcode":
+            self.populate_population_by_postalcode()
+
+    def populate_population_by_postalcode(self):
+        file_path = os.path.join(self.get_this_dir(),"data","geography","cleaned_pop.csv")
+        # Table name in PostgreSQL
+        table_name = 'population_by_postalcode'
+
+        # Connect to the database
+        connection = self.get_connection()
+
+        # Create a cursor
+        cursor = connection.cursor()
+
+        # Use the COPY command to load data from the CSV file into the table
+        copy_sql = f"""
+                COPY {table_name}
+                FROM stdin WITH CSV HEADER
+                DELIMITER as ','
+                """
+        with open(file_path, 'r') as file:
+            cursor.copy_expert(sql=copy_sql, file=file)
+            cursor.close()
+            connection.commit()
+
+        # Close the database connection
+        connection.close()        
+
     
     def populate_distro_channel_group(self):
         self.run_update_from_cli_connector("populate_distro_channel_group")
