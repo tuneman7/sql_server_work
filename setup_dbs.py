@@ -71,25 +71,49 @@ def setup_dbs():
 def test_database():
     products = db_base("customers")
 
+def print_title(title):
+    print("*"*40)
+    print(title)
+    print("*"*40)
+
 def populate_dbs():
+
     fdi = fake_data_to_db("products",svr_type='mssql')
+    print_title("product_type")
     fdi.populate_fake_data(table_name='product_type',count=0)
+    print_title("products")
     fdi.populate_fake_data(table_name='products',count=1000)
+    print_title("product_price")
     fdi.populate_fake_data(table_name='product_price',count=1000)
+    print_title("product_price_history")
     fdi.populate_fake_data(table_name='product_price_history',count=1000)
+
+    
     finance = fake_data_to_db("finance",svr_type='postsql')
-    finance.populate_fake_data(table_name='geography',count=800)
-    finance.populate_fake_data(table_name='gl_accounts',count=800)
-    finance.populate_fake_data(table_name='distro_channel',count=800)
-    finance.populate_fake_data(table_name='distro_channel_group',count=800)
-    finance.populate_fake_data(table_name='population_by_postalcode',count=800)    
+    print_title("geo_geography")
+    finance.populate_fake_data(table_name='geo_geography',count=800)
+    print_title("fin_gl_accounts")
+    finance.populate_fake_data(table_name='fin_gl_accounts',count=800)
+    print_title("fin_distro_channel")
+    finance.populate_fake_data(table_name='fin_distro_channel',count=800)
+    print_title("fin_distro_channel_group")
+    finance.populate_fake_data(table_name='fin_distro_channel_group',count=800)
+    print_title("geo_postalcode_to_county_state")
+    finance.populate_fake_data(table_name='geo_postalcode_to_county_state',count=800)
+    print_title("geo_population_by_postalcode")
+    finance.populate_fake_data(table_name='geo_population_by_postalcode',count=800)
+    print_title("fin_distro_partner")
+    finance.populate_fake_data(table_name='fin_distro_partner',count=800)
+    print_title("geo_city_population")
+    finance.populate_fake_data(table_name='geo_city_population',count=800)
+
     ci = fake_data_to_db("customers",svr_type='mysql')
-    ci.populate_fake_data(table_name="customer_info",count=3000)
-    ci.populate_fake_data(table_name="customer_product",count=30000)
-    ci = fake_data_to_db("customers",svr_type='mysql')
+    print_title("customer_info")
+    ci.populate_fake_data(table_name="customer_info",count=50000)
+    print_title("customer_product")    
+    ci.populate_fake_data(table_name="customer_product",count=5000)
+    print_title("customer_product_history")        
     ci.populate_fake_data(table_name="customer_product_history")
-
-
 
 
 def main():
@@ -104,15 +128,13 @@ def main():
         print("Action is : {}".format(args.Action))
         if args.Action.lower() == "setup_dbs":
             setup_dbs()
+            return
         if args.Action.lower() == "testdb":
             test_database()
         if args.Action.lower() == "populate_dbs":
             populate_dbs()
+            return
 
-
-    
-
-        
 
 
 main()

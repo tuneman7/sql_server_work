@@ -1,0 +1,36 @@
+\c finance
+-- Insert data into fin_distro_channel table with abbreviated chnl_cd values
+INSERT INTO fin_distro_channel (chnl_cd, channel_desc, created_by, updated_by)
+VALUES
+    ('AIR', 'Airlines', 'John Doe', 'John Doe'),
+    ('TH', 'Theatrical', 'Jane Smith', 'Jane Smith'),
+    ('STREAM', 'Streaming', 'Alice Johnson', 'Alice Johnson'),
+    ('STREAMRTL', 'Streaming Rental', 'Bob Williams', 'Bob Williams'),
+    ('STREAMSUB', 'Streaming Subscription', 'Charlie Davis', 'Charlie Davis'),
+    ('MOBILE', 'Mobile', 'Eve Wilson', 'Eve Wilson'),
+    ('EDU', 'Education', 'Grace Lee', 'Grace Lee'),
+    ('MPUB', 'Music Publishing', 'David Brown', 'David Brown'),
+    ('HVID', 'Home Video', 'Frank Miller', 'Frank Miller'),
+    ('HVIDR', 'Home Video Rentals', 'Gina Anderson', 'Gina Anderson'),
+    ('EVNT', 'Events', 'Henry White', 'Henry White'),
+    ('HVIDDVD', 'Home Video DVD', 'Ivy Clark', 'Ivy Clark'),
+    ('CABLE', 'Cable TV Networks', 'John Doe', 'John Doe'), -- Additional Channels
+    ('VOD', 'Video-on-Demand (VOD) Services', 'Jane Smith', 'Jane Smith'),
+    ('GAMES', 'Video Game Consoles', 'Alice Johnson', 'Alice Johnson'),
+    ('PODCAST', 'Podcasting Platforms', 'Bob Williams', 'Bob Williams'),
+    ('LIVESTREAM', 'Live Streaming Platforms', 'Charlie Davis', 'Charlie Davis'),
+    ('VR', 'Virtual Reality (VR) Platforms', 'Eve Wilson', 'Eve Wilson'),
+    ('FILMFEST', 'Film Festivals', 'Grace Lee', 'Grace Lee'),
+    ('DIGSIGNAGE', 'Digital Signage Networks', 'David Brown', 'David Brown'),
+    ('EDUINST', 'Educational Institutions', 'Frank Miller', 'Frank Miller'),
+    ('CRUISE', 'Cruise Lines', 'Gina Anderson', 'Gina Anderson'),
+    ('THEMEPARK', 'Theme Parks', 'Henry White', 'Henry White'),
+    ('INTL', 'International Distribution', 'Ivy Clark', 'Ivy Clark'),
+    ('SPORTS', 'Sports Networks', 'John Doe', 'John Doe'),
+    ('RETAIL', 'Retail Stores', 'Jane Smith', 'Jane Smith'),
+    ('AIRPORT', 'Airports and Airlines', 'Alice Johnson', 'Alice Johnson'),
+    ('OUTDOOR', 'Outdoor Events', 'Bob Williams', 'Bob Williams'),
+    ('MUSEUM', 'Museums and Cultural Institutions', 'Charlie Davis', 'Charlie Davis'),
+    ('SOCIAL', 'Social Media Platforms', 'Eve Wilson', 'Eve Wilson'),
+    ('WEBSERIES', 'Web Series Platforms', 'Grace Lee', 'Grace Lee'),
+    ('AGGREGATOR', 'Streaming Aggregators', 'David Brown', 'David Brown');

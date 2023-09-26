@@ -69,15 +69,16 @@ class fake_data_to_db(db_base):
         cursor = conn.cursor()
 
         try:
+
             p_db = fake_data_to_db("products")
             l_pi = p_db.get_list_from_sql(sql_text="select id from products")
             df_p_types = p_db.run_query_with_single_df(query_key="get_product_id_and_product_type")
-            #print(df_p_types.head())
-            # Fetch the IDs of existing customers from the customer_info table
+
+            #Fetch the IDs of existing customers from the customer_info table
             cursor.execute("SELECT id FROM customer_info")
             customer_ids = [row[0] for row in cursor.fetchall()]
-
             for _ in range(count):
+                
                 # Simulate normal distribution to select a random customer_id
                 customer_id = int(np.random.normal(loc=np.mean(customer_ids), scale=np.std(customer_ids)))
 
@@ -117,12 +118,37 @@ class fake_data_to_db(db_base):
                 conn.close()        
         
     def populate_customer_info_table(self,count):
+
+        fin_db = db_base("finance","postsql")
+        results = fin_db.run_query_with_single_df(query_key="get_population_and_state_from_geo")
+
+        results = results[(results != 0).all(axis=1)]
+
+        # return
+        column_name = 'zip_population'
+        zip_population = results.columns.get_loc(column_name)
+        column_name = 'city_name'
+        city_name = results.columns.get_loc(column_name)
+        column_name = 'postalcode'
+        postalcode = results.columns.get_loc(column_name)
+        column_name = 'province'
+        province = results.columns.get_loc(column_name)
+
+
+        # return
+        # Calculate total population and distribution
+        total_population = sum([int(results.iloc[ind,zip_population]) for ind in range(len(results))])
+        customer_distribution = [(results.iloc[ind,city_name],results.iloc[ind,postalcode],results.iloc[ind,province], (int(results.iloc[ind,zip_population]) / total_population) * count) for ind in range(len(results))]
+
+
+
         conn = self.get_connection()
         cursor = conn.cursor()
 
-        try:
+        # try:
+        for city_name, postalcode, province, city_customers in customer_distribution:
+            for _ in range(int(city_customers)):
 
-            for _ in range(count):
                 # Generate random first and last names
                 f_name = fake.first_name()
                 l_name = fake.last_name()
@@ -135,44 +161,103 @@ class fake_data_to_db(db_base):
                 five_years_ago = today - timedelta(days=365 * 5)
                 created_dt = fake.date_time_between(start_date=five_years_ago, end_date=today)
 
+                country="USA"
                 # Insert the generated data into the database
                 cursor.execute(
                     """
-                    INSERT INTO customer_info (f_name, l_name, email_address, created_dt)
-                    VALUES (%s, %s, %s, %s)
+                    INSERT INTO customers.customer_info (f_name, l_name, email_address, created_dt,postalcode,city_name,country,province)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
                     """,
-                    (f_name, l_name, email_address, created_dt)
+                    (f_name, l_name, email_address, created_dt,postalcode,city_name,country,province)
                 )
 
-            conn.commit()
-            cursor.close()
-            conn.close()
+        conn.commit()
+        cursor.close()
+        conn.close()
 
-        except Exception as e:
-            print(f"Error: {e}")
-        finally:
-            if conn:
-                conn.close()
+        # except Exception as e:
+        #     print(f"Error: {e}")
+        # finally:
+        #     if conn:
+        #         conn.close()
 
 
     def populate_fake_postsql_data(self,table_name,count):
-        if table_name=="geography":
-            self.populate_geography()
-        if table_name=="gl_accounts":
-            self.populate_gl_accounts(count)
-        if table_name=="account_activity":
-            self.populate_account_activity(count)
-        if table_name=="distro_channel":
-            self.populate_distro_channel()            
-        if table_name=="distro_channel_group":
-            self.populate_distro_channel_group()
-        if table_name=="population_by_postalcode":
-            self.populate_population_by_postalcode()
+        if table_name=="geo_geography":
+            self.populate_geo_geography()
+        if table_name=="fin_gl_accounts":
+            self.populate_fin_gl_accounts(count)
+        if table_name=="fin_account_activity":
+            self.populate_fin_account_activity(count)
+        if table_name=="fin_distro_channel":
+            self.populate_fin_distro_channel()            
+        if table_name=="fin_distro_channel_group":
+            self.populate_fin_distro_channel_group()
+        if table_name=="geo_population_by_postalcode":
+            self.populate_geo_population_by_postalcode()
+        if table_name=="geo_postalcode_to_county_state":
+            self.populate_geo_postalcode_to_county_state()
+        if table_name=="fin_distro_partner":
+            self.populate_fin_distro_partner(count)
+        if table_name=="geo_city_population":
+            self.populate_geo_city_population()
+            
+    def populate_geo_city_population(self):
+        self.run_update_from_cli_connector("populate_geo_city_population")
 
-    def populate_population_by_postalcode(self):
+    def populate_fin_distro_partner(self,count=1000):
+        connection = self.get_connection()
+        cursor = connection.cursor()
+
+        generated_partner_desc = set()
+        while len(generated_partner_desc)<count:
+            company_name = fake.company()
+            if company_name not in generated_partner_desc:
+                generated_partner_desc.add(company_name)
+
+        for partner_desc in generated_partner_desc:
+            created_by = fake.name()
+            updated_by = fake.name()
+            
+            cursor.execute(
+                "INSERT INTO fin_distro_partner (partner_desc, created_by, updated_by) VALUES (%s, %s, %s)",
+                (partner_desc, created_by, updated_by)
+            )
+
+        connection.commit()
+        cursor.close()
+
+    def populate_geo_postalcode_to_county_state(self):
+        file_path = os.path.join(self.get_this_dir(),"data","geography","postal_to_county_state.csv")
+        # Table name in PostgreSQL
+        table_name = 'public.geo_postalcode_to_county_state'
+
+        # Connect to the database
+        connection = self.get_connection()
+
+        # Create a cursor
+        cursor = connection.cursor()
+
+        # Use the COPY command to load data from the CSV file into the table
+        copy_sql = f"""
+                COPY {table_name}
+                FROM stdin WITH CSV HEADER
+                DELIMITER as ','
+                """
+        with open(file_path, 'r') as file:
+            cursor.copy_expert(sql=copy_sql, file=file)
+            cursor.close()
+            connection.commit()
+
+        # Close the database connection
+        connection.close()        
+
+
+
+    def populate_geo_population_by_postalcode(self):
         file_path = os.path.join(self.get_this_dir(),"data","geography","cleaned_pop.csv")
         # Table name in PostgreSQL
-        table_name = 'public.poplation_by_postalcode'
+        table_name = 'public.geo_population_by_postalcode'
 
         # Connect to the database
         connection = self.get_connection()
@@ -195,18 +280,18 @@ class fake_data_to_db(db_base):
         connection.close()        
 
     
-    def populate_distro_channel_group(self):
-        self.run_update_from_cli_connector("populate_distro_channel_group")
+    def populate_fin_distro_channel_group(self):
+        self.run_update_from_cli_connector("populate_fin_distro_channel_group")
 
-    def populate_distro_channel(self):
-        self.run_update_from_cli_connector("populate_distro_channel")
+    def populate_fin_distro_channel(self):
+        self.run_update_from_cli_connector("populate_fin_distro_channel")
 
-    def populate_account_activity(self,count):
+    def populate_fin_account_activity(self,count):
         this_obj = fake_data_to_db("products")
         p_list = this_obj.get_list_from_sql()
 
 
-    def populate_gl_accounts(self,count):
+    def populate_fin_gl_accounts(self,count):
         names = ["Streaming","Production","Overhead","Capital","Theatrical","Marketing","Promotion","Sales","Printing","Music","Sound Track","Distribution"]
         fake = Faker()
         conn = self.get_connection()
@@ -228,7 +313,7 @@ class fake_data_to_db(db_base):
                 # Insert the generated data into the database
                 cursor.execute(
                     """
-                    INSERT INTO gl_accounts (account_code, account_name, account_type, created_by)
+                    INSERT INTO fin_gl_accounts (account_code, account_name, account_type, created_by)
                     VALUES (%s, %s, %s, %s)
                     """,
                     (account_code, account_name, account_type,created_by)
@@ -240,7 +325,7 @@ class fake_data_to_db(db_base):
             print(str(e))
             conn.close()
 
-    def populate_geography(self):
+    def populate_geo_geography(self):
         df = self.read_geo_file()
         # Create a cursor to execute SQL queries
         con = self.get_connection()
@@ -250,7 +335,7 @@ class fake_data_to_db(db_base):
         for index, row in df.iterrows():
             cursor.execute(
                 """
-                INSERT INTO geography (zipcode, country, location_name, msa)
+                INSERT INTO geo_geography (postalcode, country, location_name, msa)
                 VALUES (%s, %s, %s, %s)
                 """,
                 (row["postal_code"], row["country_code"], row["place_name"], row["admin_name3"])

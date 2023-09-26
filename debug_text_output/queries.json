@@ -1,8 +1,12 @@
 {
-   "customers": [
+   "products": [
       {
-         "populate_customer_product_history.sql": "/data/school/MIDS/sql_server_work/db_artifacts/mysql/queries/customers/populate_customer_product_history.sql",
-         "populate_customer_product_history.sql_content": "INSERT INTO customers.customer_product_history\n    (product_id, customer_id, product_type, purchase_dt, expiration_dt, created_by, created_dt, updated_by, updated_dt)\nSELECT\n    product_id,\n    customer_id,\n    product_type,\n    (expiration_dt - INTERVAL (DATEDIFF(expiration_dt, purchase_dt) + 1) DAY) AS purchase_dt,\n    (purchase_dt) AS expiration_dt,\n    created_by,\n    created_dt,\n    updated_by,\n    updated_dt\nFROM\n    customers.customer_product\nWHERE\n    RAND() <= 0.8; -- Select 80% of records randomly    \n\n"
+         "get_product_id_and_product_type.sql": "/data/school/MIDS/sql_server_work/db_artifacts/mssql/queries/products/get_product_id_and_product_type.sql",
+         "get_product_id_and_product_type.sql_content": "SELECT\n    p.id AS product_id,\n    p.product_name,\n    pt.product_type AS product_type\nFROM\n    [products].[dbo].[products] AS p\nJOIN\n    [dbo].[product_type] AS pt\nON\n    p.product_type = pt.id;"
+      },
+      {
+         "populate_product_price_history.sql": "/data/school/MIDS/sql_server_work/db_artifacts/mssql/queries/products/populate_product_price_history.sql",
+         "populate_product_price_history.sql_content": "-- Insert data into product_price_history from product_price\nINSERT INTO [dbo].[product_price_history] (product_id, usd_price, pricing_start_dt, pricing_end_dt, created_by, created_dt, updated_by, updated_dt)\nSELECT\n    p.product_id,\n    ROUND(p.usd_price * 0.8, 2), -- 20% lower usd_price\n    p.pricing_start_dt,\n    DATEADD(DAY, -1, p.pricing_start_dt) AS pricing_end_dt, -- One day before pricing_start_dt\n    p.created_by,\n    p.created_dt,\n    p.updated_by,\n    p.updated_dt\nFROM\n    [dbo].[product_price] p;\n"
       }
    ]
 }

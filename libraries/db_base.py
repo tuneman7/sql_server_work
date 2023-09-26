@@ -283,8 +283,9 @@ class db_base(Utility):
 
         return df_list
     
-    def get_df_from_mysql(self,query_key=None):
-        query_text=self.get_sql_query_from_query_key(query_key=query_key)
+    def get_df_from_mysql(self,query_key=None,query_text=None):
+        if query_key is not None:
+            query_text=self.get_sql_query_from_query_key(query_key=query_key)
         conn = self.get_connection()
         df = pd.read_sql(query_text,conn)
         conn.close()
@@ -366,7 +367,15 @@ class db_base(Utility):
 
     def run_query_with_single_df(self,query_key=None,query_text=None,current_database=None):
         if self.SERVERTYPE=="mysql":
-            return self.get_df_from_mysql(query_key=query_key)
+            if query_key is not None:
+                return self.get_df_from_mysql(query_key=query_key)
+            if query_text is not None:
+                return self.get_df_from_mysql(query_text=query_text)
+        if self.SERVERTYPE=="postsql":
+            if query_key is not None:
+                return self.get_df_from_mysql(query_key=query_key)
+            if query_text is not None:
+                return self.get_df_from_mysql(query_text=query_text)
         if query_key is not None:
             return self.run_query_with_multiple_df_return(query_key=query_key)[0]
         if query_text is not None:
