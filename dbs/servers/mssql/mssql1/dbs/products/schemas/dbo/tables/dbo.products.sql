@@ -9,8 +9,8 @@ GO
 CREATE TABLE [dbo].[products](
 	[id] [int] IDENTITY(1,1) NOT NULL,
 	[product_name] [varchar](100) NULL,
-	[product_type] [int] NULL,
-	[created_by] [char](100) NULL,
+	[product_type_id] [int] NULL,
+	[created_by] [char](100) NULL DEFAULT system_user,
 	[created_dt] [datetime] NULL,
 	[updated_by] [char](100) NULL,
 	[updated_dt] [datetime] NULL,

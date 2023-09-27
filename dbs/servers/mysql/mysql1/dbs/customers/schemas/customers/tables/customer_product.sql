@@ -4,7 +4,7 @@ CREATE TABLE customers.customer_product (
     id INT AUTO_INCREMENT PRIMARY KEY,
     customer_id INT,
     product_id INT,
-    product_type CHAR(100),
+    product_type_desc CHAR(100),
     purchase_dt DATETIME,
     expiration_dt DATETIME,
     created_by CHAR(100),

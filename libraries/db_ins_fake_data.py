@@ -8,6 +8,7 @@ from datetime import timedelta
 import pandas as pd
 import os
 import numpy as np
+from psycopg2.extras import execute_values
 
 # Create an instance of the Faker generator
 fake = Faker()
@@ -43,6 +44,14 @@ class fake_data_to_db(db_base):
     def __init__(self,current_database=None,svr_type='mssql',artifact_dir='db_artifacts'):
         super().__init__(current_database=current_database,svr_type=svr_type,artifact_dir=artifact_dir)
 
+        self.account_type_accounts = {
+            "Asset":["Building","Equipment","Vehicles","Machinery","Patent","Cash on Hand","Royalties","Property Rights","Music Catalog","Movie Catalog"],
+            "Liability":["Debt","Future Interest Due","Tax Liability","Bad Debt"],
+            "Equity":["Internal Shares","External Shares","Goodwill"],
+            "Revenue":["Streaming Cash","Sell-Through Income","Distribution Income","Rental Income","Interest Income","Theatrical Income","Music Income"],
+            "Expense":["Payroll","Overhead","Capital Expense","TV Royalties","Movie Royalties","Tax Expense","Production Cost"]
+        }        
+
     def populate_fake_data(self,table_name,count=500):
         if self.SERVERTYPE=="mysql":
             return self.populate_fake_mysql_data(table_name=table_name,count=count)
@@ -73,21 +82,17 @@ class fake_data_to_db(db_base):
             p_db = fake_data_to_db("products")
             l_pi = p_db.get_list_from_sql(sql_text="select id from products")
             df_p_types = p_db.run_query_with_single_df(query_key="get_product_id_and_product_type")
-
             #Fetch the IDs of existing customers from the customer_info table
             cursor.execute("SELECT id FROM customer_info")
             customer_ids = [row[0] for row in cursor.fetchall()]
-            for _ in range(count):
-                
-                # Simulate normal distribution to select a random customer_id
-                customer_id = int(np.random.normal(loc=np.mean(customer_ids), scale=np.std(customer_ids)))
+            for i in range(len(customer_ids)):
 
-                # Ensure the selected customer_id is within the range of available IDs
-                customer_id = max(min(customer_id, max(customer_ids)), min(customer_ids))
+                # Simulate normal distribution to select a random customer_id
+                customer_id = customer_ids[i]
 
                 # Generate other random data
                 product_id = random.choice(l_pi)
-                product_type = df_p_types.loc[df_p_types['product_id'] == product_id, 'product_type'].values[0]
+                product_type_desc = df_p_types.loc[df_p_types['product_id'] == product_id, 'product_type_desc'].values[0]
                 
                 #product_type = fake.word()
                 created_by = fake.name()
@@ -101,10 +106,10 @@ class fake_data_to_db(db_base):
                 # Insert the generated data into the database
                 cursor.execute(
                     """
-                    INSERT INTO customer_product (product_id, customer_id, created_by, purchase_dt, expiration_dt,product_type)
+                    INSERT INTO customer_product (product_id, customer_id, created_by, purchase_dt, expiration_dt,product_type_desc)
                     VALUES (%s, %s, %s, %s, %s, %s)
                     """,
-                    (product_id, customer_id, created_by, purchase_dt, expiration_dt,product_type)
+                    (product_id, customer_id, created_by, purchase_dt, expiration_dt,product_type_desc)
                 )
 
             conn.commit()
@@ -187,8 +192,6 @@ class fake_data_to_db(db_base):
             self.populate_geo_geography()
         if table_name=="fin_gl_accounts":
             self.populate_fin_gl_accounts(count)
-        if table_name=="fin_account_activity":
-            self.populate_fin_account_activity(count)
         if table_name=="fin_distro_channel":
             self.populate_fin_distro_channel()            
         if table_name=="fin_distro_channel_group":
@@ -201,6 +204,143 @@ class fake_data_to_db(db_base):
             self.populate_fin_distro_partner(count)
         if table_name=="geo_city_population":
             self.populate_geo_city_population()
+        if table_name=="fin_account_activity":
+            self.populate_fin_account_activity(count)
+
+
+    def populate_fin_account_activity(self,count=4000):
+
+        df_gl_acct = self.run_query_with_single_df(query_text="select * from fin_gl_accounts")
+        df_d_chnl = self.run_query_with_single_df(query_text="select * from fin_distro_channel")
+        df_d_part = self.run_query_with_single_df(query_text="select * from fin_distro_partner")
+        df_geo    = self.run_query_with_single_df(query_text="select * from geo_geography")
+
+        cust = db_base("customers","mysql")
+        df_cust = cust.run_query_with_single_df(query_text="select * from customer_info")
+        df_c_prod = cust.run_query_with_single_df(query_text="select * from customer_product")
+        df_c_prod_h = cust.run_query_with_single_df(query_text="select * from customer_product_history")
+        
+        prod = db_base("products","mssql")
+        #df_prod = prod.run_query_with_single_df(query_text="select * from products")
+        df_prod_price = prod.run_query_with_single_df(query_text="select * from product_price")
+
+        data_to_insert = []
+
+        #customer products inserted
+        cpi=set()
+
+        fn = os.path.join(self.get_this_dir(),"temp_data","fin_account_activity.csv")
+
+        #got through customer's historical products
+        for i in range(len(df_c_prod_h)):
+
+            #post_date
+            l_purchase_dt=df_c_prod_h.columns.get_loc("purchase_dt")
+            post_date=df_c_prod_h.iloc[i,l_purchase_dt]
+
+
+            #product_id
+            l_product_id=df_c_prod_h.columns.get_loc("product_id")
+            product_id=df_c_prod_h.iloc[i,l_product_id]
+
+            cpi.add(product_id)
+
+            #come back to this with date comparison on the price it was at the time purchased
+            #for the time being keep this simple.
+            amt_usd=df_prod_price.loc[df_prod_price["product_id"]==product_id,"usd_price"].values[0]
+
+            #customer_id
+            l_customer_id=df_c_prod_h.columns.get_loc("customer_id")
+            customer_id=df_c_prod_h.iloc[i,l_customer_id]
+
+            #gl_account_id
+            gl_account_id=random.choice(df_gl_acct.loc[df_gl_acct['account_type'] == "Revenue", 'id'].values)
+            
+            #geography_id
+            c_postalcode=df_cust.loc[df_cust["id"]==customer_id,"postalcode"].values[0]
+            geography_id=df_geo.loc[df_geo["postalcode"]==c_postalcode,"id"].values[0]
+
+            #fin_distro_channel_id
+            fin_distro_channel_id=random.choice(df_d_chnl["id"].values)
+
+            #fin_distro_partner_id
+            fin_distro_partner_id=random.choice(df_d_part["id"].values)
+
+            line_to_write="{},{},{},{},{},{},{},{}".format(str(post_date),str(product_id),str(customer_id),str(gl_account_id),str(amt_usd),str(geography_id),str(fin_distro_channel_id),str(fin_distro_partner_id))
+
+            self.write_line_to_file(fn,line_to_write)
+
+
+        #now go through current products
+        for i in range(len(df_c_prod)):
+
+            #post_date
+            l_purchase_dt=df_c_prod.columns.get_loc("purchase_dt")
+            post_date=df_c_prod.iloc[i,l_purchase_dt]
+
+            #product_id
+            l_product_id=df_c_prod.columns.get_loc("product_id")
+            product_id=df_c_prod.iloc[i,l_product_id]
+
+            cpi.add(product_id)
+
+            #come back to this with date comparison on the price it was at the time purchased
+            #for the time being keep this simple.
+            amt_usd=str(df_prod_price.loc[df_prod_price["product_id"]==product_id,"usd_price"].values[0])
+
+            #customer_id
+            l_customer_id=df_c_prod.columns.get_loc("customer_id")
+            customer_id=df_c_prod.iloc[i,l_customer_id]
+
+            #gl_account_id
+            gl_account_id=random.choice(df_gl_acct.loc[df_gl_acct['account_type'] == "Revenue", 'id'].values)
+            
+            #geography_id
+            c_postalcode=df_cust.loc[df_cust["id"]==customer_id,"postalcode"].values[0]
+            geography_id=df_geo.loc[df_geo["postalcode"]==c_postalcode,"id"].values[0]
+
+            #fin_distro_channel_id
+            fin_distro_channel_id=random.choice(df_d_chnl["id"].values)
+
+            #fin_distro_partner_id
+            fin_distro_partner_id=random.choice(df_d_part["id"].values)
+
+            line_to_write="{},{},{},{},{},{},{},{}".format(str(post_date),str(product_id),str(customer_id),str(gl_account_id),str(amt_usd),str(geography_id),str(fin_distro_channel_id),str(fin_distro_partner_id))
+
+            self.write_line_to_file(fn,line_to_write)
+
+
+        #line_to_write="{},{},{},{},{},{},{},{}".format(str(post_date),str(product_id),str(customer_id),str(gl_account_id),str(amt_usd),str(geography_id),str(fin_distro_channel_id),str(fin_distro_partner_id))
+
+                # Connect to the database
+        connection = self.get_connection()
+
+        # Create a cursor
+        cursor = connection.cursor()
+
+        # Use the COPY command to load data from the CSV file into the table
+        copy_sql = f"""
+                COPY fin_account_activity(post_date,product_id,customer_id,account_id,amt_usd,geo_geography_id,fin_distro_channel_id,fin_distro_partner_id) 
+                FROM stdin 
+                DELIMITER as ','
+                """
+        with open(fn, 'r') as file:
+            cursor.copy_expert(sql=copy_sql, file=file)
+            cursor.close()
+            connection.commit()
+
+        # Close the database connection
+        connection.close()        
+
+
+
+
+        
+
+
+
+        
+        
             
     def populate_geo_city_population(self):
         self.run_update_from_cli_connector("populate_geo_city_population")
@@ -253,7 +393,6 @@ class fake_data_to_db(db_base):
         connection.close()        
 
 
-
     def populate_geo_population_by_postalcode(self):
         file_path = os.path.join(self.get_this_dir(),"data","geography","cleaned_pop.csv")
         # Table name in PostgreSQL
@@ -286,13 +425,10 @@ class fake_data_to_db(db_base):
     def populate_fin_distro_channel(self):
         self.run_update_from_cli_connector("populate_fin_distro_channel")
 
-    def populate_fin_account_activity(self,count):
-        this_obj = fake_data_to_db("products")
-        p_list = this_obj.get_list_from_sql()
-
 
     def populate_fin_gl_accounts(self,count):
-        names = ["Streaming","Production","Overhead","Capital","Theatrical","Marketing","Promotion","Sales","Printing","Music","Sound Track","Distribution"]
+
+        l_keys=[key for key in self.account_type_accounts.keys()]
         fake = Faker()
         conn = self.get_connection()
         cursor = conn.cursor()
@@ -301,9 +437,9 @@ class fake_data_to_db(db_base):
 
                 # Generate random account name and account code
                 account_code = fake.unique.random_number(digits=6, fix_len=True)
-                account_type = random.choice(["Asset", "Liability", "Equity", "Revenue", "Expense"])
+                account_type = random.choice(l_keys)
 
-                account_name = random.choice(names) + " " + account_type + " " + str(account_code)
+                account_name = random.choice(self.account_type_accounts[account_type]) + " " + account_type + " " + str(account_code)
                 
                 # Generate other random account data
                 #account_balance = round(random.uniform(10000000, 10000000), 2)
@@ -439,11 +575,11 @@ class fake_data_to_db(db_base):
             product_name = product_names[i]
             created_by = fake.first_name()
             product_type =random.choice(id_list)
-            created_dt = fake.date_time_this_decade(before_now=True, after_now=False, tzinfo=None)
+            created_dt = self.create_random_date(starting_years_ago=5,ending_years_ago=3)
 
             # SQL query to insert data
             sql_query = """
-            INSERT INTO products (product_name, product_type, created_by)
+            INSERT INTO products (product_name, product_type_id, created_dt)
             VALUES (?, ?, ?)
             """
 
@@ -459,12 +595,12 @@ class fake_data_to_db(db_base):
         conn = self.get_connection()
         cursor = conn.cursor()
 
-        product_types = ["Movie", "Subscription", "Game", "Single View Movie", "Bundle", "TV Series", "TV Season", "TV Episode", "Event"]
+        product_types = ["Movie", "Subscription", "Game", "Single View Movie", "Bundle", "TV Series", "TV Season", "TV Episode", "Event","Download","Pay TV"]
 
         for product_type in product_types:
             # SQL query to insert data
             sql_query = """
-            INSERT INTO product_type (product_type)
+            INSERT INTO product_type (product_type_desc)
             VALUES (?)
             """
 

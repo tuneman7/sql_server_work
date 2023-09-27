@@ -8,7 +8,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[product_type](
 	[id] [int] IDENTITY(1,1) NOT NULL,
-	[product_type] [char](100) NULL,
+	[product_type_desc] [char](100) NULL,
 	[create_dt] [datetime] default GETDATE(),
 	[created_by] [char](100) default SYSTEM_USER,
 	[update_dt] [datetime] NULL,

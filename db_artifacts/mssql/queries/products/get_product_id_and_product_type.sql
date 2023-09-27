@@ -1,10 +1,9 @@
 SELECT
     p.id AS product_id,
     p.product_name,
-    pt.product_type AS product_type
+    pt.id AS product_type_id,
+    pt.product_type_desc
 FROM
-    [products].[dbo].[products] AS p
+    products p
 JOIN
-    [dbo].[product_type] AS pt
-ON
-    p.product_type = pt.id;
+    product_type pt ON p.product_type_id = pt.id;

@@ -82,7 +82,7 @@ def populate_dbs():
     print_title("product_type")
     fdi.populate_fake_data(table_name='product_type',count=0)
     print_title("products")
-    fdi.populate_fake_data(table_name='products',count=1000)
+    fdi.populate_fake_data(table_name='products',count=500)
     print_title("product_price")
     fdi.populate_fake_data(table_name='product_price',count=1000)
     print_title("product_price_history")
@@ -109,11 +109,16 @@ def populate_dbs():
 
     ci = fake_data_to_db("customers",svr_type='mysql')
     print_title("customer_info")
-    ci.populate_fake_data(table_name="customer_info",count=50000)
-    print_title("customer_product")    
+    ci.populate_fake_data(table_name="customer_info",count=80000)
+    print_title("customer_product")
     ci.populate_fake_data(table_name="customer_product",count=5000)
-    print_title("customer_product_history")        
+    print_title("customer_product_history")
     ci.populate_fake_data(table_name="customer_product_history")
+
+    print_title("fin_account_activity")
+    finance = fake_data_to_db("finance",svr_type='postsql')
+    finance.populate_fake_data(table_name='fin_account_activity',count=800)
+
 
 
 def main():

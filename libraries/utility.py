@@ -16,6 +16,8 @@ import re
 import unicodedata
 from contextlib import contextmanager
 import base64
+import random
+from datetime import timedelta
 
 
 class Utility:
@@ -40,6 +42,21 @@ class Utility:
         # for mac and linux(here, os.name is 'posix')
         else:
             _ = system('clear')
+
+    def create_random_date(self,starting_years_ago=5,ending_years_ago=3):
+        # Get the current date
+        current_date = datetime.now()
+
+        # Calculate the date ranges
+        end_date = current_date - timedelta(days=ending_years_ago * 365)  # Three years ago
+        start_date = current_date - timedelta(days=starting_years_ago * 365)  # Five years ago
+
+        # Generate a random number of days between three and five years ago
+        random_days = random.randint(0, (end_date - start_date).days)
+
+        # Calculate the random date
+        random_date = start_date + timedelta(days=random_days)
+        return random_date
 
     def count_files_in_two_directories(self,dir1,dir2):
         file_count_1 = len(list(Path(dir1).rglob("*")))
@@ -200,6 +217,20 @@ class Utility:
 
         return output_dict
 
+    def write_line_to_file(self,file_name,line_to_write):
+        if not os.path.exists(os.path.dirname(file_name)):
+            os.makedirs(os.path.dirname(file_name))
+
+        if not os.path.isfile(file_name):
+            with open(file_name, "w") as outfile:
+                outfile.write(line_to_write+"\n")
+        else:
+            with open(file_name, "a") as outfile:
+                outfile.write(line_to_write+"\n")
+
+
+
+            
 
     def write_dict_to_json(self,file_name,output_dict):
         #file_name = os.path.join(self.get_this_dir(),"debug_text_output","queries.json")
