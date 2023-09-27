@@ -4,6 +4,9 @@ import os
 import subprocess
 import argparse
 from libraries.db_ins_fake_data import fake_data_to_db
+import importlib.util
+from pydantic_sqlalchemy import sqlalchemy_to_pydantic
+
 
 mu=Util()
 
@@ -109,7 +112,7 @@ def populate_dbs():
 
     ci = fake_data_to_db("customers",svr_type='mysql')
     print_title("customer_info")
-    ci.populate_fake_data(table_name="customer_info",count=80000)
+    ci.populate_fake_data(table_name="customer_info",count=13000)
     print_title("customer_product")
     ci.populate_fake_data(table_name="customer_product",count=5000)
     print_title("customer_product_history")
@@ -119,12 +122,84 @@ def populate_dbs():
     finance = fake_data_to_db("finance",svr_type='postsql')
     finance.populate_fake_data(table_name='fin_account_activity',count=800)
 
+import re
+
+def create_model_files(inputfile,outputdirectory):
+    print("got in here")
+    # Split the input code into sections based on class definitions
+
+    mu.nukepath(outputdirectory)
+
+    # Read the content of the input file
+    with open(inputfile, "r") as f:
+        code_lines = f.readlines()
+
+    # Initialize variables to track class definitions
+    class_started = False
+    class_lines = []
+    class_files = []
+
+    # Iterate through the lines in the input code
+    for line in code_lines:
+        # Check if a new class definition is encountered
+        if line.strip().startswith("class "):
+            # If a class has already started, save it to a separate file
+            if class_started:
+                class_content = "".join(class_lines)
+                class_files.append(class_content)
+                class_lines = []
+
+            # Start tracking a new class
+            class_started = True
+
+        # Append the line to the current class
+        class_lines.append(line)
+
+    # Save each class to a separate file
+    for i, class_content in enumerate(class_files):
+        # Create a new filename based on the class name
+        class_name = class_content.split("class ")[1].split("(")[0].strip()
+        output_file = f"{class_name}.py"
+
+        if i>0:
+        # Add the first 8 lines to the beginning of each file
+            class_content = "".join(code_lines[:8]) + class_content
+
+        of = os.path.join(outputdirectory,output_file)
+        mu.write_text_to_file(of,class_content)
+
+        print(f"Created {output_file} ({i+1}/{len(class_files)})")
+
+    print("Splitting complete.")
+
+def create_pydantic_models(MODELS_DIR):
+
+    # Dynamically import all SQLAlchemy models in the specified directory
+    models = []
+    for model_file in os.listdir(MODELS_DIR):
+        if model_file.endswith(".py"):
+            module_name = os.path.splitext(model_file)[0]
+            module_path = os.path.join(MODELS_DIR, model_file)
+            spec = importlib.util.spec_from_file_location(module_name, module_path)
+            module = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(module)
+            models.extend([cls for cls in module.__dict__.values() if isinstance(cls, type)])
+
+    # Generate Pydantic models from the discovered SQLAlchemy models
+    for model in models:
+        if hasattr(model, "__table__"):  # Check if it's an SQLAlchemy model
+            pydantic_model = sqlalchemy_to_pydantic(model, exclude=["id"])
+            pydantic_model_code = pydantic_model.schema_json(indent=2)
+            print(pydantic_model_code)
+
 
 
 def main():
 
     parser = argparse.ArgumentParser()
     parser.add_argument("-a", "--Action", help = "Action to Perform")
+    parser.add_argument("-i", "--inputfile", help = "Input File")
+    parser.add_argument("-o", "--outfile", help = "Out File")
 
     args = parser.parse_args()
     print(args)
@@ -139,6 +214,14 @@ def main():
         if args.Action.lower() == "populate_dbs":
             populate_dbs()
             return
+        if args.Action.lower() == "create_model_files":
+            if args.inputfile and args.outfile:
+                create_model_files(args.inputfile,args.outfile)
+        if args.Action.lower() == "create_pydantic_models":
+            if args.inputfile:
+                create_pydantic_models(args.inputfile)
+            return
+
 
 
 

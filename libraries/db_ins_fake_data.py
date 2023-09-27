@@ -230,6 +230,7 @@ class fake_data_to_db(db_base):
         cpi=set()
 
         fn = os.path.join(self.get_this_dir(),"temp_data","fin_account_activity.csv")
+        self.nukefile(fn)
 
         #got through customer's historical products
         for i in range(len(df_c_prod_h)):
@@ -312,7 +313,7 @@ class fake_data_to_db(db_base):
 
         #line_to_write="{},{},{},{},{},{},{},{}".format(str(post_date),str(product_id),str(customer_id),str(gl_account_id),str(amt_usd),str(geography_id),str(fin_distro_channel_id),str(fin_distro_partner_id))
 
-                # Connect to the database
+        # Connect to the database
         connection = self.get_connection()
 
         # Create a cursor
@@ -333,17 +334,10 @@ class fake_data_to_db(db_base):
         connection.close()        
 
 
-
-
-        
-
-
-
-        
-        
-            
     def populate_geo_city_population(self):
         self.run_update_from_cli_connector("populate_geo_city_population")
+
+
 
     def populate_fin_distro_partner(self,count=1000):
         connection = self.get_connection()
@@ -366,6 +360,7 @@ class fake_data_to_db(db_base):
 
         connection.commit()
         cursor.close()
+
 
     def populate_geo_postalcode_to_county_state(self):
         file_path = os.path.join(self.get_this_dir(),"data","geography","postal_to_county_state.csv")

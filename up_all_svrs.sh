@@ -111,3 +111,14 @@ echo "****************"
 
 python setup_dbs.py -a setup_dbs
 python setup_dbs.py -a populate_dbs
+
+echo "****************"
+echo "Trying to bring up pydantic models"
+echo "****************"
+
+sqlacodegen "postgresql://postgres:${postsql_pw}@${postsql_svr}/finance"  --outfile ${postsql1_apidir}/models.py
+
+echo "python setup_dbs.py -a create_model_files -i ${postsql1_apidir}/models.py -o ${postsql1_apidir}/models"
+python setup_dbs.py -a create_model_files -i ${postsql1_apidir}/models.py -o ${postsql1_apidir}/models
+python setup_dbs.py -a create_model_files -i ${postsql1_apidir}/models
+

@@ -16,6 +16,8 @@ mssql1_loc_dir=$(pwd)/sql_data_files/mssql/${mssql1}
 mssql1_port=1433
 mssql1_sn=127.0.0.1
 mssql1_up="sqlcmd -S ${mssql1_sn} -U SA -P ${mssql1_pwd} -C -Q 'exit()'"
+mssql1_apiport=8023
+mssql1_apidir=$(pwd)/fastapi/products
 
 #mysql
 mysql1_name=mysql1
@@ -26,6 +28,8 @@ mysql1_loc_dir=$(pwd)/sql_data_files/mysql/${mysql1}
 mysql1_port=3306
 mysql1_sn=127.0.0.1
 mysql1_up="mysql -h ${mysql1_sn} -u root -p'${mysql1_pwd}' -e'SHOW PROCESSLIST' 2>/dev/null"
+mysql1_apiport=8024
+mysql1_apidir=$(pwd)/fastapi/customer
 
 #postgress
 postsql1_name=postsql1
@@ -36,6 +40,8 @@ postsql1_loc_dir=$(pwd)/sql_data_files/postsql/${postsql1}
 postsql1_port=5432
 postsql1_sn=127.0.0.1
 postsql1_up="PGPASSWORD=${postsql1_pwd} psql -h ${postsql1_sn} -U postgres -p'${postsql1_port}' -c'SELECT version()' >/dev/null"
+postsql1_apiport=8025
+postsql1_apidir=$(pwd)/fastapi/finance
 
 
 mssql_servers=($mssql1)

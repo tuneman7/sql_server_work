@@ -68,4 +68,10 @@ openpyxl
 randomname
 mysql-connector-python
 faker==19.6.2
-psycopg2
+fastapi[all]
+sqlalchemy
+databases
+psycopg2-binary
+asyncpg
+sqlacodegen
+pydantic_sqlalchemy

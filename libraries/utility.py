@@ -378,6 +378,9 @@ class Utility:
                 sys.stdout = old_stdout
 
     def write_text_to_file(self,output_file_name,output_string):
+        if not os.path.exists(os.path.dirname(output_file_name)):
+            os.makedirs(os.path.dirname(output_file_name))
+
         with open(output_file_name, "w") as outfile:
             outfile.write(output_string)
 

@@ -75,3 +75,24 @@ cp $of $cnctr_dir/$postsql1_sn.sh
 echo ""
 echo postsql1_up=$postsql1_up
 
+echo "************************"
+echo "Setting Up Fastapi connectors"
+echo "************************"
+config_file=$(pwd)/fastapi/finance/templates/connector.template
+
+of=$(pwd)/fastapi/finance/connector.py
+
+envsubst < $config_file > $of
+
+echo cf=$of
+
+export postsql1_apiport=$postsql1_apiport
+
+config_file=$(pwd)/fastapi/finance/templates/run.template
+
+of=$(pwd)/fastapi/finance/run.sh
+
+envsubst < $config_file > $of
+
+echo cf=$of
+
