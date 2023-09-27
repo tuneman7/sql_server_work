@@ -1,0 +1,2 @@
+#!/bin/bash
+sqlacodegen "postgresql://postgres:${postsql_pw}@${postsql_svr}/finance"  --outfile ${postsql1_apidir}/models.py
