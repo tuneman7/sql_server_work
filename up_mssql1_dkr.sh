@@ -73,7 +73,41 @@ envsubst < $config_file > $of
 echo cf=$of
 
 cat $of
-cp $of $cnctr_dir/$postsql1_sn.sh
+cp $of $cnctr_dir/$mssql1_sn.sh
 echo ""
+
+echo "************************"
+echo "Setting Up Fastapi connectors"
+echo "************************"
+config_file=$(pwd)/fastapi/products/templates/connector.template
+
+of=$(pwd)/fastapi/products/connector.py
+
+envsubst < $config_file > $of
+
+echo cf=$of
+chmod 777 $of
+
+export mssql1_apiport=$mssql1_apiport
+
+config_file=$(pwd)/fastapi/products/templates/genmodel.template
+
+of=$(pwd)/fastapi/products/genmodel.sh
+
+export mssql1_apidir=$mssql1_apidir
+
+envsubst < $config_file > $of
+
+echo cf=$of
+chmod 777 $of
+
+config_file=$(pwd)/fastapi/products/templates/run.template
+
+of=$(pwd)/fastapi/products/run.sh
+
+envsubst < $config_file > $of
+
+echo cf=$of
+chmod 777 $of
 
 

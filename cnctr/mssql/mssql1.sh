@@ -1,0 +1,1 @@
+sqlcmd -S 127.0.0.1 -U SA -P Python2028 -C

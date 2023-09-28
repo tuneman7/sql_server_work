@@ -85,8 +85,20 @@ of=$(pwd)/fastapi/finance/connector.py
 envsubst < $config_file > $of
 
 echo cf=$of
+chmod 777 $of
 
 export postsql1_apiport=$postsql1_apiport
+
+config_file=$(pwd)/fastapi/finance/templates/genmodel.template
+
+of=$(pwd)/fastapi/finance/genmodel.sh
+
+export postsql1_apidir=$postsql1_apidir
+
+envsubst < $config_file > $of
+
+echo cf=$of
+chmod 777 $of
 
 config_file=$(pwd)/fastapi/finance/templates/run.template
 
@@ -95,4 +107,5 @@ of=$(pwd)/fastapi/finance/run.sh
 envsubst < $config_file > $of
 
 echo cf=$of
+chmod 777 $of
 

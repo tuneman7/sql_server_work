@@ -7,7 +7,7 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[products](
-	[id] [int] IDENTITY(1,1) NOT NULL,
+	[id] [int] IDENTITY(1,1) PRIMARY KEY,
 	[product_name] [varchar](100) NULL,
 	[product_type_id] [int] NULL,
 	[created_by] [char](100) NULL DEFAULT system_user,
@@ -16,11 +16,6 @@ CREATE TABLE [dbo].[products](
 	[updated_dt] [datetime] NULL,
 	parent_product_id int NULL
 ) ON [PRIMARY]
-GO
-ALTER TABLE [dbo].[products] ADD PRIMARY KEY CLUSTERED 
-(
-	[id] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
 ALTER TABLE [dbo].[products] ADD  DEFAULT (getdate()) FOR [created_dt]
 GO

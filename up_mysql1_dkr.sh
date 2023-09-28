@@ -74,7 +74,42 @@ echo my_sql_up=$my_sql_up
 echo cf=$of
 
 cat $of
-cp $of $cnctr_dir/$postsql1_sn.sh
+cp $of $cnctr_dir/$mysql1_sn.sh
 echo ""
+
+
+echo "************************"
+echo "Setting Up Fastapi connectors"
+echo "************************"
+config_file=$(pwd)/fastapi/customers/templates/connector.template
+
+of=$(pwd)/fastapi/customers/connector.py
+
+envsubst < $config_file > $of
+
+echo cf=$of
+chmod 777 $of
+
+export mysql1_apiport=$mysql1_apiport
+
+config_file=$(pwd)/fastapi/customers/templates/genmodel.template
+
+of=$(pwd)/fastapi/customers/genmodel.sh
+
+export mysql1_apidir=$mysql1_apidir
+
+envsubst < $config_file > $of
+
+echo cf=$of
+chmod 777 $of
+
+config_file=$(pwd)/fastapi/customers/templates/run.template
+
+of=$(pwd)/fastapi/customers/run.sh
+
+envsubst < $config_file > $of
+
+echo cf=$of
+chmod 777 $of
 
 

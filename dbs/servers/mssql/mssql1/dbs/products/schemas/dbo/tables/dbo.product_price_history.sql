@@ -7,7 +7,7 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[product_price_history](
-	[id] [int] IDENTITY(1,1) NOT NULL,
+	[id] [int] IDENTITY(1,1) PRIMARY KEY,
 	product_id int not null,
 	usd_price money not null,
 	[pricing_start_dt] [datetime] not NULL,
@@ -17,11 +17,6 @@ CREATE TABLE [dbo].[product_price_history](
 	[updated_by] [char](100) NULL,
 	[updated_dt] [datetime] NULL
 ) ON [PRIMARY]
-GO
-ALTER TABLE [dbo].[product_price_history] ADD PRIMARY KEY CLUSTERED 
-(
-	[id] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
 ALTER TABLE product_price_history
 ADD CONSTRAINT FK_product_price_history_product

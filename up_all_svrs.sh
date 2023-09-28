@@ -116,9 +116,22 @@ echo "****************"
 echo "Trying to bring up pydantic models"
 echo "****************"
 
-sqlacodegen "postgresql://postgres:${postsql_pw}@${postsql_svr}/finance"  --outfile ${postsql1_apidir}/models.py
+# sqlacodegen "postgresql://postgres:${postsql_pw}@${postsql_svr}/finance"  --outfile ${postsql1_apidir}/models.py
 
-echo "python setup_dbs.py -a create_model_files -i ${postsql1_apidir}/models.py -o ${postsql1_apidir}/models"
-python setup_dbs.py -a create_model_files -i ${postsql1_apidir}/models.py -o ${postsql1_apidir}/models
-python setup_dbs.py -a create_model_files -i ${postsql1_apidir}/models
+# echo "python setup_dbs.py -a create_model_files -i ${postsql1_apidir}/models.py -o ${postsql1_apidir}/models"
+# python setup_dbs.py -a create_model_files -i ${postsql1_apidir}/models.py -o ${postsql1_apidir}/models
+# python setup_dbs.py -a create_model_files -i ${postsql1_apidir}/models
+
+    for u_c in "${a_gen_models[@]}"
+    do
+        echo "#!/bin/bash">my_runner.sh
+        echo "$u_c">>my_runner.sh
+        chmod 777 my_runner.sh
+        . my_runner.sh >/dev/null
+        #add return code to array
+        s_up+=($?)
+
+    done
+    rm my_runner.sh
+
 

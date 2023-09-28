@@ -15,433 +15,204 @@ Base.metadata.create_all(bind=engine)
 # FastAPI app
 app = FastAPI()
 
-# Create
-@app.post("/fin_account_activity/")
-def create_fin_account_activity(fin_account_activity: dict, db: Session = Depends(get_db)):
-    db_fin_account_activity = FinAccountActivity(**fin_account_activity)
-    db.add(db_fin_account_activity)
+# Create a ProductType entry
+@app.post("/product_type/")
+def create_product_type(product_type: ProductType, db: Session = Depends(get_db)):
+    db.add(product_type)
     db.commit()
-    db.refresh(db_fin_account_activity)
-    return db_fin_account_activity
+    db.refresh(product_type)
+    return product_type
 
-# Read
-@app.get("/fin_account_activity/{id}")
-def read_fin_account_activity(id: int, db: Session = Depends(get_db)):
-    fin_account_activity = db.query(FinAccountActivity).filter(FinAccountActivity.id == id).first()
-    if fin_account_activity is None:
-        raise HTTPException(status_code=404, detail="FinAccountActivity not found")
-    return fin_account_activity
+# Retrieve a ProductType entry by ID
+@app.get("/product_type/{product_type_id}/")
+def read_product_type(product_type_id: int, db: Session = Depends(get_db)):
+    product_type = db.query(ProductType).filter(ProductType.id == product_type_id).first()
+    if product_type is None:
+        raise HTTPException(status_code=404, detail="ProductType not found")
+    return product_type
 
-# Update
-@app.put("/fin_account_activity/{id}")
-def update_fin_account_activity(id: int, fin_account_activity: dict, db: Session = Depends(get_db)):
-    db_fin_account_activity = db.query(FinAccountActivity).filter(FinAccountActivity.id == id).first()
-    if db_fin_account_activity is None:
-        raise HTTPException(status_code=404, detail="FinAccountActivity not found")
+# Retrieve all ProductType entries
+@app.get("/product_type/")
+def read_product_types(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
+    product_types = db.query(ProductType).offset(skip).limit(limit).all()
+    return product_types
 
-    for key, value in fin_account_activity.items():
-        setattr(db_fin_account_activity, key, value)
-
+# Update a ProductType entry by ID
+@app.put("/product_type/{product_type_id}/")
+def update_product_type(product_type_id: int, product_type: ProductType, db: Session = Depends(get_db)):
+    db_product_type = db.query(ProductType).filter(ProductType.id == product_type_id).first()
+    if db_product_type is None:
+        raise HTTPException(status_code=404, detail="ProductType not found")
+    
+    db_product_type.product_type_desc = product_type.product_type_desc
+    db_product_type.update_dt = product_type.update_dt
+    db_product_type.updated_by = product_type.updated_by
     db.commit()
-    db.refresh(db_fin_account_activity)
-    return db_fin_account_activity
+    db.refresh(db_product_type)
+    return db_product_type
 
-# Delete
-@app.delete("/fin_account_activity/{id}")
-def delete_fin_account_activity(id: int, db: Session = Depends(get_db)):
-    fin_account_activity = db.query(FinAccountActivity).filter(FinAccountActivity.id == id).first()
-    if fin_account_activity is None:
-        raise HTTPException(status_code=404, detail="FinAccountActivity not found")
-
-    db.delete(fin_account_activity)
+# Delete a ProductType entry by ID
+@app.delete("/product_type/{product_type_id}/")
+def delete_product_type(product_type_id: int, db: Session = Depends(get_db)):
+    product_type = db.query(ProductType).filter(ProductType.id == product_type_id).first()
+    if product_type is None:
+        raise HTTPException(status_code=404, detail="ProductType not found")
+    
+    db.delete(product_type)
     db.commit()
-    return fin_account_activity
+    return product_type
 
-# List
-@app.get("/fin_account_activity/")
-def list_fin_account_activities(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
-    fin_account_activities = db.query(FinAccountActivity).offset(skip).limit(limit).all()
-    return fin_account_activities
-
-
-
-# Create
-@app.post("/fin_distro_channel_group/")
-def create_fin_distro_channel_group(fin_distro_channel_group: dict, db: Session = Depends(get_db)):
-    db_fin_distro_channel_group = FinDistroChannelGroup(**fin_distro_channel_group)
-    db.add(db_fin_distro_channel_group)
+# Create a Products entry
+@app.post("/products/")
+def create_products(products: Products, db: Session = Depends(get_db)):
+    db.add(products)
     db.commit()
-    db.refresh(db_fin_distro_channel_group)
-    return db_fin_distro_channel_group
+    db.refresh(products)
+    return products
 
-# Read
-@app.get("/fin_distro_channel_group/{id}")
-def read_fin_distro_channel_group(id: int, db: Session = Depends(get_db)):
-    fin_distro_channel_group = db.query(FinDistroChannelGroup).filter(FinDistroChannelGroup.id == id).first()
-    if fin_distro_channel_group is None:
-        raise HTTPException(status_code=404, detail="FinDistroChannelGroup not found")
-    return fin_distro_channel_group
+# Retrieve a Products entry by ID
+@app.get("/products/{product_id}/")
+def read_products(product_id: int, db: Session = Depends(get_db)):
+    products = db.query(Products).filter(Products.id == product_id).first()
+    if products is None:
+        raise HTTPException(status_code=404, detail="Products not found")
+    return products
 
-# Update
-@app.put("/fin_distro_channel_group/{id}")
-def update_fin_distro_channel_group(id: int, fin_distro_channel_group: dict, db: Session = Depends(get_db)):
-    db_fin_distro_channel_group = db.query(FinDistroChannelGroup).filter(FinDistroChannelGroup.id == id).first()
-    if db_fin_distro_channel_group is None:
-        raise HTTPException(status_code=404, detail="FinDistroChannelGroup not found")
+# Retrieve all Products entries
+@app.get("/products/")
+def read_all_products(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
+    products = db.query(Products).offset(skip).limit(limit).all()
+    return products
 
-    for key, value in fin_distro_channel_group.items():
-        setattr(db_fin_distro_channel_group, key, value)
-
+# Update a Products entry by ID
+@app.put("/products/{product_id}/")
+def update_products(product_id: int, products: Products, db: Session = Depends(get_db)):
+    db_products = db.query(Products).filter(Products.id == product_id).first()
+    if db_products is None:
+        raise HTTPException(status_code=404, detail="Products not found")
+    
+    db_products.product_name = products.product_name
+    db_products.product_type_id = products.product_type_id
+    db_products.created_by = products.created_by
+    db_products.created_dt = products.created_dt
+    db_products.updated_by = products.updated_by
+    db_products.updated_dt = products.updated_dt
+    db_products.parent_product_id = products.parent_product_id
     db.commit()
-    db.refresh(db_fin_distro_channel_group)
-    return db_fin_distro_channel_group
+    db.refresh(db_products)
+    return db_products
 
-# Delete
-@app.delete("/fin_distro_channel_group/{id}")
-def delete_fin_distro_channel_group(id: int, db: Session = Depends(get_db)):
-    fin_distro_channel_group = db.query(FinDistroChannelGroup).filter(FinDistroChannelGroup.id == id).first()
-    if fin_distro_channel_group is None:
-        raise HTTPException(status_code=404, detail="FinDistroChannelGroup not found")
-
-    db.delete(fin_distro_channel_group)
+# Delete a Products entry by ID
+@app.delete("/products/{product_id}/")
+def delete_products(product_id: int, db: Session = Depends(get_db)):
+    products = db.query(Products).filter(Products.id == product_id).first()
+    if products is None:
+        raise HTTPException(status_code=404, detail="Products not found")
+    
+    db.delete(products)
     db.commit()
-    return fin_distro_channel_group
+    return products
 
-# List
-@app.get("/fin_distro_channel_group/")
-def list_fin_distro_channel_groups(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
-    fin_distro_channel_groups = db.query(FinDistroChannelGroup).offset(skip).limit(limit).all()
-    return fin_distro_channel_groups
-
-# Create
-@app.post("/fin_distro_channel/")
-def create_fin_distro_channel(fin_distro_channel: dict, db: Session = Depends(get_db)):
-    db_fin_distro_channel = FinDistroChannel(**fin_distro_channel)
-    db.add(db_fin_distro_channel)
+# Create a ProductPrice entry
+@app.post("/product_price/")
+def create_product_price(product_price: ProductPrice, db: Session = Depends(get_db)):
+    db.add(product_price)
     db.commit()
-    db.refresh(db_fin_distro_channel)
-    return db_fin_distro_channel
+    db.refresh(product_price)
+    return product_price
 
-# Read
-@app.get("/fin_distro_channel/{id}")
-def read_fin_distro_channel(id: int, db: Session = Depends(get_db)):
-    fin_distro_channel = db.query(FinDistroChannel).filter(FinDistroChannel.id == id).first()
-    if fin_distro_channel is None:
-        raise HTTPException(status_code=404, detail="FinDistroChannel not found")
-    return fin_distro_channel
+# Retrieve a ProductPrice entry by ID
+@app.get("/product_price/{product_price_id}/")
+def read_product_price(product_price_id: int, db: Session = Depends(get_db)):
+    product_price = db.query(ProductPrice).filter(ProductPrice.id == product_price_id).first()
+    if product_price is None:
+        raise HTTPException(status_code=404, detail="ProductPrice not found")
+    return product_price
 
-# Update
-@app.put("/fin_distro_channel/{id}")
-def update_fin_distro_channel(id: int, fin_distro_channel: dict, db: Session = Depends(get_db)):
-    db_fin_distro_channel = db.query(FinDistroChannel).filter(FinDistroChannel.id == id).first()
-    if db_fin_distro_channel is None:
-        raise HTTPException(status_code=404, detail="FinDistroChannel not found")
+# Retrieve all ProductPrice entries
+@app.get("/product_price/")
+def read_all_product_price(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
+    product_prices = db.query(ProductPrice).offset(skip).limit(limit).all()
+    return product_prices
 
-    for key, value in fin_distro_channel.items():
-        setattr(db_fin_distro_channel, key, value)
-
+# Update a ProductPrice entry by ID
+@app.put("/product_price/{product_price_id}/")
+def update_product_price(product_price_id: int, product_price: ProductPrice, db: Session = Depends(get_db)):
+    db_product_price = db.query(ProductPrice).filter(ProductPrice.id == product_price_id).first()
+    if db_product_price is None:
+        raise HTTPException(status_code=404, detail="ProductPrice not found")
+    
+    db_product_price.product_id = product_price.product_id
+    db_product_price.usd_price = product_price.usd_price
+    db_product_price.pricing_start_dt = product_price.pricing_start_dt
+    db_product_price.pricing_end_dt = product_price.pricing_end_dt
+    db_product_price.created_by = product_price.created_by
+    db_product_price.created_dt = product_price.created_dt
+    db_product_price.updated_by = product_price.updated_by
+    db_product_price.updated_dt = product_price.updated_dt
     db.commit()
-    db.refresh(db_fin_distro_channel)
-    return db_fin_distro_channel
+    db.refresh(db_product_price)
+    return db_product_price
 
-# Delete
-@app.delete("/fin_distro_channel/{id}")
-def delete_fin_distro_channel(id: int, db: Session = Depends(get_db)):
-    fin_distro_channel = db.query(FinDistroChannel).filter(FinDistroChannel.id == id).first()
-    if fin_distro_channel is None:
-        raise HTTPException(status_code=404, detail="FinDistroChannel not found")
-
-    db.delete(fin_distro_channel)
+# Delete a ProductPrice entry by ID
+@app.delete("/product_price/{product_price_id}/")
+def delete_product_price(product_price_id: int, db: Session = Depends(get_db)):
+    product_price = db.query(ProductPrice).filter(ProductPrice.id == product_price_id).first()
+    if product_price is None:
+        raise HTTPException(status_code=404, detail="ProductPrice not found")
+    
+    db.delete(product_price)
     db.commit()
-    return fin_distro_channel
+    return product_price
 
-# List
-@app.get("/fin_distro_channel/")
-def list_fin_distro_channels(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
-    fin_distro_channels = db.query(FinDistroChannel).offset(skip).limit(limit).all()
-    return fin_distro_channels
-
-
-# Create
-@app.post("/fin_distro_partner/")
-def create_fin_distro_partner(fin_distro_partner: dict, db: Session = Depends(get_db)):
-    db_fin_distro_partner = FinDistroPartner(**fin_distro_partner)
-    db.add(db_fin_distro_partner)
+# Create a ProductPriceHistory entry
+@app.post("/product_price_history/")
+def create_product_price_history(product_price_history: ProductPriceHistory, db: Session = Depends(get_db)):
+    db.add(product_price_history)
     db.commit()
-    db.refresh(db_fin_distro_partner)
-    return db_fin_distro_partner
+    db.refresh(product_price_history)
+    return product_price_history
 
-# Read
-@app.get("/fin_distro_partner/{id}")
-def read_fin_distro_partner(id: int, db: Session = Depends(get_db)):
-    fin_distro_partner = db.query(FinDistroPartner).filter(FinDistroPartner.id == id).first()
-    if fin_distro_partner is None:
-        raise HTTPException(status_code=404, detail="FinDistroPartner not found")
-    return fin_distro_partner
+# Retrieve a ProductPriceHistory entry by ID
+@app.get("/product_price_history/{product_price_history_id}/")
+def read_product_price_history(product_price_history_id: int, db: Session = Depends(get_db)):
+    product_price_history = db.query(ProductPriceHistory).filter(ProductPriceHistory.id == product_price_history_id).first()
+    if product_price_history is None:
+        raise HTTPException(status_code=404, detail="ProductPriceHistory not found")
+    return product_price_history
 
-# Update
-@app.put("/fin_distro_partner/{id}")
-def update_fin_distro_partner(id: int, fin_distro_partner: dict, db: Session = Depends(get_db)):
-    db_fin_distro_partner = db.query(FinDistroPartner).filter(FinDistroPartner.id == id).first()
-    if db_fin_distro_partner is None:
-        raise HTTPException(status_code=404, detail="FinDistroPartner not found")
+# Retrieve all ProductPriceHistory entries
+@app.get("/product_price_history/")
+def read_all_product_price_history(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
+    product_price_histories = db.query(ProductPriceHistory).offset(skip).limit(limit).all()
+    return product_price_histories
 
-    for key, value in fin_distro_partner.items():
-        setattr(db_fin_distro_partner, key, value)
-
+# Update a ProductPriceHistory entry by ID
+@app.put("/product_price_history/{product_price_history_id}/")
+def update_product_price_history(product_price_history_id: int, product_price_history: ProductPriceHistory, db: Session = Depends(get_db)):
+    db_product_price_history = db.query(ProductPriceHistory).filter(ProductPriceHistory.id == product_price_history_id).first()
+    if db_product_price_history is None:
+        raise HTTPException(status_code=404, detail="ProductPriceHistory not found")
+    
+    db_product_price_history.product_id = product_price_history.product_id
+    db_product_price_history.usd_price = product_price_history.usd_price
+    db_product_price_history.pricing_start_dt = product_price_history.pricing_start_dt
+    db_product_price_history.pricing_end_dt = product_price_history.pricing_end_dt
+    db_product_price_history.created_by = product_price_history.created_by
+    db_product_price_history.created_dt = product_price_history.created_dt
+    db_product_price_history.updated_by = product_price_history.updated_by
+    db_product_price_history.updated_dt = product_price_history.updated_dt
     db.commit()
-    db.refresh(db_fin_distro_partner)
-    return db_fin_distro_partner
+    db.refresh(db_product_price_history)
+    return db_product_price_history
 
-# Delete
-@app.delete("/fin_distro_partner/{id}")
-def delete_fin_distro_partner(id: int, db: Session = Depends(get_db)):
-    fin_distro_partner = db.query(FinDistroPartner).filter(FinDistroPartner.id == id).first()
-    if fin_distro_partner is None:
-        raise HTTPException(status_code=404, detail="FinDistroPartner not found")
-
-    db.delete(fin_distro_partner)
+# Delete a ProductPriceHistory entry by ID
+@app.delete("/product_price_history/{product_price_history_id}/")
+def delete_product_price_history(product_price_history_id: int, db: Session = Depends(get_db)):
+    product_price_history = db.query(ProductPriceHistory).filter(ProductPriceHistory.id == product_price_history_id).first()
+    if product_price_history is None:
+        raise HTTPException(status_code=404, detail="ProductPriceHistory not found")
+    
+    db.delete(product_price_history)
     db.commit()
-    return fin_distro_partner
-
-# List
-@app.get("/fin_distro_partner/")
-def list_fin_distro_partners(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
-    fin_distro_partners = db.query(FinDistroPartner).offset(skip).limit(limit).all()
-    return fin_distro_partners
-
-
-# Create
-@app.post("/fin_gl_accounts/")
-def create_fin_gl_account(fin_gl_account: dict, db: Session = Depends(get_db)):
-    db_fin_gl_account = FinGlAccount(**fin_gl_account)
-    db.add(db_fin_gl_account)
-    db.commit()
-    db.refresh(db_fin_gl_account)
-    return db_fin_gl_account
-
-# Read
-@app.get("/fin_gl_accounts/{id}")
-def read_fin_gl_account(id: int, db: Session = Depends(get_db)):
-    fin_gl_account = db.query(FinGlAccount).filter(FinGlAccount.id == id).first()
-    if fin_gl_account is None:
-        raise HTTPException(status_code=404, detail="FinGlAccount not found")
-    return fin_gl_account
-
-# Update
-@app.put("/fin_gl_accounts/{id}")
-def update_fin_gl_account(id: int, fin_gl_account: dict, db: Session = Depends(get_db)):
-    db_fin_gl_account = db.query(FinGlAccount).filter(FinGlAccount.id == id).first()
-    if db_fin_gl_account is None:
-        raise HTTPException(status_code=404, detail="FinGlAccount not found")
-
-    for key, value in fin_gl_account.items():
-        setattr(db_fin_gl_account, key, value)
-
-    db.commit()
-    db.refresh(db_fin_gl_account)
-    return db_fin_gl_account
-
-# Delete
-@app.delete("/fin_gl_accounts/{id}")
-def delete_fin_gl_account(id: int, db: Session = Depends(get_db)):
-    fin_gl_account = db.query(FinGlAccount).filter(FinGlAccount.id == id).first()
-    if fin_gl_account is None:
-        raise HTTPException(status_code=404, detail="FinGlAccount not found")
-
-    db.delete(fin_gl_account)
-    db.commit()
-    return fin_gl_account
-
-# List
-@app.get("/fin_gl_accounts/")
-def list_fin_gl_accounts(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
-    fin_gl_accounts = db.query(FinGlAccount).offset(skip).limit(limit).all()
-    return fin_gl_accounts
-
-
-@app.post("/geo_city_population/")
-def create_geo_city_population(geo_city_population: dict, db: Session = Depends(get_db)):
-    db_geo_city_population = GeoCityPopulation(**geo_city_population)
-    db.add(db_geo_city_population)
-    db.commit()
-    db.refresh(db_geo_city_population)
-    return db_geo_city_population
-
-# Read
-@app.get("/geo_city_population/{id}")
-def read_geo_city_population(id: int, db: Session = Depends(get_db)):
-    geo_city_population = db.query(GeoCityPopulation).filter(GeoCityPopulation.id == id).first()
-    if geo_city_population is None:
-        raise HTTPException(status_code=404, detail="GeoCityPopulation not found")
-    return geo_city_population
-
-# Update
-@app.put("/geo_city_population/{id}")
-def update_geo_city_population(id: int, geo_city_population: dict, db: Session = Depends(get_db)):
-    db_geo_city_population = db.query(GeoCityPopulation).filter(GeoCityPopulation.id == id).first()
-    if db_geo_city_population is None:
-        raise HTTPException(status_code=404, detail="GeoCityPopulation not found")
-
-    for key, value in geo_city_population.items():
-        setattr(db_geo_city_population, key, value)
-
-    db.commit()
-    db.refresh(db_geo_city_population)
-    return db_geo_city_population
-
-# Delete
-@app.delete("/geo_city_population/{id}")
-def delete_geo_city_population(id: int, db: Session = Depends(get_db)):
-    geo_city_population = db.query(GeoCityPopulation).filter(GeoCityPopulation.id == id).first()
-    if geo_city_population is None:
-        raise HTTPException(status_code=404, detail="GeoCityPopulation not found")
-
-    db.delete(geo_city_population)
-    db.commit()
-    return geo_city_population
-
-# List
-@app.get("/geo_city_population/")
-def list_geo_city_population(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
-    geo_city_populations = db.query(GeoCityPopulation).offset(skip).limit(limit).all()
-    return geo_city_populations
-
-
-
-# Create
-@app.post("/geo_geography/")
-def create_geo_geography(geo_geography: dict, db: Session = Depends(get_db)):
-    db_geo_geography = GeoGeography(**geo_geography)
-    db.add(db_geo_geography)
-    db.commit()
-    db.refresh(db_geo_geography)
-    return db_geo_geography
-
-# Read
-@app.get("/geo_geography/{id}")
-def read_geo_geography(id: int, db: Session = Depends(get_db)):
-    geo_geography = db.query(GeoGeography).filter(GeoGeography.id == id).first()
-    if geo_geography is None:
-        raise HTTPException(status_code=404, detail="GeoGeography not found")
-    return geo_geography
-
-# Update
-@app.put("/geo_geography/{id}")
-def update_geo_geography(id: int, geo_geography: dict, db: Session = Depends(get_db)):
-    db_geo_geography = db.query(GeoGeography).filter(GeoGeography.id == id).first()
-    if db_geo_geography is None:
-        raise HTTPException(status_code=404, detail="GeoGeography not found")
-
-    for key, value in geo_geography.items():
-        setattr(db_geo_geography, key, value)
-
-    db.commit()
-    db.refresh(db_geo_geography)
-    return db_geo_geography
-
-# Delete
-@app.delete("/geo_geography/{id}")
-def delete_geo_geography(id: int, db: Session = Depends(get_db)):
-    geo_geography = db.query(GeoGeography).filter(GeoGeography.id == id).first()
-    if geo_geography is None:
-        raise HTTPException(status_code=404, detail="GeoGeography not found")
-
-    db.delete(geo_geography)
-    db.commit()
-    return geo_geography
-
-# List
-@app.get("/geo_geography/")
-def list_geo_geography(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
-    geo_geographies = db.query(GeoGeography).offset(skip).limit(limit).all()
-    return geo_geographies
-
-
-# Create
-@app.post("/geo_population_by_postalcode/")
-def create_geo_population(geo_data: dict, db: Session = Depends(get_db)):
-    insert_stmt = t_geo_population_by_postalcode.insert().values(**geo_data)
-    db.execute(insert_stmt)
-    db.commit()
-    return geo_data
-
-# Read
-@app.get("/geo_population_by_postalcode/{postalcode}")
-def read_geo_population(postalcode: str, db: Session = Depends(get_db)):
-    select_stmt = select([t_geo_population_by_postalcode]).where(t_geo_population_by_postalcode.c.postalcode == postalcode)
-    result = db.execute(select_stmt).first()
-    if result is None:
-        raise HTTPException(status_code=404, detail="GeoPopulationByPostalcode not found")
-    return dict(result)
-
-# Update
-@app.put("/geo_population_by_postalcode/{postalcode}")
-def update_geo_population(postalcode: str, geo_data: dict, db: Session = Depends(get_db)):
-    update_stmt = t_geo_population_by_postalcode.update().where(t_geo_population_by_postalcode.c.postalcode == postalcode).values(**geo_data)
-    result = db.execute(update_stmt)
-    if result.rowcount == 0:
-        raise HTTPException(status_code=404, detail="GeoPopulationByPostalcode not found")
-    db.commit()
-    return geo_data
-
-# Delete
-@app.delete("/geo_population_by_postalcode/{postalcode}")
-def delete_geo_population(postalcode: str, db: Session = Depends(get_db)):
-    delete_stmt = t_geo_population_by_postalcode.delete().where(t_geo_population_by_postalcode.c.postalcode == postalcode)
-    result = db.execute(delete_stmt)
-    if result.rowcount == 0:
-        raise HTTPException(status_code=404, detail="GeoPopulationByPostalcode not found")
-    db.commit()
-    return {"message": "GeoPopulationByPostalcode deleted"}
-
-# List
-@app.get("/geo_population_by_postalcode/")
-def list_geo_population(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
-    select_stmt = select([t_geo_population_by_postalcode]).offset(skip).limit(limit)
-    result = db.execute(select_stmt).fetchall()
-    return [dict(row) for row in result]
-
-# Create
-@app.post("/geo_postalcode_to_county_state/")
-def create_geo_postalcode(data: dict, db: Session = Depends(get_db)):
-    insert_stmt = t_geo_postalcode_to_county_state.insert().values(**data)
-    db.execute(insert_stmt)
-    db.commit()
-    return data
-
-# Read
-@app.get("/geo_postalcode_to_county_state/{postalcode}")
-def read_geo_postalcode(postalcode: str, db: Session = Depends(get_db)):
-    select_stmt = select([t_geo_postalcode_to_county_state]).where(t_geo_postalcode_to_county_state.c.postalcode == postalcode)
-    result = db.execute(select_stmt).first()
-    if result is None:
-        raise HTTPException(status_code=404, detail="GeoPostalcodeToCountyState not found")
-    return dict(result)
-
-# Update
-@app.put("/geo_postalcode_to_county_state/{postalcode}")
-def update_geo_postalcode(postalcode: str, data: dict, db: Session = Depends(get_db)):
-    update_stmt = t_geo_postalcode_to_county_state.update().where(t_geo_postalcode_to_county_state.c.postalcode == postalcode).values(**data)
-    result = db.execute(update_stmt)
-    if result.rowcount == 0:
-        raise HTTPException(status_code=404, detail="GeoPostalcodeToCountyState not found")
-    db.commit()
-    return data
-
-# Delete
-@app.delete("/geo_postalcode_to_county_state/{postalcode}")
-def delete_geo_postalcode(postalcode: str, db: Session = Depends(get_db)):
-    delete_stmt = t_geo_postalcode_to_county_state.delete().where(t_geo_postalcode_to_county_state.c.postalcode == postalcode)
-    result = db.execute(delete_stmt)
-    if result.rowcount == 0:
-        raise HTTPException(status_code=404, detail="GeoPostalcodeToCountyState not found")
-    db.commit()
-    return {"message": "GeoPostalcodeToCountyState deleted"}
-
-# List
-@app.get("/geo_postalcode_to_county_state/")
-def list_geo_postalcode(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
-    select_stmt = select([t_geo_postalcode_to_county_state]).offset(skip).limit(limit)
-    result = db.execute(select_stmt).fetchall()
-    return [dict(row) for row in result]
+    return product_price_history

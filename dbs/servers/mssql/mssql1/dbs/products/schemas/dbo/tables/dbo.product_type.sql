@@ -7,18 +7,13 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[product_type](
-	[id] [int] IDENTITY(1,1) NOT NULL,
+	[id] [int] IDENTITY(1,1) PRIMARY KEY,
 	[product_type_desc] [char](100) NULL,
 	[create_dt] [datetime] default GETDATE(),
 	[created_by] [char](100) default SYSTEM_USER,
 	[update_dt] [datetime] NULL,
 	[updated_by] [char](100) NULL
 ) ON [PRIMARY]
-GO
-ALTER TABLE [dbo].[product_type] ADD PRIMARY KEY CLUSTERED 
-(
-	[id] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
 
 -- Create a trigger on the 'product_type' table

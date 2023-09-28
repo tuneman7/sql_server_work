@@ -29,7 +29,7 @@ mysql1_port=3306
 mysql1_sn=127.0.0.1
 mysql1_up="mysql -h ${mysql1_sn} -u root -p'${mysql1_pwd}' -e'SHOW PROCESSLIST' 2>/dev/null"
 mysql1_apiport=8024
-mysql1_apidir=$(pwd)/fastapi/customer
+mysql1_apidir=$(pwd)/fastapi/customers
 
 #postgress
 postsql1_name=postsql1
@@ -61,8 +61,16 @@ a_sql_dkr_img=($mssql1_name)
 a_sql_dkr_img+=($mysql1_name)
 a_sql_dkr_img+=($postsql1_name)
 
+#array of commands to check for sql server to be up
 a_sql_inline_command=("${mssql1_up}")
 a_sql_inline_command+=("${mysql1_up}")
 a_sql_inline_command+=("${postsql1_up}")
 
+#array of commands to generate models from databases
+of=$(pwd)/fastapi/products/genmodel.sh
+a_gen_models=("${of}")
+of=$(pwd)/fastapi/finance/genmodel.sh
+a_gen_models+=("${of}")
+of=$(pwd)/fastapi/customers/genmodel.sh
+a_gen_models+=("${of}")
 

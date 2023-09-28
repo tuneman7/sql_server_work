@@ -3,7 +3,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 
 
-DATABASE_URL = "postgresql://postgres:Python2028@127.0.0.1/finance"
+DATABASE_URL = "mssql+pyodbc://sa:Python2028@127.0.0.1/products?driver=ODBC+Driver+18+for+SQL+Server&TrustServerCertificate=yes"
 
 # SQLAlchemy
 engine = create_engine(DATABASE_URL)

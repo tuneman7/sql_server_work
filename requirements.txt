@@ -73,5 +73,5 @@ sqlalchemy
 databases
 psycopg2-binary
 asyncpg
-sqlacodegen
+sqlacodegen==3.0.0b2
 pydantic_sqlalchemy

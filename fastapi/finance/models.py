@@ -1,7 +1,6 @@
-# coding: utf-8
 from sqlalchemy import CHAR, Column, DateTime, Integer, String, Table, text
 from sqlalchemy.dialects.postgresql import MONEY
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import declarative_base
 
 Base = declarative_base()
 metadata = Base.metadata
@@ -12,15 +11,15 @@ class FinAccountActivity(Base):
 
     id = Column(Integer, primary_key=True, server_default=text("nextval('fin_account_activity_id_seq'::regclass)"))
     product_id = Column(Integer, nullable=False)
-    customer_id = Column(Integer)
     account_id = Column(Integer, nullable=False)
-    post_date = Column(DateTime, server_default=text("CURRENT_TIMESTAMP"))
+    customer_id = Column(Integer)
+    post_date = Column(DateTime, server_default=text('CURRENT_TIMESTAMP'))
     amt_usd = Column(MONEY)
     geo_geography_id = Column(Integer)
     fin_distro_channel_id = Column(Integer)
     fin_distro_partner_id = Column(Integer)
     created_by = Column(CHAR(100))
-    created_dt = Column(DateTime, server_default=text("CURRENT_TIMESTAMP"))
+    created_dt = Column(DateTime, server_default=text('CURRENT_TIMESTAMP'))
     updated_by = Column(CHAR(100))
     updated_dt = Column(DateTime)
 
@@ -32,7 +31,7 @@ class FinDistroChannel(Base):
     chnl_cd = Column(CHAR(15))
     channel_desc = Column(CHAR(400))
     created_by = Column(CHAR(100))
-    created_dt = Column(DateTime, server_default=text("CURRENT_TIMESTAMP"))
+    created_dt = Column(DateTime, server_default=text('CURRENT_TIMESTAMP'))
     updated_by = Column(CHAR(100))
     updated_dt = Column(DateTime)
 
@@ -44,7 +43,7 @@ class FinDistroChannelGroup(Base):
     group_desc = Column(CHAR(400))
     fin_distro_channel_id = Column(Integer)
     created_by = Column(CHAR(100))
-    created_dt = Column(DateTime, server_default=text("CURRENT_TIMESTAMP"))
+    created_dt = Column(DateTime, server_default=text('CURRENT_TIMESTAMP'))
     updated_by = Column(CHAR(100))
     updated_dt = Column(DateTime)
 
@@ -55,12 +54,12 @@ class FinDistroPartner(Base):
     id = Column(Integer, primary_key=True, server_default=text("nextval('fin_distro_partner_id_seq'::regclass)"))
     partner_desc = Column(CHAR(200), nullable=False)
     created_by = Column(CHAR(100))
-    created_dt = Column(DateTime, server_default=text("CURRENT_TIMESTAMP"))
+    created_dt = Column(DateTime, server_default=text('CURRENT_TIMESTAMP'))
     updated_by = Column(CHAR(100))
     updated_dt = Column(DateTime)
 
 
-class FinGlAccount(Base):
+class FinGlAccounts(Base):
     __tablename__ = 'fin_gl_accounts'
 
     id = Column(Integer, primary_key=True, server_default=text("nextval('fin_gl_accounts_id_seq'::regclass)"))
@@ -68,7 +67,7 @@ class FinGlAccount(Base):
     account_name = Column(String(255), nullable=False)
     account_type = Column(String(50), nullable=False)
     created_by = Column(CHAR(100))
-    created_dt = Column(DateTime, server_default=text("CURRENT_TIMESTAMP"))
+    created_dt = Column(DateTime, server_default=text('CURRENT_TIMESTAMP'))
     updated_by = Column(CHAR(100))
     updated_dt = Column(DateTime)
 
@@ -91,7 +90,7 @@ class GeoGeography(Base):
     location_name = Column(String(100))
     msa = Column(String(100))
     created_by = Column(CHAR(100))
-    created_dt = Column(DateTime, server_default=text("CURRENT_TIMESTAMP"))
+    created_dt = Column(DateTime, server_default=text('CURRENT_TIMESTAMP'))
     updated_by = Column(CHAR(100))
     updated_dt = Column(DateTime)
 

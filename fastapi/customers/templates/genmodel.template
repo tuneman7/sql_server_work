@@ -1,2 +1,2 @@
 #!/bin/bash
-sqlacodegen "postgresql://postgres:${postsql_pw}@${postsql_svr}/finance"  --outfile ${postsql1_apidir}/models.py
+sqlacodegen "mysql+mysqlconnector://root:${mysql_pw}@${mysql_svr}/customers"  --outfile ${mysql1_apidir}/models.py

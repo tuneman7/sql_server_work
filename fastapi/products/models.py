@@ -1,113 +1,64 @@
-# coding: utf-8
-from sqlalchemy import CHAR, Column, DateTime, Integer, String, Table, text
-from sqlalchemy.dialects.postgresql import MONEY
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import CHAR, Column, DateTime, ForeignKey, Identity, Integer, String, text
+from sqlalchemy.dialects.mssql import MONEY
+from sqlalchemy.orm import declarative_base, relationship
 
 Base = declarative_base()
-metadata = Base.metadata
 
 
-class FinAccountActivity(Base):
-    __tablename__ = 'fin_account_activity'
+class ProductType(Base):
+    __tablename__ = 'product_type'
 
-    id = Column(Integer, primary_key=True, server_default=text("nextval('fin_account_activity_id_seq'::regclass)"))
-    product_id = Column(Integer, nullable=False)
-    customer_id = Column(Integer)
-    account_id = Column(Integer, nullable=False)
-    post_date = Column(DateTime, server_default=text("CURRENT_TIMESTAMP"))
-    amt_usd = Column(MONEY)
-    geo_geography_id = Column(Integer)
-    fin_distro_channel_id = Column(Integer)
-    fin_distro_partner_id = Column(Integer)
-    created_by = Column(CHAR(100))
-    created_dt = Column(DateTime, server_default=text("CURRENT_TIMESTAMP"))
-    updated_by = Column(CHAR(100))
+    id = Column(Integer, Identity(start=1, increment=1), primary_key=True)
+    product_type_desc = Column(CHAR(100, 'SQL_Latin1_General_CP1_CI_AS'))
+    create_dt = Column(DateTime, server_default=text('(getdate())'))
+    created_by = Column(CHAR(100, 'SQL_Latin1_General_CP1_CI_AS'), server_default=text('(suser_sname())'))
+    update_dt = Column(DateTime)
+    updated_by = Column(CHAR(100, 'SQL_Latin1_General_CP1_CI_AS'))
+
+
+class Products(Base):
+    __tablename__ = 'products'
+
+    id = Column(Integer, Identity(start=1, increment=1), primary_key=True)
+    product_name = Column(String(100, 'SQL_Latin1_General_CP1_CI_AS'))
+    product_type_id = Column(Integer)
+    created_by = Column(CHAR(100, 'SQL_Latin1_General_CP1_CI_AS'), server_default=text('(suser_sname())'))
+    created_dt = Column(DateTime, server_default=text('(getdate())'))
+    updated_by = Column(CHAR(100, 'SQL_Latin1_General_CP1_CI_AS'))
+    updated_dt = Column(DateTime)
+    parent_product_id = Column(Integer)
+
+    product_price = relationship('ProductPrice', back_populates='product')
+    product_price_history = relationship('ProductPriceHistory', back_populates='product')
+
+
+class ProductPrice(Base):
+    __tablename__ = 'product_price'
+
+    id = Column(Integer, Identity(start=1, increment=1), primary_key=True)
+    product_id = Column(ForeignKey('products.id'), nullable=False)
+    usd_price = Column(MONEY, nullable=False)
+    pricing_start_dt = Column(DateTime, nullable=False)
+    pricing_end_dt = Column(DateTime, nullable=False)
+    created_by = Column(CHAR(100, 'SQL_Latin1_General_CP1_CI_AS'), server_default=text('(suser_sname())'))
+    created_dt = Column(DateTime, server_default=text('(getdate())'))
+    updated_by = Column(CHAR(100, 'SQL_Latin1_General_CP1_CI_AS'))
     updated_dt = Column(DateTime)
 
+    product = relationship('Products', back_populates='product_price')
 
-class FinDistroChannel(Base):
-    __tablename__ = 'fin_distro_channel'
 
-    id = Column(Integer, primary_key=True, server_default=text("nextval('fin_distro_channel_id_seq'::regclass)"))
-    chnl_cd = Column(CHAR(15))
-    channel_desc = Column(CHAR(400))
-    created_by = Column(CHAR(100))
-    created_dt = Column(DateTime, server_default=text("CURRENT_TIMESTAMP"))
-    updated_by = Column(CHAR(100))
+class ProductPriceHistory(Base):
+    __tablename__ = 'product_price_history'
+
+    id = Column(Integer, Identity(start=1, increment=1), primary_key=True)
+    product_id = Column(ForeignKey('products.id'), nullable=False)
+    usd_price = Column(MONEY, nullable=False)
+    pricing_start_dt = Column(DateTime, nullable=False)
+    pricing_end_dt = Column(DateTime, nullable=False)
+    created_by = Column(CHAR(100, 'SQL_Latin1_General_CP1_CI_AS'), server_default=text('(suser_sname())'))
+    created_dt = Column(DateTime, server_default=text('(getdate())'))
+    updated_by = Column(CHAR(100, 'SQL_Latin1_General_CP1_CI_AS'))
     updated_dt = Column(DateTime)
 
-
-class FinDistroChannelGroup(Base):
-    __tablename__ = 'fin_distro_channel_group'
-
-    id = Column(Integer, primary_key=True, server_default=text("nextval('fin_distro_channel_group_id_seq'::regclass)"))
-    group_desc = Column(CHAR(400))
-    fin_distro_channel_id = Column(Integer)
-    created_by = Column(CHAR(100))
-    created_dt = Column(DateTime, server_default=text("CURRENT_TIMESTAMP"))
-    updated_by = Column(CHAR(100))
-    updated_dt = Column(DateTime)
-
-
-class FinDistroPartner(Base):
-    __tablename__ = 'fin_distro_partner'
-
-    id = Column(Integer, primary_key=True, server_default=text("nextval('fin_distro_partner_id_seq'::regclass)"))
-    partner_desc = Column(CHAR(200), nullable=False)
-    created_by = Column(CHAR(100))
-    created_dt = Column(DateTime, server_default=text("CURRENT_TIMESTAMP"))
-    updated_by = Column(CHAR(100))
-    updated_dt = Column(DateTime)
-
-
-class FinGlAccount(Base):
-    __tablename__ = 'fin_gl_accounts'
-
-    id = Column(Integer, primary_key=True, server_default=text("nextval('fin_gl_accounts_id_seq'::regclass)"))
-    account_code = Column(String(20), nullable=False)
-    account_name = Column(String(255), nullable=False)
-    account_type = Column(String(50), nullable=False)
-    created_by = Column(CHAR(100))
-    created_dt = Column(DateTime, server_default=text("CURRENT_TIMESTAMP"))
-    updated_by = Column(CHAR(100))
-    updated_dt = Column(DateTime)
-
-
-class GeoCityPopulation(Base):
-    __tablename__ = 'geo_city_population'
-
-    id = Column(Integer, primary_key=True, server_default=text("nextval('geo_city_population_id_seq'::regclass)"))
-    city_name = Column(String(100))
-    population = Column(Integer)
-    country = Column(String(100), server_default=text("'USA'::character varying"))
-
-
-class GeoGeography(Base):
-    __tablename__ = 'geo_geography'
-
-    id = Column(Integer, primary_key=True, server_default=text("nextval('geo_geography_id_seq'::regclass)"))
-    postalcode = Column(String(10))
-    country = Column(String(100))
-    location_name = Column(String(100))
-    msa = Column(String(100))
-    created_by = Column(CHAR(100))
-    created_dt = Column(DateTime, server_default=text("CURRENT_TIMESTAMP"))
-    updated_by = Column(CHAR(100))
-    updated_dt = Column(DateTime)
-
-
-t_geo_population_by_postalcode = Table(
-    'geo_population_by_postalcode', metadata,
-    Column('postalcode', String(20)),
-    Column('population', Integer),
-    Column('country', String(100), server_default=text("'USA'::character varying"))
-)
-
-
-t_geo_postalcode_to_county_state = Table(
-    'geo_postalcode_to_county_state', metadata,
-    Column('postalcode', String(20)),
-    Column('countyname', String(80)),
-    Column('province', String(60)),
-    Column('country', String(100), server_default=text("'USA'::character varying"))
-)
+    product = relationship('Products', back_populates='product_price_history')
