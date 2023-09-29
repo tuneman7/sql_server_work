@@ -1,6 +1,12 @@
 from sqlalchemy import create_engine, Column, Integer, String, DateTime, Numeric
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
+#import the db_base libraries for all connections we have
+from libraries.db_base import db_base
+
+customers_db = db_base("customers","mysql")
+products_db = db_base("products","mssql")
+finance_db = db_base("finance","postsql")
 
 
 DATABASE_URL = "mssql+pyodbc://sa:Python2028@127.0.0.1/products?driver=ODBC+Driver+18+for+SQL+Server&TrustServerCertificate=yes"

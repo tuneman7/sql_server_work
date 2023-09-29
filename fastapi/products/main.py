@@ -110,7 +110,7 @@ def create_product(product_data: dict, db: Session = Depends(get_db)):
     # Add to the database and commit
     db.add(product)
     db.commit()
-
+    db.refresh(product)
     return product
 
 # Update a Product by ID using a dictionary as input
@@ -132,7 +132,7 @@ def update_product(product_id: int, product_data: dict, db: Session = Depends(ge
 
     # Commit the changes
     db.commit()
-
+    db.refresh(product)
     return product
 
 # Get a Product by ID

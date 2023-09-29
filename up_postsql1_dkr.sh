@@ -109,3 +109,30 @@ envsubst < $config_file > $of
 echo cf=$of
 chmod 777 $of
 
+
+echo "************************"
+echo "Setting Up Symlinks"
+echo "************************"
+
+#putting symlinks into api directories
+source_dir=$(pwd)/libraries
+target_dir=${postsql1_apidir}/libraries
+
+if ! [ -d "${target_dir}" ]; then
+    ln -s $source_dir $target_dir
+fi
+
+
+source_dir=$(pwd)/db_artifacts
+target_dir=${postsql1_apidir}/db_artifacts
+
+if ! [ -d "${target_dir}" ]; then
+    ln -s $source_dir $target_dir
+fi
+
+source_dir=$(pwd)/data
+target_dir=${postsql1_apidir}/data
+
+if ! [ -d "${target_dir}" ]; then
+    ln -s $source_dir $target_dir
+fi
