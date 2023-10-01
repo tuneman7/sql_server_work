@@ -15,6 +15,25 @@ Base.metadata.create_all(bind=engine)
 # FastAPI app
 app = FastAPI()
 
+# Create a CustomerInfo entry using a dictionary as input
+@app.post("/customer_info/")
+def create_customer_info(customer_info_data: dict, db: Session = Depends(get_db)):
+    create_dt = datetime.now()
+    created_by = "YourUser"  # Set the appropriate user here
+
+    # Add created_by and create_dt to the input dictionary
+    customer_info_data["created_by"] = created_by
+    customer_info_data["created_dt"] = create_dt
+
+    # Create the CustomerInfo object using the input dictionary
+    customer_info = CustomerInfo(**customer_info_data)
+
+    # Add to the database and commit
+    db.add(customer_info)
+    db.commit()
+    db.refresh(customer_info)
+    return customer_info
+
 # Get all CustomerInfo entries
 @app.get("/customer_info/")
 def get_all_customer_info(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
