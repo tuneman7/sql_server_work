@@ -73,7 +73,7 @@ class fake_data_to_db(db_base):
         #pipe the update file into the cli
         self.run_update_from_cli_connector("populate_customer_product_history")
 
-    def populate_customer_products(self,count):
+    def populate_customer_products(self,count,products_per_customer=5):
         conn = self.get_connection()
         cursor = conn.cursor()
 
@@ -89,28 +89,30 @@ class fake_data_to_db(db_base):
 
                 # Simulate normal distribution to select a random customer_id
                 customer_id = customer_ids[i]
-
-                # Generate other random data
-                product_id = random.choice(l_pi)
-                product_type_desc = df_p_types.loc[df_p_types['product_id'] == product_id, 'product_type_desc'].values[0]
                 
-                #product_type = fake.word()
-                created_by = fake.name()
-                # Generate purchase_dt in a range between two days and one year ago
-                purchase_dt = fake.date_time_between(start_date="-1y-2d", end_date="-2d")
+                for i in range(products_per_customer):
 
-                end_date=purchase_dt + timedelta(days=random.choice([1, 30, 90, 365]))
-                # Generate expiration_dt as one day, one month, three months, or one year after purchase_dt
-                expiration_dt = fake.date_time_between_dates(purchase_dt,end_date)
+                    # Generate other random data
+                    product_id = random.choice(l_pi)
+                    product_type_desc = df_p_types.loc[df_p_types['product_id'] == product_id, 'product_type_desc'].values[0]
+                    
+                    #product_type = fake.word()
+                    created_by = fake.name()
+                    # Generate purchase_dt in a range between two days and one year ago
+                    purchase_dt = fake.date_time_between(start_date="-1y-2d", end_date="-2d")
 
-                # Insert the generated data into the database
-                cursor.execute(
-                    """
-                    INSERT INTO customer_product (product_id, customer_id, created_by, purchase_dt, expiration_dt,product_type_desc)
-                    VALUES (%s, %s, %s, %s, %s, %s)
-                    """,
-                    (product_id, customer_id, created_by, purchase_dt, expiration_dt,product_type_desc)
-                )
+                    end_date=purchase_dt + timedelta(days=random.choice([1, 30, 90, 365]))
+                    # Generate expiration_dt as one day, one month, three months, or one year after purchase_dt
+                    expiration_dt = fake.date_time_between_dates(purchase_dt,end_date)
+
+                    # Insert the generated data into the database
+                    cursor.execute(
+                        """
+                        INSERT INTO customer_product (product_id, customer_id, created_by, purchase_dt, expiration_dt,product_type_desc)
+                        VALUES (%s, %s, %s, %s, %s, %s)
+                        """,
+                        (product_id, customer_id, created_by, purchase_dt, expiration_dt,product_type_desc)
+                    )
 
             conn.commit()
             cursor.close()

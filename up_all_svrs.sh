@@ -109,8 +109,22 @@ echo "****************"
 echo "Setting up databases"
 echo "****************"
 
-python setup_dbs.py -a setup_dbs
-python setup_dbs.py -a populate_dbs
+time python setup_dbs.py -a setup_dbs
+
+echo "****************"
+echo "setup complete"
+echo "****************"
+
+echo "****************"
+echo "Populating Databases"
+echo "****************"
+
+time python setup_dbs.py -a populate_dbs
+
+echo "****************"
+echo "Database Population Complete"
+echo "****************"
+
 
 echo "****************"
 echo "Trying to bring up pydantic models"

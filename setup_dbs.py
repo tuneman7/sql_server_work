@@ -112,7 +112,8 @@ def populate_dbs():
 
     ci = fake_data_to_db("customers",svr_type='mysql')
     print_title("customer_info")
-    ci.populate_fake_data(table_name="customer_info",count=13000)
+    #note -- This takes quite some time
+    ci.populate_fake_data(table_name="customer_info",count=20000)
     print_title("customer_product")
     ci.populate_fake_data(table_name="customer_product",count=5000)
     print_title("customer_product_history")
