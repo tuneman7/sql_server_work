@@ -73,7 +73,7 @@ class fake_data_to_db(db_base):
         #pipe the update file into the cli
         self.run_update_from_cli_connector("populate_customer_product_history")
 
-    def populate_customer_products(self,count,products_per_customer=5):
+    def populate_customer_products(self,count,products_per_customer=3):
         conn = self.get_connection()
         cursor = conn.cursor()
 
