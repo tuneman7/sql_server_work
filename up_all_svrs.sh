@@ -163,6 +163,16 @@ echo "****************"
 echo "Completed up FASTAPI front-ends"
 echo "****************"
 
+echo "****************"
+echo "Spinning up DASHBOARD"
+echo "****************"
+
+. ./spin_up_dashboard.sh
+
+echo "****************"
+echo "Completed Spinning up DASHBOARD"
+echo "****************"
+
 
 . ./do_exit.sh
 

@@ -55,7 +55,6 @@ chmod 777 $of
 
 this_dir=$(pwd)
 cd ./dashboard
-return
-. ./run_dashboard.sh &
+. ./run_dashboard.sh 
 cd $this_dir
 

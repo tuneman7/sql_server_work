@@ -27,7 +27,7 @@ done
 #array of commands to check for sql server to be up
 this_dir=$(pwd)
 cd ./fastapi/products/ 
-. run.sh &
+. run.sh & 
 this_pid=$?
 fastapi_pids=("${this_pid}")
 cd $this_dir

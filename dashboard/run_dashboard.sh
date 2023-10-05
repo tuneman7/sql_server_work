@@ -7,6 +7,7 @@ find . -type d -name __pycache__ -exec rm -r {} \+
 
 gunicorn --bind 0.0.0.0:8026 app:app --threads 20 &
 
+echo ""
 echo "*********************************"
 echo "Waiting for Dashboard to come up:"
 echo "http://127.0.0.1:8026"
