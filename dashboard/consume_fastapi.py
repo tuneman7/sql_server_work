@@ -4,8 +4,6 @@ import os
 
 consume_fastapi = Blueprint('consume_fastapi', __name__)
 
-from libraries.data_objects import data_objects as do
-
 
 @consume_fastapi.route('/consume_fastapi_start', methods=['POST', 'GET'])
 def consume_fastapi_start():

@@ -110,6 +110,7 @@ envsubst < $config_file > $of
 echo cf=$of
 chmod 777 $of
 
+
 echo "************************"
 echo "Setting Up Symlinks"
 echo "************************"

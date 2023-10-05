@@ -114,7 +114,9 @@ def populate_dbs():
     print_title("customer_info")
     #note -- This takes quite some time
     #this customer number is the driver for a lot of other stuff.
-    ci.populate_fake_data(table_name="customer_info",count=15000)
+    #ci.populate_fake_data(table_name="customer_info",count=15000)
+    ci.populate_fake_data(table_name="customer_info",count=10000)
+
     print_title("customer_product")
     ci.populate_fake_data(table_name="customer_product",count=5000)
     print_title("customer_product_history")

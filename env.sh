@@ -18,6 +18,9 @@ mssql1_up="sqlcmd -S ${mssql1_sn} -U SA -P ${mssql1_pwd} -C -Q 'exit()'"
 mssql1_apiport=8023
 mssql1_apidir=$(pwd)/fastapi/products
 
+products_api_url="http://${mssql1_sn}:${mssql1_apiport}/"
+export products_api_url=$products_api_url
+
 #mysql
 mysql1_name=mysql1
 mysql1_hostname=mysql1
@@ -30,6 +33,9 @@ mysql1_up="mysql -h ${mysql1_sn} -u root -p'${mysql1_pwd}' -e'SHOW PROCESSLIST' 
 mysql1_apiport=8024
 mysql1_apidir=$(pwd)/fastapi/customers
 
+customers_api_url="http://${mysql1_sn}:${mysql1_apiport}/"
+export customers_api_url=$customers_api_url
+
 #postgress
 postsql1_name=postsql1
 postsql1_hostname=postsql1
@@ -41,6 +47,16 @@ postsql1_sn=127.0.0.1
 postsql1_up="PGPASSWORD=${postsql1_pwd} psql -h ${postsql1_sn} -U postgres -p'${postsql1_port}' -c'SELECT version()' >/dev/null"
 postsql1_apiport=8025
 postsql1_apidir=$(pwd)/fastapi/finance
+
+finance_api_url="http://${postsql1_sn}:${postsql1_apiport}/"
+export finance_api_url=$finance_api_url
+
+
+#put fastapi urls into array:
+#array of all bash files to destroy docker instances
+fast_api_urls=("${products_api_url}")
+fast_api_urls+=("${customers_api_url}")
+fast_api_urls+=("${finance_api_url}")
 
 
 mssql_servers=($mssql1)
@@ -72,4 +88,21 @@ of=$(pwd)/fastapi/finance/genmodel.sh
 a_gen_models+=("${of}")
 of=$(pwd)/fastapi/customers/genmodel.sh
 a_gen_models+=("${of}")
+
+
+
+#Dashboard configuration
+dashboard_port=8026
+dashboard_path=$(pwd)/dashboard
+dashboard_host=127.0.0.1
+dashboard_url="http://${dashboard_host}:${dashboard_port}"
+
+
+
+#array of ports used by fastapi or dasboard
+fast_api_ports=("${mssql1_apiport}")
+fast_api_ports+=("${mysql1_apiport}")
+fast_api_ports+=("${postsql1_apiport}")
+fast_api_ports+=("${dashboard_port}")
+
 

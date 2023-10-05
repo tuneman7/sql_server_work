@@ -42,7 +42,8 @@ pycparser==2.21
 PyNaCl==1.4.0
 requests==2.26.0
 six==1.16.0
-SQLAlchemy==1.4.27
+#SQLAlchemy==1.4.27
+SQLAlchemy
 stripe==2.63.0
 urllib3==1.26.7
 Werkzeug==2.0.2
