@@ -1,0 +1,26 @@
+#!/bin/bash
+
+
+
+echo ""
+echo "*********************************"
+echo "Waiting for Dashboard to come up:"
+echo "$dashboard_jn_url/tree"
+echo "*********************************"
+
+nohup jupyter notebook --no-browser --ip=0.0.0.0 --allow-root --NotebookApp.token="" --NotebookApp.password="" --port=$dashboard_jn_port --notebook-dir=./j_nbks > jupyter.log 2>&1 &
+
+finished=false
+while ! $finished; do
+    response_code=$(curl -o /dev/null -s -w "%{http_code}\n" -X GET "$dashboard_jn_url/tree")
+    if [ "$response_code" -eq 200 ]; then
+        finished=true
+        echo "*********************************"
+        echo "* Jupyter is ready:             *"
+        echo "  $dashboard_jn_url/tree?"
+        echo "*********************************"
+    else
+        finished=false
+    fi
+done
+

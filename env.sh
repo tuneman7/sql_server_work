@@ -97,6 +97,11 @@ dashboard_path=$(pwd)/dashboard
 dashboard_host=127.0.0.1
 dashboard_url="http://${dashboard_host}:${dashboard_port}"
 
+#Dashboard Jupyter
+dashboard_jn_port=8027
+dashboard_jn_path=$(pwd)/dashboard/j_nbks
+dashboard_jn_host=127.0.0.1
+dashboard_jn_url="http://${dashboard_jn_host}:${dashboard_jn_port}"
 
 
 #array of ports used by fastapi or dasboard
@@ -104,5 +109,6 @@ fast_api_ports=("${mssql1_apiport}")
 fast_api_ports+=("${mysql1_apiport}")
 fast_api_ports+=("${postsql1_apiport}")
 fast_api_ports+=("${dashboard_port}")
+fast_api_ports+=("${dashboard_jn_port}")
 
 
