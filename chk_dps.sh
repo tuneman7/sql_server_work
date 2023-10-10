@@ -43,6 +43,23 @@ all_deps=0
 
 fi
 
+#exalmple
+sqlcmd -?>/dev/null
+if [ $? -eq 0 ]; then
+    echo "sqlcmd is installed"
+else
+    echo "*********************************"
+    echo "sqlcmd is not installed -- exiting"
+    echo "visit:"
+    echo "https://askubuntu.com/questions/1407533/microsoft-odbc-v18-is-not-find-by-apt"
+    echo "https://dba.stackexchange.com/questions/174277/getting-sqlcmd-sqlcmd-command-not-found-in-linux"    
+    echo "*********************************"
+all_deps=0
+
+fi
+
+
+
 if [ $all_deps -eq 0 ]; then
     echo "zip is installed"
 cat ./scr/msgs/deps_fail.txt
