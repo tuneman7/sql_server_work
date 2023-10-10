@@ -117,23 +117,26 @@ echo "************************"
 
 
 #putting symlinks into api directories
-source_dir=$(pwd)/libraries
+source_dir=$(pwd)/libraries/
 target_dir=${mssql1_apidir}/libraries
+rm -rf $target_dir
 
 if ! [ -d "${target_dir}" ]; then
     ln -s $source_dir $target_dir
 fi
 
 
-source_dir=$(pwd)/db_artifacts
+source_dir=$(pwd)/db_artifacts/
 target_dir=${mssql1_apidir}/db_artifacts
+rm -rf $target_dir
 
 if ! [ -d "${target_dir}" ]; then
     ln -s $source_dir $target_dir
 fi
 
-source_dir=$(pwd)/data
+source_dir=$(pwd)/data/
 target_dir=${mssql1_apidir}/data
+rm -rf $target_dir
 
 if ! [ -d "${target_dir}" ]; then
     ln -s $source_dir $target_dir

@@ -79,6 +79,7 @@ while ! $finished; do
         #add return code to array
         s_up+=($?)
 
+        sleep 1
     done
     rm my_runner.sh
 

@@ -24,32 +24,37 @@ echo "************************"
 
 
 #putting symlinks into dashboard directories
-source_dir=$(pwd)/libraries
+source_dir=$(pwd)/libraries/
 target_dir=${dashboard_path}/libraries/db_libraries
+rm -rf $target_dir
 
 if ! [ -d "${target_dir}" ]; then
     ln -s $source_dir $target_dir
 fi
 
 #putting symlinks into dashboard directories
-source_dir=$(pwd)/j_nbks
+source_dir=$(pwd)/j_nbks/
 target_dir=${dashboard_path}/j_nbks
+rm -rf $target_dir
+
 
 if ! [ -d "${target_dir}" ]; then
     ln -s $source_dir $target_dir
 fi
 
 #putting symlinks into dashboard directories
-source_dir=$(pwd)/db_artifacts
+source_dir=$(pwd)/db_artifacts/
 target_dir=${dashboard_path}/db_artifacts
+rm -rf $target_dir
 
 if ! [ -d "${target_dir}" ]; then
     ln -s $source_dir $target_dir
 fi
 
 #putting symlinks into dashboard directories
-source_dir=${dashboard_path}
+source_dir=${dashboard_path}/
 target_dir=${dashboard_path}/j_nbks/dashboard
+rm -rf $target_dir
 
 if ! [ -d "${target_dir}" ]; then
     ln -s $source_dir $target_dir
@@ -57,8 +62,9 @@ fi
 
 
 #putting symlinks into dashboard directories
-source_dir=$(pwd)/db_artifacts
+source_dir=$(pwd)/db_artifacts/
 target_dir=${dashboard_path}/db_artifacts
+rm -rf $target_dir
 
 if ! [ -d "${target_dir}" ]; then
     ln -s $source_dir $target_dir
