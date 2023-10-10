@@ -91,7 +91,7 @@ fi
 
 
 #exalmple
-gunicorn >/dev/null
+gunicorn --help >/dev/null
 if [ $? -eq 0 ]; then
     echo "gunicorn is installed"
 else

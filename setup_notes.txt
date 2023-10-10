@@ -37,3 +37,18 @@ https://stackoverflow.com/questions/61528483/error-pg-config-executable-not-foun
 https://www.pgadmin.org/download/pgadmin-4-apt/
 
 #Start Through UI.
+
+
+#Notes-- ToDo:
+
+#Update setup bash-script to install everything needed on new box.
+
+#remember to set up thisp path
+/opt/mssql-tools18/bin
+
+
+#docker notes even after setup this error#
+https://phoenixnap.com/kb/docker-permission-denied
+
+be sure to run:
+newgrp docker -- as the current user

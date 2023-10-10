@@ -1,8 +1,15 @@
 #!/bin/bash
 source ./env.sh
+
+#if not all dependencies are set up
+#get out of here
+if [ $all_deps -eq 0 ]; then
+    return
+fi
+
 deactivate
 rm -rf ./${VENV_NAME}
-python3 -m venv ${VENV_NAME}
+python -m venv ${VENV_NAME}
 source ./${VENV_NAME}/bin/activate
 pip install --upgrade pip
 pip install -r requirements.txt

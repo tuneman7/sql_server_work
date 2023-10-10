@@ -2,6 +2,11 @@
 
 source ./chk_dps.sh
 
+if [ $all_deps -eq 0 ]; then
+    return
+fi
+
+
 VENV_NAME=sql_server_env
 
 #individual database setups

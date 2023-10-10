@@ -33,7 +33,7 @@ echo "Changing permissions on \$backup_dir"
 sudo chmod -R 777 $postsql1_loc_dir
 
 #test
-get rid of db directory
+#get rid of db directory
 rm -rf $postsql1_loc_dir
 mkdir -vp $postsql1_loc_dir
 sudo chmod -R 777 $postsql1_loc_dir
