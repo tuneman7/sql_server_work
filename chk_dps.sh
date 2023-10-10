@@ -44,21 +44,66 @@ all_deps=0
 fi
 
 #exalmple
-sqlcmd -?>/dev/null
+mysql --help>/dev/null
 if [ $? -eq 0 ]; then
-    echo "sqlcmd is installed"
+    echo "mysql is installed"
 else
     echo "*********************************"
-    echo "sqlcmd is not installed -- exiting"
+    echo "mysql is not installed -- exiting"
     echo "visit:"
-    echo "https://askubuntu.com/questions/1407533/microsoft-odbc-v18-is-not-find-by-apt"
-    echo "https://dba.stackexchange.com/questions/174277/getting-sqlcmd-sqlcmd-command-not-found-in-linux"    
+    echo ""
+    echo "sudo apt-get install mysql-client"    
+    echo "*********************************"
+all_deps=0
+
+fi
+
+#exalmple
+psql --help>/dev/null
+if [ $? -eq 0 ]; then
+    echo "psql is installed"
+else
+    echo "*********************************"
+    echo "psql is not installed -- exiting"
+    echo "visit:"
+    echo ""
+    echo "sudo apt install postgresql-client-common"
+    echo "sudo apt-get install -y postgresql-client"    
+    echo "*********************************"
+all_deps=0
+
+fi
+
+#exalmple
+pip >/dev/null
+if [ $? -eq 0 ]; then
+    echo "pip is installed"
+else
+    echo "*********************************"
+    echo "pip is not installed -- exiting"
+    echo "visit:"
+    echo ""
+    echo "apt install python3-pip"    
     echo "*********************************"
 all_deps=0
 
 fi
 
 
+#exalmple
+gunicorn >/dev/null
+if [ $? -eq 0 ]; then
+    echo "gunicorn is installed"
+else
+    echo "*********************************"
+    echo "gunicorn is not installed -- exiting"
+    echo "visit:"
+    echo ""
+    echo "apt install gunicorn"    
+    echo "*********************************"
+all_deps=0
+
+fi
 
 if [ $all_deps -eq 0 ]; then
     echo "zip is installed"
