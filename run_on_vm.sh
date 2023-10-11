@@ -1,4 +1,5 @@
 #!/bin/bash
 
 cd /sql_server_work
-. up_all_svrs.sh
+echo "output.txt">output.txt
+sudo -u ubuntu bash ./up_all_svrs.sh
