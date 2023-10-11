@@ -165,6 +165,17 @@ echo "Completed Spinning up DASHBOARD"
 echo "****************"
 
 
+if [ -n "$skip_venv" ] && [ $skip_venv -eq 1 ]; then
+
+    #because there are background servers running continually
+    #this will never exit.
+    wait
+
+else
+   echo "No override letting it through."
+fi
+
+
 . ./do_exit.sh
 
 

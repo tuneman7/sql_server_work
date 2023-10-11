@@ -7,10 +7,16 @@ if [ $all_deps -eq 0 ]; then
     return
 fi
 
-deactivate
-rm -rf ./${VENV_NAME}
-python -m venv ${VENV_NAME}
-source ./${VENV_NAME}/bin/activate
+if [ -n "$skip_venv" ] && [ $skip_venv -eq 1 ]; then
+    echo "Skipping Virtual Environment"
+else
+    deactivate
+    rm -rf ./${VENV_NAME}
+    python -m venv ${VENV_NAME}
+    source ./${VENV_NAME}/bin/activate
+fi
+
+
 pip install --upgrade pip
 pip install -r requirements.txt
 
