@@ -175,6 +175,10 @@ else
    echo "No override letting it through."
 fi
 
+#because there are background port forwarding commands running continually
+#this will never exit.
+wait
+
 
 . ./do_exit.sh
 
