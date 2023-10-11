@@ -4,7 +4,7 @@ Setting up sql client on Ubuntu 22.04 LTS.
 https://askubuntu.com/questions/1407533/microsoft-odbc-v18-is-not-find-by-apt
 
 #all users
-https://dba.stackexchange.com/questions/174277/getting-sqlcmd-sqlcmd-command-not-found-in-linux
+https://dba.stackexchange.com/questions/174277/getting-/opt/mssql-tools18/bin/sqlcmd-/opt/mssql-tools18/bin/sqlcmd-command-not-found-in-linux
 
 This is not the greatest no help with 22.04
 https://learn.microsoft.com/en-us/sql/linux/quickstart-install-connect-docker?view=sql-server-ver16&pivots=cs1-bash

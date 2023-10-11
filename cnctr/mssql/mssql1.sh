@@ -1,1 +1,1 @@
-sqlcmd -S 127.0.0.1 -U SA -P Python2028 -C
+/opt/mssql-tools18/bin/sqlcmd -S 127.0.0.1 -U SA -P Python2028 -C

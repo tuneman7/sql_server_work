@@ -1,1 +1,1 @@
-sqlcmd -S $mssql_svr -U SA -P $mssql_pw -C
+/opt/mssql-tools18/bin/sqlcmd -S $mssql_svr -U SA -P $mssql_pw -C
