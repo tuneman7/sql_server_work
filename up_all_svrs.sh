@@ -56,16 +56,6 @@ echo "Checking if database servers are up"
 echo "****************"
 
 
-# for u_c in "${a_sql_inline_command[@]}"
-# do
-#     #run the bash command
-#     echo "$u_c"
-#     #add return code to array
-
-
-# done
-# return
-
 finished=false
 while ! $finished; do
 
