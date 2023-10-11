@@ -34,12 +34,14 @@ cd $this_dir
 cd ./fastapi/customers/
 . run.sh &
 this_pid=$?
-fastapi_pids=+("${this_pid}")
+#fastapi_pids=+("${this_pid}")
+fastapi_pids[${#fastapi_pids[@]}]="${this_pid}"
 cd $this_dir
 cd ./fastapi/finance/
 . run.sh &
 this_pid=$?
-fastapi_pids=+("${this_pid}")
+#fastapi_pids=+("${this_pid}")
+fastapi_pids[${#fastapi_pids[@]}]="${this_pid}"
 cd $this_dir
 
     for u_c in "${fastapi_pids[@]}"
