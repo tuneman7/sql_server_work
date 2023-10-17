@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "brave-sonar-367918",
+  "private_key_id": "74b1d5b6db906ff8260c4106f086bfb52496b483",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCoW3H5yyjHKzIU\nSJnLOTFSsAY3QjRUAk/IeC/EburPVArl4S9uHZ/TdT0gktnce6Q0Lv7R7qKkEpGI\nNnCvI1IOa4v26t6IqnbYunODfA++t2MVHmxnaoHMV4zA+oB4OK4e5WX34J3ShurL\nGV6uPs1mLi2Bp9f3RnOwz0O88UYceUV4JQeSCrk7agjmRdlnj76fOBbacPtepXYC\nduWuQDufmI6+hMAEnOsIq2sk0//kXS2nZFLsuSCFpq1CGtKJBlvQnwzf89yUgTKU\nGttS1/Yq8xXh4lj+7M5KmjKtWPhQWNl22wAP919wfRiMKjAdW3uzYZhUuQJR6fwM\nfN+KtCbnAgMBAAECggEACBRfZhQEZc6NDYvQaarZ0vSPT86Vu/m3wiYBG4W72hhX\n74v83pAoZURemyDBDi5BhUmYwWgY676CYnhDtHwBn580rTRnWpqyWm3+8NlJg3xs\nkmJj5HCoQFoWmgT2Q7lrTctHjKZTHKaMlROnchL3K4ddeA1J4DGZiBY3qNUmvriq\niWuyBlsuHfLsmQRYOTUdknVfXq17tzbjtzv3tul8LZ9QxS8LkThd9YVp30QpaEM4\nJatF4xZiQdLhrfeThZQ1g/krXsK306blK4F2dnVCME9Uv0moj/guO0WB/P7SShLY\nra/aGA0NPiGbAivHOwcqvV+EgU5jlf3mAxLc9PutXQKBgQDhHS5d7gOSbCFl0lyS\nhN1yZ28Zy4oE7p3Fjgh7or97Um2vmTduEDOSSqKSGPOyI+ONJDjz2QJxPgf4mVy6\n1iiEITYq+eJ+8X/PlB48Y6SuBBcBJepQn4XsVUWzurxvxiUa5wHFs/hIV//9DX0N\n6uyVOGNNVAoDGNSryL5MFMujwwKBgQC/dMKkbWG/AeF6naY+CVFcaND+I67x0p4c\nx/fTh1scwdH4YM2T6sj/fRCWyj39Dh2JRQtrXYsxHVZwwtl0pwS24cA31/q3pIwj\nd0KOF5TLWsLDOKjjdptTQAfsSabHjERCtBuASQv3phnLYUGCuESe/8EbjOGNR7Hj\nuh25VdByDQKBgQCTBIzQmW5JxUa2igEdS5qYacbcUNqtx+zQJaeSn0Jw1u99nBHg\nVsJni0jLI3KcZ+Xnur1bO+HldT6ddANknhLN4CbRQGtUvoHbXn+0rtrRLyia/lke\nGGDNbQ9dhtokIYMAI9g7dwLytE4hxRpj6YZjGfV4ficfyKq0GiF17KrmIwKBgDxU\nI31Chll000Ma6CaGMyAGW0ypm9fRgUcab+o0ra4rGOnGPyFMC1gOZarOQag6yW3W\n1tlXGaQ5VWKk03bhpiemjTZLlVJGxG3sh4lUvusxR0vSz80VM66Q764yKx6YAW5v\naHcNDXtU2K3wkH8LZ3wepQ/0XaJyJAjZPcKH2u4FAoGAVKd9L6DIkrrOpbHx+0gw\nZu0n0jPML76la30uP7D8KS1If6ExJJENpuIH53/bfw0GhpenYqblBVmSvRJjmY2B\n1c5Q8RCCVgn7E5TuxCj+pMcchzQYa+QclRGlEfC2tNuZUgvwRNJCAtiY+o4r9zfS\nFMp42DQ456nOpabVXqe6A94=\n-----END PRIVATE KEY-----\n",
+  "client_email": "big-query-service-account@brave-sonar-367918.iam.gserviceaccount.com",
+  "client_id": "111553150687577344001",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/big-query-service-account%40brave-sonar-367918.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}

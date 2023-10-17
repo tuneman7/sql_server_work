@@ -1,0 +1,2 @@
+#!/bin/bash
+sqlacodegen "mssql+pyodbc://sa:${mssql_pw}@${mssql_svr}/products?driver=ODBC+Driver+18+for+SQL+Server&TrustServerCertificate=yes"  --outfile ${mssql1_apidir}/models.py

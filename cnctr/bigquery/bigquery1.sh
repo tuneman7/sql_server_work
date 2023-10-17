@@ -1,0 +1,1 @@
+gcloud auth activate-service-account --key-file=/data/school/MIDS/sql_server_work/dbs/servers/bigquery/bigquery1/tokens/brave-sonar-367918-74b1d5b6db90.json
