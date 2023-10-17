@@ -20,6 +20,11 @@ fi
 pip install --upgrade pip
 pip install -r requirements.txt
 
+
+#setup bigquery as needed
+pip install google-cloud-bigquery
+
+
 #create libraries symlink so jn can run isolated without
 #root dir being cluttered
 
@@ -49,4 +54,4 @@ if ! [ -d "${target_dir}" ]; then
 fi
 
 
-#. ir.sh
+

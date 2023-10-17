@@ -105,6 +105,27 @@ all_deps=0
 
 fi
 
+#exalmple
+gcloud --help >/dev/null
+if [ $? -eq 0 ]; then
+    echo "gcloud is installed"
+else
+    echo "*********************************"
+    echo "gcloud is not installed -- exiting"
+    echo "try:"
+    echo ""
+    echo "curl https://sdk.cloud.google.com | bash"    
+    echo "*********************************"
+all_deps=0
+
+fi
+
+
+
+
+
+
+
 if [ $all_deps -eq 0 ]; then
     echo "zip is installed"
 cat ./scr/msgs/deps_fail.txt

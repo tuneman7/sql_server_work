@@ -21,18 +21,29 @@ def get_sql_server_key(d,parent_key='',target_key=''):
                 get_sql_server_key(value,new_key)
 
 def create_sql_db(servername,server_objects,server_type="mssql"):
+    print("*"*40)
+    print("COMING IN HERE")
+    print("*"*40)
     for db in server_objects["dbs"]:
+        print("*"*20)
+        print(servername)        
         print(db)
+        print("*"*20)
+
         #get myconnector
         cntr_path=os.path.join(mu.get_this_dir(),"cnctr",server_type,"{}.{}".format(servername,"sh"))
+
         if not os.path.exists(cntr_path):
             print("*"*30)
             print("File does not exist:")
             print(cntr_path)
             print("*"*30)
             return
+                        
         db_connector=mu.get_data_from_file(cntr_path).replace("\n","").replace("\r","")
-
+        if "bigquery" in server_type:
+            db_connector = "bq query --use_legacy_sql=false "
+        
         #get create cmd
         create_cmd_file=server_objects["dbs"][db]["create_db"]["create_db.sql"]
         input_pipe=None
@@ -42,9 +53,17 @@ def create_sql_db(servername,server_objects,server_type="mssql"):
             input_pipe="<"
         if "postsql" in server_type:
             input_pipe="-f"
+        if "bigquery" in server_type:
+            input_pipe="<"
+
 
         
         cmd="{} {} {}".format(db_connector,input_pipe,create_cmd_file)
+
+        #bigquery can't create projects / databases through sql
+        if server_type=="bigquery":
+            cmd=mu.get_data_from_file(create_cmd_file)
+            #am here
         print(cmd)
         subprocess.run(cmd,shell=True)
 
@@ -70,6 +89,8 @@ def setup_dbs():
     setup_sql_server_dbs(m_dict["servers"]["mssql"],"mssql")
     setup_sql_server_dbs(m_dict["servers"]["mysql"],"mysql")
     setup_sql_server_dbs(m_dict["servers"]["postsql"],"postsql")
+    setup_sql_server_dbs(m_dict["servers"]["bigquery"],"bigquery")
+
 
 def test_database():
     products = db_base("customers")
@@ -79,7 +100,7 @@ def print_title(title):
     print(title)
     print("*"*40)
 
-def populate_dbs():
+def populate_dbs(): 
 
     fdi = fake_data_to_db("products",svr_type='mssql')
     print_title("product_type")

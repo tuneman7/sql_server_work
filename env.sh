@@ -11,6 +11,24 @@ VENV_NAME=sql_server_env
 
 #individual database setups
 
+#bigquery
+bigquery_keyfile="$(pwd)/dbs/servers/bigquery/tokens/brave-sonar-367918-74b1d5b6db90.json"
+
+bigquery_name=bigquery1
+bigquery_hostname=bigquery1
+bigquery1=bigquery1
+bigquery_pwd=Python2028
+bigquery_loc_dir=$(pwd)/sql_data_files/bigquery/${bigquery1}
+bigquery_port=1433
+bigquery_sn=127.0.0.1
+bigquery_up="bq ls"
+bigquery_apiport=8028
+bigquery_apidir=$(pwd)/fastapi/site_traffic
+
+site_traffic_api_url="http://${bigquery_sn}:${bigquery_apiport}/"
+export site_traffic_api_url=$site_traffic_api_url
+
+
 #sql_server
 mssql1_name=mssql1
 mssql1_hostname=mssql1
@@ -70,6 +88,7 @@ mssql_servers=($mssql1)
 server_up_dkr_l_cmds=("up_mysql1_dkr.sh")
 server_up_dkr_l_cmds+=("up_mssql1_dkr.sh")
 server_up_dkr_l_cmds+=("up_postsql1_dkr.sh")
+
 
 #array of all bash files to destroy docker instances
 server_down_dkr_l_cmds=("down_mssql1_dkr.sh")
