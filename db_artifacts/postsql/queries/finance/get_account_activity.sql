@@ -4,6 +4,7 @@ select
 	aa.customer_id,
 	aa.account_id,
 	aa.amt_usd,
+	aa.post_date,
 	dc.channel_desc,
 	dp.partner_desc,
 	geo.location_name,
