@@ -1,35 +1,29 @@
-
-<div id="customer_info_caller"></div>
+<h1 id="customer_products_title">Customer Products</h1>
+<div id="customer_product_section"></div>
 
 <script>
 
 
+function render_graphs(event_name,slide_no){
+
+          $.ajax({
+              url: '/render_customer_products',
+              type: 'post',
+              data: {event_name: event_name, slide_no: slide_no},
+              success: function(data){ 
+                  $('#customer_product_section').html(data); 
+                  $('#customer_product_section').append(data.htmlresponse);
+              }
+          });
+        };
+
+
+$(document).ready(function () {
     
+    page_loading();
+    render_graphs("Customer Products","1");
 
+});
 
-      function refresh_fastapi(pageno){
-  
-  
-            $.ajax({
-                url: '/get_customer_revenue',
-                type: 'post',
-                data: {pageno:pageno},
-                success: function(data){ 
-                    $('#customer_info_caller').empty();                 
-                    $('#customer_info_caller').html(data); 
-                    $('#customer_info_caller').append(data.htmlresponse); 
-                    page_not_loading();
-                }
-            });
-            
-          };
+</script>
 
-
-  $(document).ready(function () {
-      
-  
-  });
-  
-  </script>
-  
-  

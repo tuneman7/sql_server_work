@@ -26,15 +26,16 @@ class database_aggregator(Utility):
         super().__init__()
 
 
-    def get_customer_data(self):
+    def get_customer_product_data(self):
         dbprod = db_base("products")
         prod_info = dbprod.run_query_with_single_df(query_key="get_product_info")
         dbfin = db_base("finance",svr_type='postsql')
         fin_account_activity = dbfin.run_query_with_single_df(query_key="get_account_activity")
         dbcust = db_base("customers",svr_type='mysql')
+        cust_products = dbcust.run_query_with_single_df(query_key="get_customer_product_history1")
         sql = self.get_data_from_file(os.path.join(self.get_this_dir(),"libraries","psql_queries","aggregate_customer_info.psql"))
         df = psql.sqldf(sql)
-        print(sql)
+        return df
 
     def print_internal_directory(self):
 

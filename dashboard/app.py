@@ -218,8 +218,8 @@ def send_email():
 
 # from fastapi_consumer import fastapi_consumer
 # app.register_blueprint(fastapi_consumer)
-from customer_revenue import customer_revenue
-app.register_blueprint(customer_revenue)
+from customer_products import customer_products
+app.register_blueprint(customer_products)
 
 
 

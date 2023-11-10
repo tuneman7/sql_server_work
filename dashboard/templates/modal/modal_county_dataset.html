@@ -21,27 +21,29 @@
     $(document).ready(function () {
 
 
-      $("table.dataframe").attr("class","display")
-      $("table.display").attr("border","0")
+    $("#dataset_table_parent table.dataframe").attr("class","display");
+    $("#dataset_table_parent table.display").attr("border","0");
+    $("#dataset_table_parent table.display").attr("style","width:100%");
+    $("#dataset_table_parent table.display").attr("id","mydataframe");
 
-      $("table.display").attr("id","mydataframe")
+    $("#mydataframe").dataTable( {
+      "columns": [
+        null,
+        { "width": "15%" },
+        { "width": "15%" },
+        null,
+        null,
+        null, 
+        null,
+        null
+      ],
+      "columnDefs": [
+    { "visible": false, "targets": 1 }
+  ],
+      "buttons": [
+          'copy', 'csv', 'excel', 'pdf', 'print'
+      ]        
+    } );
 
-      $("#mydataframe").dataTable( {
-        "columns": [
-          null,
-          { "width": "15%" },
-          { "width": "15%" },
-          null,
-          null,
-          null, 
-          null
-        ],
-        "buttons": [
-            'copy', 'csv', 'excel', 'pdf', 'print'
-        ]        
-      } ).columns.adjust().responsive.recalc();
- 
-  
-      });
 
   </script>   

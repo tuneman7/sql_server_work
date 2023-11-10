@@ -14,7 +14,35 @@
 
 <div class="container">
 
-  fido
+    <div>
+        <div id="table"></div>
+      </div>
+      <script>
+        new gridjs.Grid({
+          columns: [
+            { id: 'customer_id', name: 'Customer ID' },
+            { id: 'f_name', name: 'First Name' },
+            { id: 'l_name', name: 'Last Name' },
+            { id: 'product_name', name: 'Product Name' },
+            { id: 'product_type', name: 'Product Type' },
+            { id: 'amt_usd', name: 'Amount (USD)' },
+            { id: 'post_date', name: 'Post Date' },
+            { id: 'channel_desc', name: 'Channel Description' },
+            { id: 'partner_desc', name: 'Partner Description' },
+            { id: 'location_name', name: 'Location Name' },
+            { id: 'account_name', name: 'Account Name' },
+            { id: 'account_type', name: 'Account Type' }
+          ],
+          server: {
+            url: '/api/data',
+            then: results => results.data,
+          },
+          sort: true,
+          pagination: true,
+        }).render(document.getElementById('table'));
+      </script>
+
+    
 
 </div>
 
@@ -23,6 +51,36 @@
 
   
       $(document).ready(function () {
+
+
+        $("#dataset_table_parent table.dataframe").attr("class","display");
+        $("#dataset_table_parent table.display").attr("border","0");
+        $("#dataset_table_parent table.display").attr("style","width:100%");
+        $("#dataset_table_parent table.display").attr("id","mydataframe");
+
+        $("#mydataframe").dataTable( {
+        "columns": [
+            null,
+            { "width": "15%" },
+            { "width": "15%" },
+            null,
+            null,
+            null, 
+            null,
+            null
+        ],
+        "columnDefs": [
+        { "visible": false, "targets": 1 }
+    ],
+        "buttons": [
+            'copy', 'csv', 'excel', 'pdf', 'print'
+        ]        
+        } );
+
+
+
+
+
 
           page_not_loading();
 
@@ -34,171 +92,91 @@
 
 
   {% if chart_json is not none %}
-        
 
-  <div class="modal fade" id="dataset_modal" >
-    <div class="modal-dialog modal-lg" >
-        <div class="modal-content modal-lg">
-            <div class="modal-header modal-lg">
-              <table border="0" width="100%"></table>
-              <tr>
-                <td>
-                  <h4 class="modal-title">Raw dataset for {{county_text}}.</h4>
-                </td>
-                <td>
-                  <button type="button" class="close" data-dismiss="modal">×</button>
-                </td>
-              </tr>
-                
-              
+  <div class="container">
+    <div class="container-fluid" id="event_detail_rendering">
+        <div class="row">
+            <div class="col-md-1">
+                <img src="./static/images/back-button-svgrepo-com.svg" width="40" height="40" onclick="move_back_slide()" id="move_back_slide"/>
             </div>
-            <div class="modal-body modal-lg" id="dataset_table_parent">
-              <h1>
-                <!--Displaying the converted table-->
-                  {% for table in tables %}
-                  <h2>{{titles[loop.index]}}</h2>							
-                  {{ table|safe }}
-                  {% endfor %}	
-                </h1>        
+            <div class="col-md-10  float-left">
+                {% if event_text is not none %}
+                {{ event_text | safe }}
+                {% endif %}
+            </div>
+            <div class="col-md-1 float-right">
+                <img src="./static/images/back-button-svgrepo-com.svg" width="40" height="40" style="transform:rotate(180deg)" class="float-end" id="move_forward_slide" onclick="move_forward_slide()"/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-1"></div>
+            <div class="col-md-10">
+                <br/>
+            </div>
+            <div class="col-md-1"></div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <br/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div id="event_render_container">
+                    {% if chart_json is not none %}
+                    <!-- Placeholder for the tooltip -->
+                    <div id="vis-tooltip" class="vg-tooltip on_top_always"></div>
+                </div>
+                <!-- Render Charts -->
+                <script type="text/javascript">
+                    function parse(url, div) {
+                        var opt = { mode: "vega-lite", renderer: "svg", actions: { export: true, source: false, editor: false } };
+                        vegaEmbed("#" + div, url, opt, function (error, result) {
+                            vegaTooltip.vegaLite(result.view, url);
+                        });
+                    }
+                    //Parse your Json variable here
+                    parse({{ chart_json | safe }} , "event_rendering_chart");
+                </script>
+                {% endif %}
             </div>
         </div>
     </div>
-  </div>
+</div>
 
-  <div class="modal fade" id="predict_dataset_modal" >
-    <div class="modal-dialog modal-lg" >
-        <div class="modal-content modal-lg">
-            <div class="modal-header modal-lg">
-              <table border="0" width="100%"></table>
-              <tr>
-                <td>
-                  <h4 class="modal-title">Predict dataset for {{county_text}}.</h4>
-                </td>
-                <td>
-                  <button type="button" class="close" data-dismiss="modal">×</button>
-                </td>
-              </tr>
-                
-              
-            </div>
-            <div class="modal-body modal-lg" id="predict_dataset_table_parent">
-              <h1>
-                <!--Displaying the converted table-->
-                  {% for table in predict_tables %}
-                  <h2>{{titles[loop.index]}}</h2>							
-                  {{ table|safe }}
-                  {% endfor %}	
-                </h1>        
-            </div>
-        </div>
-    </div>
-  </div>
+<script>
+    var slide_no = 1;
+    var current_event_name = "";
+    var total_slides = {{ total_slides }};
 
-  <div class="modal fade" id="initial_model_modal" >
-    <div class="modal-dialog modal-lg" >
-        <div class="modal-content modal-lg">
-            <div class="modal-header modal-lg">
-              <table border="0" width="100%"></table>
-              <tr>
-                <td>
-                  <h4 class="modal-title">Model parameters (initial model) for {{county_text}}.</h4>
-                </td>
-                <td>
-                  <button type="button" class="close" data-dismiss="modal">×</button>
-                </td>
-              </tr>
-                
-              
-            </div>
-            <div class="modal-body modal-lg" id="initial_model_modal_content">
-              <h1>
-                <!--Displaying the converted table-->
-                  {{ INITIAL_HPARAMS|safe }}
-                </h1>        
-            </div>
-        </div>
-    </div>
-  </div>
+    function move_forward_slide() {
+        nav_to_section("trade");
+        slide_no += 1;
+        page_loading();
+        render_graphs("trade", slide_no);
+    }
 
-  <div class="modal fade" id="tuned_model_modal" >
-    <div class="modal-dialog modal-lg" >
-        <div class="modal-content modal-lg">
-            <div class="modal-header modal-lg">
-              <table border="0" width="100%"></table>
-              <tr>
-                <td>
-                  <h4 class="modal-title">Model parameters (tuned model) for {{county_text}}.</h4>
-                </td>
-                <td>
-                  <button type="button" class="close" data-dismiss="modal">×</button>
-                </td>
-              </tr>
-                
-              
-            </div>
-            <div class="modal-body modal-lg" id="tuned_model_modal_content">
-              <h1>
-                <!--Displaying the converted table-->
-                  {{ TUNED_HPARAMS|safe }}
-                </h1>        
-            </div>
-        </div>
-    </div>
-  </div>  
+    function move_back_slide() {
+        nav_to_section("trade");
+        if (slide_no == 1) {
+            return;
+        }
+        slide_no -= 1;
+        page_loading();
+        render_graphs("trade", slide_no);
+    }
 
-  <br />
-  
-  
-      </div>
-  <!-- Placeholder for the tooltip -->
-  <div id="vis-tooltip" class="vg-tooltip"></div>
-      </div>
-  <!-- Render Charts -->
-  <script type="text/javascript">
-
-  function render_initial_model_modal(){
-    $('#initial_model_modal').modal('show'); };  
-
-    function render_tuned_model_modal(){
-    $('#tuned_model_modal').modal('show'); };      
+    $(document).ready(function () {
+        slide_no = {{ slide_no }};
+        if (!(slide_no < total_slides)) {
+            $("#move_forward_slide").hide();
+        } else {
+            $("#move_forward_slide").show();
+        }
+        page_not_loading();
+    });
+</script>
 
 
-  function pop_out_county_modal()
-  {
-    url = './section_five_popout?state=' + '{{state}}' + '&county=' + '{{county}}' +  '&popup=' + '{{popup}}' +  '&county_or_msa=' + '{{county_or_msa}}' 
-    window.open(url,'','toolbar=no');
-  }
-
-  function how_it_started()
-  {
-    window.open('./static/pdfs/w210_project_proposal.pdf','','toolbar=no');
-  }
-  
-  function play_closing_audio()
-  {
-    var audio = new Audio("./static/audio/cant_do_it_like_me_4.mp3")
-    audio.play()
-  }
-
-  function swap_msa_county(the_value){
-
-    county_or_msa = $("#county_or_msa").val();
-    if(county_or_msa == the_value)
-    {return;}
-
-    $("#county_or_msa").val(the_value);
-    state = $("#state_list").val();
-    county = "";
-    refresh_predictions(state,county,the_value);
-    
-
-
-    };
-
-
-  
-  
-  </script>
-  
-    {% endif %}
+  {% endif %}
   
