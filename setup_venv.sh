@@ -24,6 +24,13 @@ pip install -r requirements.txt
 #setup bigquery as needed
 pip install google-cloud-bigquery
 
+jupyter nbextension install --py --user hide_code
+# jupyter nbextension enable --py --user hide_code
+# jupyter serverextension enable --py --user hide_code
+
+#Vega fusion.
+pip install "vegafusion[embed]"
+
 
 #create libraries symlink so jn can run isolated without
 #root dir being cluttered

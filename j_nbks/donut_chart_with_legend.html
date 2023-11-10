@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    #vis.vega-embed {
+      width: 100%;
+      display: flex;
+    }
+
+    #vis.vega-embed details,
+    #vis.vega-embed details summary {
+      position: relative;
+    }
+  </style>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vega-lite@5.15.1"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+</head>
+<body>
+  <div id="vis"></div>
+  <script>
+    (function(vegaEmbed) {
+      var spec = {"config": {"view": {"continuousWidth": 300, "continuousHeight": 300}}, "data": {"name": "data-072067316c955901f19e73823bec70d3"}, "mark": {"type": "arc", "innerRadius": 50}, "encoding": {"color": {"field": "location_name", "legend": {"orient": "right", "title": "Top Locations"}, "type": "nominal"}, "theta": {"field": "transactions", "type": "quantitative"}, "tooltip": [{"field": "location_name", "type": "nominal"}, {"field": "transactions", "type": "quantitative"}]}, "title": "Top 10 Geographic Locations by Transaction Count", "width": 400, "$schema": "https://vega.github.io/schema/vega-lite/v5.15.1.json", "datasets": {"data-072067316c955901f19e73823bec70d3": [{"location_name": "Brooklyn", "transactions": 263}, {"location_name": "Chicago", "transactions": 196}, {"location_name": "Los Angeles", "transactions": 173}, {"location_name": "Houston", "transactions": 144}, {"location_name": "Bronx", "transactions": 131}, {"location_name": "San Antonio", "transactions": 104}, {"location_name": "Miami", "transactions": 100}, {"location_name": "New York", "transactions": 96}, {"location_name": "Katy", "transactions": 95}, {"location_name": "San Diego", "transactions": 89}]}};
+      var embedOpt = {"mode": "vega-lite"};
+
+      function showError(el, error){
+          el.innerHTML = ('<div style="color:red;">'
+                          + '<p>JavaScript Error: ' + error.message + '</p>'
+                          + "<p>This usually means there's a typo in your chart specification. "
+                          + "See the javascript console for the full traceback.</p>"
+                          + '</div>');
+          throw error;
+      }
+      const el = document.getElementById('vis');
+      vegaEmbed("#vis", spec, embedOpt)
+        .catch(error => showError(el, error));
+    })(vegaEmbed);
+
+  </script>
+</body>
+</html>
