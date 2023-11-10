@@ -19,7 +19,7 @@ import pandas as pd
 import pandasql as psql
 #from  libraries.utility import Utility
 #from  libraries.db_base import db_base
-from  libraries.excel_output import excel_output
+from libraries.excel_output import excel_output
 import pickle
 import sympy
 from pprint import pprint

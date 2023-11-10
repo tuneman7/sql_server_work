@@ -133,9 +133,6 @@ def home():
     res.set_cookie('sessionID', 'fido',max_age=60*10)
     return res
 
-
-
-
 # Error handlers.
 
 
@@ -158,7 +155,6 @@ if not app.debug:
     file_handler.setLevel(logging.INFO)
     app.logger.addHandler(file_handler)
     app.logger.info('errors')
-
 
 
 
@@ -222,8 +218,8 @@ def send_email():
 
 # from fastapi_consumer import fastapi_consumer
 # app.register_blueprint(fastapi_consumer)
-from consume_fastapi import consume_fastapi
-app.register_blueprint(consume_fastapi)
+from customer_revenue import customer_revenue
+app.register_blueprint(customer_revenue)
 
 
 

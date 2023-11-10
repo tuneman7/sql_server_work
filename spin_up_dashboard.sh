@@ -28,9 +28,15 @@ source_dir=$(pwd)/libraries/
 target_dir=${dashboard_path}/libraries/db_libraries
 rm -rf $target_dir
 
-if ! [ -d "${target_dir}" ]; then
-    ln -s $source_dir $target_dir
-fi
+target_dir=${dashboard_path}/libraries
+# Loop through each file in the source directory
+for file in "$source_dir"/*; do
+    # Extract just the filename
+    filename=$(basename "$file")
+
+    # Create a symlink in the target directory
+    ln -s "$file" "$target_dir/$filename"
+done
 
 #putting symlinks into dashboard directories
 source_dir=$(pwd)/j_nbks/

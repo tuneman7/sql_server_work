@@ -1,0 +1,23 @@
+select
+distinct
+    cp.id as customer_id,
+    cp.f_name,
+    cp.l_name,
+    p.product_name,
+    p.product_type,
+    fa.amt_usd,
+    fa.post_date,
+    fa.channel_desc,
+    fa.partner_desc,
+    fa.location_name,
+    fa.account_name,
+    fa.account_type
+from cust_products as cp
+join prod_info as p
+on 
+    p.id = cp.product_id
+join fin_account_activity fa
+on 
+ fa.customer_id = cp.id
+ and
+ fa.product_id = cp.product_id

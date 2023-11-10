@@ -1,0 +1,204 @@
+<style>
+
+  .on_top_always {
+    z-index: 999 !important;
+  }
+  
+  </style>
+
+<br/>
+<br/>
+<br/>
+
+<!--Don Irwin use this on the tool tip so that it will be on top always-->
+
+<div class="container">
+
+  fido
+
+</div>
+
+
+  <script>
+
+  
+      $(document).ready(function () {
+
+          page_not_loading();
+
+
+      });
+
+    </script>    
+
+
+
+  {% if chart_json is not none %}
+        
+
+  <div class="modal fade" id="dataset_modal" >
+    <div class="modal-dialog modal-lg" >
+        <div class="modal-content modal-lg">
+            <div class="modal-header modal-lg">
+              <table border="0" width="100%"></table>
+              <tr>
+                <td>
+                  <h4 class="modal-title">Raw dataset for {{county_text}}.</h4>
+                </td>
+                <td>
+                  <button type="button" class="close" data-dismiss="modal">×</button>
+                </td>
+              </tr>
+                
+              
+            </div>
+            <div class="modal-body modal-lg" id="dataset_table_parent">
+              <h1>
+                <!--Displaying the converted table-->
+                  {% for table in tables %}
+                  <h2>{{titles[loop.index]}}</h2>							
+                  {{ table|safe }}
+                  {% endfor %}	
+                </h1>        
+            </div>
+        </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="predict_dataset_modal" >
+    <div class="modal-dialog modal-lg" >
+        <div class="modal-content modal-lg">
+            <div class="modal-header modal-lg">
+              <table border="0" width="100%"></table>
+              <tr>
+                <td>
+                  <h4 class="modal-title">Predict dataset for {{county_text}}.</h4>
+                </td>
+                <td>
+                  <button type="button" class="close" data-dismiss="modal">×</button>
+                </td>
+              </tr>
+                
+              
+            </div>
+            <div class="modal-body modal-lg" id="predict_dataset_table_parent">
+              <h1>
+                <!--Displaying the converted table-->
+                  {% for table in predict_tables %}
+                  <h2>{{titles[loop.index]}}</h2>							
+                  {{ table|safe }}
+                  {% endfor %}	
+                </h1>        
+            </div>
+        </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="initial_model_modal" >
+    <div class="modal-dialog modal-lg" >
+        <div class="modal-content modal-lg">
+            <div class="modal-header modal-lg">
+              <table border="0" width="100%"></table>
+              <tr>
+                <td>
+                  <h4 class="modal-title">Model parameters (initial model) for {{county_text}}.</h4>
+                </td>
+                <td>
+                  <button type="button" class="close" data-dismiss="modal">×</button>
+                </td>
+              </tr>
+                
+              
+            </div>
+            <div class="modal-body modal-lg" id="initial_model_modal_content">
+              <h1>
+                <!--Displaying the converted table-->
+                  {{ INITIAL_HPARAMS|safe }}
+                </h1>        
+            </div>
+        </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="tuned_model_modal" >
+    <div class="modal-dialog modal-lg" >
+        <div class="modal-content modal-lg">
+            <div class="modal-header modal-lg">
+              <table border="0" width="100%"></table>
+              <tr>
+                <td>
+                  <h4 class="modal-title">Model parameters (tuned model) for {{county_text}}.</h4>
+                </td>
+                <td>
+                  <button type="button" class="close" data-dismiss="modal">×</button>
+                </td>
+              </tr>
+                
+              
+            </div>
+            <div class="modal-body modal-lg" id="tuned_model_modal_content">
+              <h1>
+                <!--Displaying the converted table-->
+                  {{ TUNED_HPARAMS|safe }}
+                </h1>        
+            </div>
+        </div>
+    </div>
+  </div>  
+
+  <br />
+  
+  
+      </div>
+  <!-- Placeholder for the tooltip -->
+  <div id="vis-tooltip" class="vg-tooltip"></div>
+      </div>
+  <!-- Render Charts -->
+  <script type="text/javascript">
+
+  function render_initial_model_modal(){
+    $('#initial_model_modal').modal('show'); };  
+
+    function render_tuned_model_modal(){
+    $('#tuned_model_modal').modal('show'); };      
+
+
+  function pop_out_county_modal()
+  {
+    url = './section_five_popout?state=' + '{{state}}' + '&county=' + '{{county}}' +  '&popup=' + '{{popup}}' +  '&county_or_msa=' + '{{county_or_msa}}' 
+    window.open(url,'','toolbar=no');
+  }
+
+  function how_it_started()
+  {
+    window.open('./static/pdfs/w210_project_proposal.pdf','','toolbar=no');
+  }
+  
+  function play_closing_audio()
+  {
+    var audio = new Audio("./static/audio/cant_do_it_like_me_4.mp3")
+    audio.play()
+  }
+
+  function swap_msa_county(the_value){
+
+    county_or_msa = $("#county_or_msa").val();
+    if(county_or_msa == the_value)
+    {return;}
+
+    $("#county_or_msa").val(the_value);
+    state = $("#state_list").val();
+    county = "";
+    refresh_predictions(state,county,the_value);
+    
+
+
+    };
+
+
+  
+  
+  </script>
+  
+    {% endif %}
+  
