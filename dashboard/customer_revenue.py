@@ -19,7 +19,6 @@ def consume_fastapi_start():
 @customer_revenue.route('/get_customer_revenue', methods=['POST', 'GET'])
 def render_customer_data_modal(popout = False):
 
-
         res = jsonify({'htmlresponse':render_template('modal/customer_data.modal.html')})
 
         return res

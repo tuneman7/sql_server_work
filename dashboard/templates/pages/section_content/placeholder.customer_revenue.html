@@ -7,17 +7,17 @@
     
 
 
-      function refresh_fastapi(state,county,county_or_msa){
+      function refresh_fastapi(pageno){
   
   
             $.ajax({
-                url: '/consume_fastapi',
+                url: '/get_customer_revenue',
                 type: 'post',
-                data: {state:state,county:county,county_or_msa:county_or_msa},
+                data: {pageno:pageno},
                 success: function(data){ 
-                    $('#fastapi_caller').empty();                 
-                    $('#fastapi_caller').html(data); 
-                    $('#fastapi_caller').append(data.htmlresponse); 
+                    $('#customer_info_caller').empty();                 
+                    $('#customer_info_caller').html(data); 
+                    $('#customer_info_caller').append(data.htmlresponse); 
                     page_not_loading();
                 }
             });
