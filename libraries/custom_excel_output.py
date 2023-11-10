@@ -325,7 +325,7 @@ class custom_excel_output(excel_output):
             #     df.to_excel(writer,sheet_name=sheet_name,freeze_panes=(1,0),index=False)
             #     self.format_worksheet(writer=writer,worksheet=writer.sheets[sheet_name],sheet_name=sheet_name,df=df,top_row_filter=top_row_filter)  # format worksheet
 
-    def write_excel_from_dfs(self,list_of_dfs=None,limiter=None,start_row=0,file_name=None,add_subtotal_on_top=False,list_of_sheet_names=None):
+    def write_excel_from_dfs(self,list_of_dfs=None,limiter=None,start_row=0,file_name=None,add_subtotal_on_top=False,list_of_sheet_names=None,cols_to_float=["amt"]):
         if file_name is None or list_of_dfs is None:
             return
         
@@ -343,6 +343,12 @@ class custom_excel_output(excel_output):
 
                 # Apply the lambda function to all columns in the DataFrame
                 df = df.applymap(remove_trailing_whitespace)
+
+                #Strip text out of these columns
+                for col_to_float in cols_to_float:
+                    for col in df:
+                        if col_to_float.lower() in str(col).lower():
+                            df["{}".format(col)] = df["{}".format(col)].replace('[\$,]', '', regex=True).astype(float)
 
 
                 #print(len(df))

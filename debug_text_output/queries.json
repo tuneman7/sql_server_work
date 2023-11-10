@@ -1,6 +1,18 @@
 {
    "products": [
       {
+         "get_tables.sql": "/data/school/MIDS/sql_server_work/db_artifacts/mssql/queries/products/get_tables.sql",
+         "get_tables.sql_content": "select name from sysobjects where type = 'u'\nexec sp_help products\nexec sp_help product_type\n\n\n"
+      },
+      {
+         "get_product_info.sql": "/data/school/MIDS/sql_server_work/db_artifacts/mssql/queries/products/get_product_info.sql",
+         "get_product_info.sql_content": "SELECT\n    p.id,\n    p.product_name,\n    pt.product_type_desc as product_type\nfrom products p\nJOIN\n    product_type pt\n--on pt.id = p.id\non pt.id = p.product_type_id\n"
+      },
+      {
+         "simple_join_example.sql": "/data/school/MIDS/sql_server_work/db_artifacts/mssql/queries/products/simple_join_example.sql",
+         "simple_join_example.sql_content": "SELECT\n    p.id,\n    p.product_name,\n    pt.product_type_desc as product_type\nfrom products p\nJOIN\n    product_type pt\n--on pt.id = p.id\non pt.id = p.product_type_id\n"
+      },
+      {
          "get_product_id_and_product_type.sql": "/data/school/MIDS/sql_server_work/db_artifacts/mssql/queries/products/get_product_id_and_product_type.sql",
          "get_product_id_and_product_type.sql_content": "SELECT\n    p.id AS product_id,\n    p.product_name,\n    pt.id AS product_type_id,\n    pt.product_type_desc\nFROM\n    products p\nJOIN\n    product_type pt ON p.product_type_id = pt.id;\n"
       },

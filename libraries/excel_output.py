@@ -77,19 +77,33 @@ class excel_output(db_base):
         return outfile,df.head(5)
         
 
-    def format_worksheet(self,writer,worksheet,sheet_name,df,top_row_filter=True,startrow=0,add_subtotal_on_top=False):
+    def format_worksheet(self,writer,worksheet,sheet_name,df,top_row_filter=True,startrow=0,add_subtotal_on_top=False,cols_to_float=["amt"]):
         if add_subtotal_on_top and len(df)>1:
             cols_for_sub = dict()
             pos = 0
             #Add subtotals on top if needed.
             for column in df:
-                if "amt" in str(column).lower():
-                    cols_for_sub[xlsxwriter.utility.xl_col_to_name(pos)] = pos
+                for col_to_float in cols_to_float:
+                    if col_to_float.lower() in str(column).lower():
+                        cols_for_sub[xlsxwriter.utility.xl_col_to_name(pos)] = pos
                 pos = pos+1
-            for key in cols_for_sub.keys():
-                pos = cols_for_sub[key]
-                my_range = "{}{}:{}{}".format(key,startrow+1,key,len(df)-startrow) 
-                formula = "=SUBTOTAL(9,{}{}:{}{})".format(key,startrow+1,key,len(df)-startrow)
+            for column_letter in cols_for_sub.keys():
+
+                #First format the column as currency:
+                # Define your currency format
+                # worksheet
+                workbook = writer.book
+                currency_format = workbook.add_format({'num_format': '$#,##0.00'})
+                colum_ref = "{}:{}".format(column_letter,column_letter)
+                worksheet.set_column(colum_ref,None,currency_format)
+
+                pos = cols_for_sub[column_letter]
+                
+                fmla_buffer = 2 if top_row_filter else 1
+                
+                #print("fmla_buffer ={}".format(fmla_buffer))
+                
+                formula = "=SUBTOTAL(9,{}{}:{}{})".format(column_letter,startrow+fmla_buffer,column_letter,len(df)+startrow+fmla_buffer)
                 if not startrow ==0:
                     worksheet.write(startrow-1,pos,formula)
         if top_row_filter:
@@ -105,10 +119,10 @@ class excel_output(db_base):
             if ("_mpm" in str(column).lower()) or ("mpm_" in str(column).lower()) :
                 cols_for_mpm[xlsxwriter.utility.xl_col_to_name(pos)] = pos
             pos = pos+1
-        for key in cols_for_mpm.keys():
+        for column_letter in cols_for_mpm.keys():
             try:
-                pos = cols_for_mpm[key]
-                my_range = "{}{}:{}{}".format(key,startrow+1,key,len(df)+startrow+1) 
+                pos = cols_for_mpm[column_letter]
+                my_range = "{}{}:{}{}".format(column_letter,startrow+1,column_letter,len(df)+startrow+1) 
                 custom_format = writer.book.add_format({'num_format':'0'})
                 writer.sheets[sheet_name].conditional_format(my_range, {'type': 'cell',
                                             'criteria' : '>', 
