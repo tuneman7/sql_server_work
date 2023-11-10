@@ -5,18 +5,17 @@
   }
   
   </style>
-
-<br/>
-<br/>
-<br/>
-
 <!--Don Irwin use this on the tool tip so that it will be on top always-->
 
 <div class="container">
 
     <div>
+        <div id="customer_prod_summary_img"></div>        
+    </div>
+
+    <div>
         <div id="table"></div>
-      </div>
+    </div>
       <script>
         new gridjs.Grid({
           columns: [
@@ -37,9 +36,24 @@
             url: '/api/data',
             then: results => results.data,
           },
+          style: {
+                td: {
+                border: '0px solid #ccc'
+                },
+                th:
+                {
+                border: '0px solid #ccc'
+                },
+                table: {
+                'font-size': '10px'
+                }
+            },
           sort: true,
           pagination: true,
         }).render(document.getElementById('table'));
+
+        parse({{ chart_json | safe }}, "customer_prod_summary");
+
       </script>
 
     
@@ -79,7 +93,7 @@
 
 
 
-
+        parse({{ chart_json | safe }}, "customer_prod_summary_img");
 
 
           page_not_loading();
