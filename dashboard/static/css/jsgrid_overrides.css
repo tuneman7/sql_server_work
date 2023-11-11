@@ -1,0 +1,46 @@
+
+/**
+ * 
+ * 
+ *
+**/
+
+
+/*****************************************************************************
+ * Override jsgrid
+ ****************************************************************************/
+
+/* Override padding and whitespace for table cells */
+.gridjs-td {
+  padding: 0 !important; /* Removes padding inside cells */
+  white-space: nowrap !important; /* Eliminates whitespace wrapping */
+}    
+
+.gridjs-th {
+  padding: 0 !important; /* Removes padding inside cells */
+  white-space: nowrap !important; /* Eliminates whitespace wrapping */
+}   
+
+tr:nth-of-type(even) td {
+ background: #fff;
+}
+
+tr:nth-of-type(odd) td {
+ background: #E2FFFF;
+}
+
+/* Custom CSS to make Grid.js pagination smaller */
+.gridjs-pagination {
+  font-size: 12px !important;; /* Smaller font size */
+  padding: 0px !important;;    /* Reduced padding */
+}
+
+.gridjs-pagination button {
+  padding: 3px 6px !important;; /* Smaller buttons */
+  font-size: 12px !important;;  /* Smaller font size */
+}
+
+
+ /*****************************************************************************
+ * 
+ ****************************************************************************/

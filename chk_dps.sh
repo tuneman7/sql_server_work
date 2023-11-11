@@ -2,6 +2,19 @@
 
 export all_deps=1
 
+redis-cli --version>/dev/null
+if [ $? -eq 0 ]; then
+    echo "redis-cli is installed"
+else
+    echo "*********************************"
+    echo "redis-cli is not installed -- exiting"
+    echo " run sudo apt install redis-tools "
+    echo "*********************************"
+all_deps=0
+    #return
+fi
+
+
 jq --version>/dev/null
 if [ $? -eq 0 ]; then
     echo "jq is installed"

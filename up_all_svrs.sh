@@ -22,12 +22,12 @@ return
 fi
 
 echo "****************"
-echo "Bringing up SQL Servers in Docker"
+echo "Bringing up Servers in Docker"
 echo "****************"
 for m_mc in "${server_up_dkr_l_cmds[@]}"
 do
 echo "****************"
-echo "Bringing up SQL Server"
+echo "Bringing up Server"
 echo "****************"
 	. $m_mc
 done
@@ -42,7 +42,7 @@ echo "****************"
 echo "Looking at servers in docker"
 echo "****************"
 
-for m_i_nm in "${a_sql_dkr_img[@]}"
+for m_i_nm in "${a_svr_dkr_img[@]}"
 do
 echo "****************"
 echo "Looking looking at $m_i_nm"
@@ -61,7 +61,7 @@ while ! $finished; do
 
     declare -a s_up=()
 
-    for u_c in "${a_sql_inline_command[@]}"
+    for u_c in "${a_server_up_inline_command[@]}"
     do
         echo "#!/bin/bash">my_runner.sh
         echo "$u_c">>my_runner.sh
@@ -188,7 +188,7 @@ if [[ "$do_exit" -eq 1 ]]
 then
 
     #If yess, kill all the processes running fastapi / guinicorn
-    for m_port in "${fast_api_ports[@]}"
+    for m_port in "${server_ports_used[@]}"
     do
 
         pid_to_kill=$(lsof -t -i :$m_port -s TCP:LISTEN)

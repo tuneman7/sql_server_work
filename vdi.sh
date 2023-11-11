@@ -9,7 +9,7 @@ echo "****************"
 echo "Looking at servers in docker"
 echo "****************"
 
-for m_i_nm in "${a_sql_dkr_img[@]}"
+for m_i_nm in "${a_svr_dkr_img[@]}"
 do
 echo "****************"
 echo "Looking looking at $m_i_nm"

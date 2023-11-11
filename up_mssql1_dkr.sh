@@ -51,8 +51,8 @@ echo "updating firewall rules for port:$mssql1_port"
 sudo ufw allow $mssql1_port
 
 #add it to the array of docker images
-a_sql_dkr_img+=($mssql1_name)
-#export a_sql_dkr_img=$a_sql_dkr_img
+a_svr_dkr_img+=($mssql1_name)
+#export a_svr_dkr_img=$a_svr_dkr_img
 
 
 

@@ -10,49 +10,143 @@
 <div class="container">
 
     <div>
-        <div id="customer_prod_summary_img"></div>        
+
+
+        <div class="container">
+            <div class="container-fluid" id="event_detail_rendering">
+                <div class="row">
+                    <div class="col-md-1">
+                        <img src="./static/images/back-button-svgrepo-com.svg" width="40" height="40" onclick="move_back_slide()" id="move_back_slide"/>
+                    </div>
+                    <div class="col-md-10  float-left">
+                        {% if event_text is not none %}
+                        {{ event_text | safe }}
+                        {% endif %}
+                    </div>
+                    <div class="col-md-1 float-right">
+                        <img src="./static/images/back-button-svgrepo-com.svg" width="40" height="40" style="transform:rotate(180deg)" class="float-end" id="move_forward_slide" onclick="move_forward_slide()"/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-1"></div>
+                    <div class="col-md-10">
+                        <br/>
+                    </div>
+                    <div class="col-md-1"></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <br/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div id="event_render_container">
+                            {% if chart_json is not none %}
+                            <!-- Placeholder for the tooltip -->
+                            <div id="customer_prod_summary_img"></div>        
+                            <div id="vis-tooltip" class="vg-tooltip on_top_always"></div>
+                            {% endif %}                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+          </div>
+        
     </div>
 
-    <div>
-        <div id="table"></div>
-    </div>
-      <script>
-        new gridjs.Grid({
-          columns: [
-            { id: 'customer_id', name: 'Customer ID' },
-            { id: 'f_name', name: 'First Name' },
-            { id: 'l_name', name: 'Last Name' },
-            { id: 'product_name', name: 'Product Name' },
-            { id: 'product_type', name: 'Product Type' },
-            { id: 'amt_usd', name: 'Amount (USD)' },
-            { id: 'post_date', name: 'Post Date' },
-            { id: 'channel_desc', name: 'Channel Description' },
-            { id: 'partner_desc', name: 'Partner Description' },
-            { id: 'location_name', name: 'Location Name' },
-            { id: 'account_name', name: 'Account Name' },
-            { id: 'account_type', name: 'Account Type' }
-          ],
-          server: {
-            url: '/api/data',
-            then: results => results.data,
-          },
-          style: {
-                td: {
-                border: '0px solid #ccc'
-                },
-                th:
-                {
-                border: '0px solid #ccc'
-                },
-                table: {
-                'font-size': '10px'
-                }
-            },
-          sort: true,
-          pagination: true,
-        }).render(document.getElementById('table'));
+    {% if slide_no == 1 %}
 
-        parse({{ chart_json | safe }}, "customer_prod_summary");
+            <div>
+                <div id="table"></div>
+            </div>
+
+            <script>
+
+
+
+                var my_grid = new gridjs.Grid({
+                columns: [
+                    { id: 'customer_id', name: 'Customer ID' },
+                    { id: 'f_name', name: 'First Name' },
+                    { id: 'l_name', name: 'Last Name' },
+                    { id: 'product_name', name: 'Product Name' },
+                    { id: 'product_type', name: 'Product Type' },
+                    { id: 'amt_usd', name: 'Amount (USD)' },
+                    { id: 'post_date', name: 'Post Date' },
+                    { id: 'channel_desc', name: 'Channel Description' },
+                    { id: 'partner_desc', name: 'Partner Description' },
+                    { id: 'location_name', name: 'Location Name' },
+                    { id: 'account_name', name: 'Account Name' },
+                    { id: 'account_type', name: 'Account Type' }
+                ],
+                server: {
+                    url: '/api/data',
+                    then: results => results.data,
+                },
+                style: {
+                        td: {
+                        border: '0px solid #ccc'
+                        },
+                        th:
+                        {
+                        border: '0px solid #ccc'
+                        },
+                        table: {
+                        'font-size': '10px'
+                        }
+                    },
+                sort: true,
+                pagination: true,
+                }).render(document.getElementById('table'));
+
+                {% if nav_to_section == "true" %}
+                
+                my_grid.on('ready', () => nav_to_section("section_one"));                
+
+                {% endif %}            
+
+                
+
+                
+            </script>
+        
+
+    {% endif %}                            
+
+
+
+
+
+    <script>
+
+        //Parse for the vega set
+        function parse(url, div) {
+            var opt = { mode: "vega-lite", renderer: "svg", actions: { export: true, source: false, editor: false } };
+            vegaEmbed("#" + div, url, opt, function (error, result) {
+                vegaTooltip.vegaLite(result.view, url);
+            });
+        }
+
+
+
+        $(document).ready(function () {
+
+            {% if chart_json is not none %}
+            parse({{ chart_json | safe }}, "customer_prod_summary_img");
+            {% endif %}
+
+            {% if nav_to_section == "true" %}
+
+            nav_to_section("section_one");
+
+            {% endif %}            
+
+            page_not_loading();
+
+          });
+
+
 
       </script>
 
@@ -61,102 +155,8 @@
 </div>
 
 
-  <script>
-
-  
-      $(document).ready(function () {
-
-
-        $("#dataset_table_parent table.dataframe").attr("class","display");
-        $("#dataset_table_parent table.display").attr("border","0");
-        $("#dataset_table_parent table.display").attr("style","width:100%");
-        $("#dataset_table_parent table.display").attr("id","mydataframe");
-
-        $("#mydataframe").dataTable( {
-        "columns": [
-            null,
-            { "width": "15%" },
-            { "width": "15%" },
-            null,
-            null,
-            null, 
-            null,
-            null
-        ],
-        "columnDefs": [
-        { "visible": false, "targets": 1 }
-    ],
-        "buttons": [
-            'copy', 'csv', 'excel', 'pdf', 'print'
-        ]        
-        } );
-
-
-
-        parse({{ chart_json | safe }}, "customer_prod_summary_img");
-
-
-          page_not_loading();
-
-
-      });
-
-    </script>    
-
-
 
   {% if chart_json is not none %}
-
-  <div class="container">
-    <div class="container-fluid" id="event_detail_rendering">
-        <div class="row">
-            <div class="col-md-1">
-                <img src="./static/images/back-button-svgrepo-com.svg" width="40" height="40" onclick="move_back_slide()" id="move_back_slide"/>
-            </div>
-            <div class="col-md-10  float-left">
-                {% if event_text is not none %}
-                {{ event_text | safe }}
-                {% endif %}
-            </div>
-            <div class="col-md-1 float-right">
-                <img src="./static/images/back-button-svgrepo-com.svg" width="40" height="40" style="transform:rotate(180deg)" class="float-end" id="move_forward_slide" onclick="move_forward_slide()"/>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-1"></div>
-            <div class="col-md-10">
-                <br/>
-            </div>
-            <div class="col-md-1"></div>
-        </div>
-        <div class="row">
-            <div class="col-md-12">
-                <br/>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-12">
-                <div id="event_render_container">
-                    {% if chart_json is not none %}
-                    <!-- Placeholder for the tooltip -->
-                    <div id="vis-tooltip" class="vg-tooltip on_top_always"></div>
-                </div>
-                <!-- Render Charts -->
-                <script type="text/javascript">
-                    function parse(url, div) {
-                        var opt = { mode: "vega-lite", renderer: "svg", actions: { export: true, source: false, editor: false } };
-                        vegaEmbed("#" + div, url, opt, function (error, result) {
-                            vegaTooltip.vegaLite(result.view, url);
-                        });
-                    }
-                    //Parse your Json variable here
-                    parse({{ chart_json | safe }} , "event_rendering_chart");
-                </script>
-                {% endif %}
-            </div>
-        </div>
-    </div>
-</div>
 
 <script>
     var slide_no = 1;
@@ -164,20 +164,18 @@
     var total_slides = {{ total_slides }};
 
     function move_forward_slide() {
-        nav_to_section("trade");
         slide_no += 1;
         page_loading();
-        render_graphs("trade", slide_no);
+        render_graphs("section_one", slide_no,true);
     }
 
     function move_back_slide() {
-        nav_to_section("trade");
         if (slide_no == 1) {
             return;
         }
         slide_no -= 1;
         page_loading();
-        render_graphs("trade", slide_no);
+        render_graphs("section_one", slide_no,true);
     }
 
     $(document).ready(function () {
@@ -189,8 +187,8 @@
         }
         page_not_loading();
     });
+
 </script>
 
 
   {% endif %}
-  

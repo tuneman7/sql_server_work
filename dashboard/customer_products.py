@@ -8,6 +8,10 @@ import os
 
 customer_products = Blueprint('customer_products', __name__)
 
+#create one instance of this so it doesn't
+#need to be re-used
+mda = da()
+mu = mutil()
 
 @customer_products.route('/customer_revenue_start', methods=['POST', 'GET'])
 def consume_fastapi_start():
@@ -20,7 +24,6 @@ def consume_fastapi_start():
 import glob
 import os
 def clear_json_files():
-        mu = mutil()
         pattern = 'altair-data*.json'
         # Get a list of matching files in the directory
         matching_files = glob.glob(os.path.join(mu.get_this_dir(), pattern))
@@ -37,27 +40,43 @@ def clear_json_files():
 def render_customer_data_modal(popout = False):
 
         chart_json=None
-        total_slides = 1
+        total_slides = 2
         slide_no=1
+        nav_to_section = False
+        if request.method == 'POST':
+                slide_no = int(request.form["slide_no"])
+                nav_to_section = request.form["nav_to_section"]
+
+        print("nav_to_section",nav_to_section)
+
+
+        print(slide_no)
 
         mar = ar()
-        mda = da()
         
-        chart_json = mar.get_cust_summary_images(mda.get_customer_product_data()).configure_axis(
-                grid=False
-            ).configure_view(
-                strokeWidth=0
-            ).to_json()            
+        if slide_no==1:
+                chart_json = mar.get_cust_summary_images(mda.get_customer_product_data()).configure_axis(
+                        grid=False
+                ).configure_view(
+                        strokeWidth=0
+                ).to_json()
+                    
+        if slide_no==2:
+                chart_json = mar.get_circle_and_donut_graphs(mda.get_customer_product_data()).configure_axis(
+                        grid=False
+                ).configure_view(
+                        strokeWidth=0
+                ).to_json()
 
 
         res = jsonify({'htmlresponse':render_template('modal/customer_data.modal.html',titles=[''],
-                                                      slide_no=slide_no,total_slides=total_slides,chart_json=chart_json)})
+                                                      slide_no=slide_no,total_slides=total_slides,chart_json=chart_json,nav_to_section=nav_to_section)})
 
         return res
 
 @customer_products.route('/api/data')
 def data():
-        mda = da()
+
         df = mda.get_customer_product_data()
         df['post_date'] = pd.to_datetime(df['post_date'])
         df['post_date'] = df['post_date'].dt.strftime('%Y-%m-%d %H:%M')

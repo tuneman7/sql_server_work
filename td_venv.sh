@@ -9,7 +9,7 @@ if [[ "$do_exit" -eq 1 ]]
 then
 
     #If yess, kill all the processes running fastapi / guinicorn
-    for m_port in "${fast_api_ports[@]}"
+    for m_port in "${server_ports_used[@]}"
     do
 
         pid_to_kill=$(lsof -t -i :$m_port -s TCP:LISTEN)

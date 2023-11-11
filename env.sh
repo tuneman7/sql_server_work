@@ -28,6 +28,14 @@ bigquery_apidir=$(pwd)/fastapi/site_traffic
 site_traffic_api_url="http://${bigquery_sn}:${bigquery_apiport}/"
 export site_traffic_api_url=$site_traffic_api_url
 
+#redis
+redis_name=redis
+redis_hostname=redis
+redis=redis
+redis_port=6379
+redis_sn=127.0.0.1
+redis_up="redis-cli -h "$redis_sn" -p "$redis_port" ping"
+
 
 #sql_server
 mssql1_name=mssql1
@@ -88,22 +96,29 @@ mssql_servers=($mssql1)
 server_up_dkr_l_cmds=("up_mysql1_dkr.sh")
 server_up_dkr_l_cmds+=("up_mssql1_dkr.sh")
 server_up_dkr_l_cmds+=("up_postsql1_dkr.sh")
+server_up_dkr_l_cmds+=("up_redis_dkr.sh")
 
 
 #array of all bash files to destroy docker instances
 server_down_dkr_l_cmds=("down_mssql1_dkr.sh")
 server_down_dkr_l_cmds+=("down_mysql1_dkr.sh")
 server_down_dkr_l_cmds+=("down_postsql1_dkr.sh")
+server_down_dkr_l_cmds+=("down_redis_dkr.sh")
+
+
 
 #array all docker images
-a_sql_dkr_img=($mssql1_name)
-a_sql_dkr_img+=($mysql1_name)
-a_sql_dkr_img+=($postsql1_name)
+a_svr_dkr_img=($mssql1_name)
+a_svr_dkr_img+=($mysql1_name)
+a_svr_dkr_img+=($postsql1_name)
+a_svr_dkr_img+=($redis_name)
 
 #array of commands to check for sql server to be up
-a_sql_inline_command=("${mssql1_up}")
-a_sql_inline_command+=("${mysql1_up}")
-a_sql_inline_command+=("${postsql1_up}")
+a_server_up_inline_command=("${mssql1_up}")
+a_server_up_inline_command+=("${mysql1_up}")
+a_server_up_inline_command+=("${postsql1_up}")
+a_server_up_inline_command+=("${redis_up}")
+
 
 #array of commands to generate models from databases
 of=$(pwd)/fastapi/products/genmodel.sh
@@ -129,10 +144,10 @@ dashboard_jn_url="http://${dashboard_jn_host}:${dashboard_jn_port}"
 
 
 #array of ports used by fastapi or dasboard
-fast_api_ports=("${mssql1_apiport}")
-fast_api_ports+=("${mysql1_apiport}")
-fast_api_ports+=("${postsql1_apiport}")
-fast_api_ports+=("${dashboard_port}")
-fast_api_ports+=("${dashboard_jn_port}")
+server_ports_used=("${mssql1_apiport}")
+server_ports_used+=("${mysql1_apiport}")
+server_ports_used+=("${postsql1_apiport}")
+server_ports_used+=("${dashboard_port}")
+server_ports_used+=("${dashboard_jn_port}")
 
 

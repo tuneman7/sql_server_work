@@ -220,6 +220,10 @@ def send_email():
 # app.register_blueprint(fastapi_consumer)
 from customer_products import customer_products
 app.register_blueprint(customer_products)
+from api import api
+app.register_blueprint(api)
+from intro import intro
+app.register_blueprint(intro)
 
 
 

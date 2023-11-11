@@ -6,7 +6,7 @@ source ./env.sh
 
 
 
-for m_port in "${fast_api_ports[@]}"
+for m_port in "${server_ports_used[@]}"
 do
 
     pid_to_kill=$(lsof -t -i :$m_port -s TCP:LISTEN)

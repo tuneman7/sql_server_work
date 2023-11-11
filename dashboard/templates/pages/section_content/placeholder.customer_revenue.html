@@ -3,24 +3,23 @@
 
 <script>
 
-function render_graphs(event_name,slide_no){
-
-          $.ajax({
-              url: '/render_customer_products',
-              type: 'post',
-              data: {event_name: event_name, slide_no: slide_no},
-              success: function(data){ 
-                  $('#customer_product_section').html(data); 
-                  $('#customer_product_section').append(data.htmlresponse);
-              }
-          });
-        };
+function render_graphs(event_name, slide_no, nav_to_section = false) {
+    $.ajax({
+        url: '/render_customer_products',
+        type: 'post',
+        data: { event_name: event_name, slide_no: slide_no, nav_to_section:nav_to_section },
+        success: function(data) { 
+            $('#customer_product_section').html(data); 
+            $('#customer_product_section').append(data.htmlresponse);
+        }
+    });
+};
 
 
 $(document).ready(function () {
     
     page_loading();
-    render_graphs("Customer Products","1");
+    render_graphs("Customer Products","1",false);
 
 });
 

@@ -33,8 +33,8 @@ echo "docker rm ${mssql1_name}"
 
 
 #add it to the array of docker images
-a_sql_dkr_img+=($mssql1_name)
-export a_sql_dkr_img=$a_sql_dkr_img
+a_svr_dkr_img+=($mssql1_name)
+export a_svr_dkr_img=$a_svr_dkr_img
 
 #delete connector
 cnctr_dir=$(pwd)/cnctr/mssql

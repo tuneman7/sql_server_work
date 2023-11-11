@@ -7,12 +7,12 @@ return
 fi
 
 echo "****************"
-echo "Tearing down SQL Servers in Docker"
+echo "Tearing down Servers in Docker"
 echo "****************"
 for m_mc in "${server_down_dkr_l_cmds[@]}"
 do
 echo "****************"
-echo "Tearing down SQL Server"
+echo "Tearing down Server"
 echo "****************"
 	. $m_mc
 done
@@ -25,7 +25,7 @@ echo "****************"
 echo "Looking at servers in docker"
 echo "****************"
 
-for m_i_nm in "${a_sql_dkr_img[@]}"
+for m_i_nm in "${a_svr_dkr_img[@]}"
 do
 echo "****************"
 echo "Looking looking at $m_i_nm"
