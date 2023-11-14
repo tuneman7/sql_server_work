@@ -17,6 +17,7 @@ from libraries.utility import Utility
 from libraries.custom_excel_output import custom_excel_output
 from libraries.db_base import db_base
 import redis
+import copy
 
 class database_aggregator(Utility):
 
@@ -80,38 +81,48 @@ class database_aggregator(Utility):
 
     def get_customer_product_data(self):
         return self.customer_product_data
+    
+    def extract_insights(self):
 
-    def analyze_data(self):
-        # Load the data
-        data = self.customer_product_data
+        # Load the dataset
+        data = copy.deepcopy(self.customer_product_data)
 
-        # Convert 'post_date' to datetime
-        data['post_date'] = pd.to_datetime(data['post_date'])
+        data['amt_usd'] = pd.to_numeric(data['amt_usd'], errors='coerce')
 
-        # Calculations
-        # Total Revenue
-        total_revenue = data['amt_usd'].sum()
-
-        # Revenue by Product Type
-        revenue_by_product_type = data.groupby('product_type')['amt_usd'].sum().sort_values(ascending=False)
-
-        # Top Customers by Revenue
-        data['full_name'] = data['f_name'] + ' ' + data['l_name']
-        top_customers = data.groupby('full_name')['amt_usd'].sum().sort_values(ascending=False).head(10)
-
-        # Revenue Trends Over Time
-        data['year_month'] = data['post_date'].dt.to_period('M')
-        revenue_trend = data.groupby('year_month')['amt_usd'].sum()
-
-        # Creating the insights dictionary
-        insights = {
-            "total_revenue": total_revenue,
-            "revenue_by_product_type": revenue_by_product_type.to_dict(),
-            "top_customers": top_customers.to_dict(),
-            "revenue_trend": revenue_trend.to_dict()
+        # First Set of Insights
+        first_set = {
+            'total_transactions': len(data),
+            'average_transaction_amount': f"${data['amt_usd'].mean():,.2f}",
+            'max_transaction_amount': f"${data['amt_usd'].max():,.2f}",
+            'min_transaction_amount': f"${data['amt_usd'].min():,.2f}",
+            'std_dev_transaction_amount': f"${data['amt_usd'].std():,.2f}"
         }
 
-        return insights
+        # Second Set of Insights
+        total_revenue = data['amt_usd'].sum()
+        city_with_most_revenue = data.groupby('location_name')['amt_usd'].sum().idxmax()
+        revenue_in_highest_grossing_city = data.groupby('location_name')['amt_usd'].sum().max()
+
+        second_set = {
+            'total_revenue': f"${total_revenue:,.2f}",
+            'city_with_most_revenue': city_with_most_revenue,
+            'revenue_in_highest_grossing_city': f"${revenue_in_highest_grossing_city:,.2f}"
+        }
+
+        # Third Set of Insights
+        highest_grossing_product = data.groupby('product_name')['amt_usd'].sum().idxmax()
+        highest_grossing_channel = data.groupby('channel_desc')['amt_usd'].sum().idxmax()
+
+        third_set = {
+            'highest_grossing_product': highest_grossing_product,
+            'highest_grossing_channel': highest_grossing_channel
+        }
+
+        # Combine all insights
+        combined_insights = {**first_set, **second_set, **third_set}
+        return combined_insights
+
+
 
     def print_internal_directory(self):
         for k, v in self.__dict__.items():

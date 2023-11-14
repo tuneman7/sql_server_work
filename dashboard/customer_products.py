@@ -40,7 +40,7 @@ def clear_json_files():
 def render_customer_data_modal(popout = False):
 
         chart_json=None
-        total_slides = 2
+        total_slides = 3
         slide_no=1
         nav_to_section = False
         if request.method == 'POST':
@@ -68,9 +68,12 @@ def render_customer_data_modal(popout = False):
                         strokeWidth=0
                 ).to_json()
 
+        insights = mda.extract_insights()
 
         res = jsonify({'htmlresponse':render_template('modal/customer_data.modal.html',titles=[''],
-                                                      slide_no=slide_no,total_slides=total_slides,chart_json=chart_json,nav_to_section=nav_to_section)})
+                                                      slide_no=slide_no,total_slides=total_slides,
+                                                      insights=insights,
+                                                      chart_json=chart_json,nav_to_section=nav_to_section)})
 
         return res
 

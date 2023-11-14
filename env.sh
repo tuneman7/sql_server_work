@@ -150,4 +150,11 @@ server_ports_used+=("${postsql1_apiport}")
 server_ports_used+=("${dashboard_port}")
 server_ports_used+=("${dashboard_jn_port}")
 
+# Exporting each URL as a separate environment variable
+export BIGQUERY_API_URL="http://${bigquery_sn}:${bigquery_apiport}/docs"
+export PRODUCTS_API_URL="http://${mssql1_sn}:${mssql1_apiport}/docs"
+export CUSTOMERS_API_URL="http://${mysql1_sn}:${mysql1_apiport}/docs"
+export FINANCE_API_URL="http://${postsql1_sn}:${postsql1_apiport}/docs"
+export DASHBOARD_URL="http://${dashboard_host}:${dashboard_port}"
+export DASHBOARD_JN_URL="http://${dashboard_jn_host}:${dashboard_jn_port}/?tree"
 

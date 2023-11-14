@@ -22,6 +22,38 @@
                         {% if event_text is not none %}
                         {{ event_text | safe }}
                         {% endif %}
+
+                        {% if insights is not none and slide_no == 1%}
+
+                        <div id="revenuesummarydata">
+                            <h3 class="text-center my-4">Financial Insights</h3>
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <ul class="list-unstyled">
+                                            <li>Total Number of Transactions: <b>{{ insights['total_transactions'] }}</b></li>
+                                            <li>Average Transaction Amount: <b>{{ insights['average_transaction_amount'] }}</b></li>
+                                            <li>Maximum Transaction Amount: <b>{{ insights['max_transaction_amount'] }}</b></li>
+                                            <li>Minimum Transaction Amount: <b>{{ insights['min_transaction_amount'] }}</b></li>
+                                            <li>Standard Deviation of Transaction Amounts: <b>{{ insights['std_dev_transaction_amount'] }}</b></li>
+                                            <li>Total Revenue: <b>{{ insights['total_revenue'] }}</b></li>
+                                        </ul>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <ul class="list-unstyled">
+                                            <li>City with Most Revenue: <b>{{ insights['city_with_most_revenue'] }}</b></li>
+                                            <li>Revenue in Highest Grossing City: <b>{{ insights['revenue_in_highest_grossing_city'] }}</b></li>
+                                            <li>Highest Grossing Product: <b>{{ insights['highest_grossing_product'] }}</b></li>
+                                            <li>Highest Grossing Channel: <b>{{ insights['highest_grossing_channel'] }}</b></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                    
+                        </div>
+                    
+                        {%endif%}                        
+
                     </div>
                     <div class="col-md-1 float-right">
                         <img src="./static/images/back-button-svgrepo-com.svg" width="40" height="40" style="transform:rotate(180deg)" class="float-end" id="move_forward_slide" onclick="move_forward_slide()"/>
@@ -55,15 +87,14 @@
         
     </div>
 
-    {% if slide_no == 1 %}
+
+    {% if slide_no == 3 %}
 
             <div>
                 <div id="table"></div>
             </div>
 
             <script>
-
-
 
                 var my_grid = new gridjs.Grid({
                 columns: [
@@ -144,6 +175,15 @@
 
             page_not_loading();
 
+            slide_no = {{ slide_no }};
+            if (!(slide_no < total_slides)) {
+                $("#move_forward_slide").hide();
+            } else {
+                $("#move_forward_slide").show();
+            }
+            page_not_loading();
+
+
           });
 
 
@@ -153,8 +193,6 @@
     
 
 </div>
-
-
 
   {% if chart_json is not none %}
 
@@ -177,16 +215,6 @@
         page_loading();
         render_graphs("section_one", slide_no,true);
     }
-
-    $(document).ready(function () {
-        slide_no = {{ slide_no }};
-        if (!(slide_no < total_slides)) {
-            $("#move_forward_slide").hide();
-        } else {
-            $("#move_forward_slide").show();
-        }
-        page_not_loading();
-    });
 
 </script>
 

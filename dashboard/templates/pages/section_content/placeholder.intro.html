@@ -1,13 +1,40 @@
-<h2 id="intro_title">System Architecture</h2>
+
 <div id="intro_section_content"></div>
 
 <div id="container">
 
-    <div id="architecture_img">
-        <img src="/static/images/diagram_data/docker_diagram_virtual_network.png" border="0" width="75%">
+    <div class="row">
+
+        <!-- URL Status Column -->
+        <div class="col-md-3">
+            <h2 class="mt-5">Sub-System Status</h2>
+            <ul class="list-group mt-3">
+                {% for name, status in url_status.items() %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <a href="{{ url_status[name]['url'] }}" target="_blank">{{ name }}</a>
+                        <span class="badge badge-{{ 'success' if url_status[name]['status'] == 'up' else 'danger' }}">
+                            {{ url_status[name]['status'] | capitalize }}
+                        </span>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+
+        <!-- Image Column -->
+        <div class="col-md-9">
+            <div id="architecture_img" class="mt-5">
+                <img src="/static/images/diagram_data/docker_diagram_virtual_network.png" class="img-fluid" alt="System Architecture">
+            </div>
+        </div>
+
+
     </div>
 
+
 </div>
+
+
 
 
 <script>

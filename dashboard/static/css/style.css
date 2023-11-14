@@ -1,1 +1,5 @@
 # Empty CSS file for your own CSS
+
+.bold {
+    font-weight: bold;
+}
