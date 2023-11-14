@@ -350,7 +350,6 @@ class custom_excel_output(excel_output):
                         if col_to_float.lower() in str(col).lower():
                             df["{}".format(col)] = df["{}".format(col)].replace('[\$,]', '', regex=True).astype(float)
 
-
                 #print(len(df))
                 sheet_name = list_of_sheet_names[sn-1] if use_sn_list else "Sheet_" + str(sn)
                 startrow = start_row + 1 if (add_subtotal_on_top == True and start_row==0) else start_row
