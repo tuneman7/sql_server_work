@@ -20,8 +20,8 @@ class AltairRendering:
 
 
     def get_cust_summary_images(self,df):
-        df["amt_usd"] = df["amt_usd"].replace('[\$,]', '', regex=True).astype(float)
         data = df
+        data["amt_usd"] = data["amt_usd"].replace('[\$,]', '', regex=True).astype(float)
 
         # Assuming 'data' is your DataFrame after cleaning
         data['post_date'] = pd.to_datetime(data['post_date'])
@@ -99,6 +99,9 @@ class AltairRendering:
 
         # Assuming df is your DataFrame
         data = df
+        
+        data = df
+        data["amt_usd"] = data["amt_usd"].replace('[\$,]', '', regex=True).astype(float)
 
         # For the pie chart, visualize the revenue per product type
         pie_data = data.groupby('product_type')['amt_usd'].sum().reset_index()

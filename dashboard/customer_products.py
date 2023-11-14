@@ -5,6 +5,9 @@ from libraries.altair_rendering import AltairRendering as ar
 from libraries.utility import Utility as mutil
 import pandas as pd
 import os
+import redis
+import glob
+
 
 customer_products = Blueprint('customer_products', __name__)
 
@@ -21,8 +24,6 @@ def consume_fastapi_start():
         section_number="five"))
         return res
 
-import glob
-import os
 def clear_json_files():
         pattern = 'altair-data*.json'
         # Get a list of matching files in the directory
@@ -43,14 +44,29 @@ def render_customer_data_modal(popout = False):
         total_slides = 3
         slide_no=1
         nav_to_section = False
+        event_text = None
+        
         if request.method == 'POST':
+                event_name = request.form["event_name"]
                 slide_no = int(request.form["slide_no"])
                 nav_to_section = request.form["nav_to_section"]
+                print(slide_no,event_name)
+
+        try:
+                file_name = event_name.lower() +"_"+ str(slide_no)+".txt"
+
+                print("file_name={}".format(file_name))
+
+                load_file_name = os.path.join(mu.get_this_dir(),"static","data",event_name,file_name)
+                print(load_file_name)
+                event_text = mu.get_data_from_file(load_file_name)
+        except:
+                fido="dido"
 
         print("nav_to_section",nav_to_section)
 
 
-        print(slide_no)
+        print(slide_no,event_name)
 
         mar = ar()
         
@@ -72,7 +88,7 @@ def render_customer_data_modal(popout = False):
 
         res = jsonify({'htmlresponse':render_template('modal/customer_data.modal.html',titles=[''],
                                                       slide_no=slide_no,total_slides=total_slides,
-                                                      insights=insights,
+                                                      insights=insights,event_text=event_text,
                                                       chart_json=chart_json,nav_to_section=nav_to_section)})
 
         return res
@@ -84,5 +100,5 @@ def data():
         df['post_date'] = pd.to_datetime(df['post_date'])
         df['post_date'] = df['post_date'].dt.strftime('%Y-%m-%d %H:%M')
         data_list = df.to_dict(orient="records")
-        #print(data_list)
+
         return jsonify({'data': data_list})

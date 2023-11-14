@@ -89,8 +89,16 @@ class database_aggregator(Utility):
 
         data['amt_usd'] = pd.to_numeric(data['amt_usd'], errors='coerce')
 
+        total_revenue = data['amt_usd'].sum()
+        city_with_most_revenue = data.groupby('location_name')['amt_usd'].sum().idxmax()
+        revenue_in_highest_grossing_city = data.groupby('location_name')['amt_usd'].sum().max()
+
+
         # First Set of Insights
         first_set = {
+            'total_revenue': f"${total_revenue:,.2f}",
+            'city_with_most_revenue': city_with_most_revenue,
+            'revenue_in_highest_grossing_city': f"${revenue_in_highest_grossing_city:,.2f}",
             'total_transactions': len(data),
             'average_transaction_amount': f"${data['amt_usd'].mean():,.2f}",
             'max_transaction_amount': f"${data['amt_usd'].max():,.2f}",
@@ -98,15 +106,8 @@ class database_aggregator(Utility):
             'std_dev_transaction_amount': f"${data['amt_usd'].std():,.2f}"
         }
 
-        # Second Set of Insights
-        total_revenue = data['amt_usd'].sum()
-        city_with_most_revenue = data.groupby('location_name')['amt_usd'].sum().idxmax()
-        revenue_in_highest_grossing_city = data.groupby('location_name')['amt_usd'].sum().max()
 
         second_set = {
-            'total_revenue': f"${total_revenue:,.2f}",
-            'city_with_most_revenue': city_with_most_revenue,
-            'revenue_in_highest_grossing_city': f"${revenue_in_highest_grossing_city:,.2f}"
         }
 
         # Third Set of Insights

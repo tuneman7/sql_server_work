@@ -1,0 +1,6 @@
+    <div class="container mt-5">
+        <a href="/api/customer_transaction_excel" class="btn btn-primary btn-sm mt-3">
+            <i class="fas fa-file-excel"></i> Download Excel File
+        </a>
+    </div>
+    <br/>
