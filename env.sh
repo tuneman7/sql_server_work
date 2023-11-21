@@ -6,6 +6,9 @@ if [ $all_deps -eq 0 ]; then
     return
 fi
 
+NETWORK_NAME="ENTERPRISE_NETWORK1"
+export NETWORK_NAME=$NETWORK_NAME
+docker network create $NETWORK_NAME
 
 VENV_NAME=sql_server_env
 

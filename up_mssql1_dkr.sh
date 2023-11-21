@@ -42,7 +42,7 @@ echo mssql1_pwd=$mssql1_pwd
 
 echo "about to create docker"
 docker run -v $mssql1_loc_dir:/var/opt/mssql  -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=${mssql1_pwd}" \
-   -p $mssql1_port:1433 --name ${mssql1_name} --hostname ${mssql1_hostname} \
+   -p $mssql1_port:1433 --name ${mssql1_name} --network $NETWORK_NAME --hostname ${mssql1_hostname} \
    -d \
    mcr.microsoft.com/mssql/server:2022-latest
 

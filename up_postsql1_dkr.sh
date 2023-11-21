@@ -44,7 +44,7 @@ echo "about to create docker"
 	
 #docker run --name some-postgres -e POSTGRES_PASSWORD=mysecretpassword -d postgres
 docker run -v $postsql1_loc_dir:/var/lib/postgresql/data  -e "POSTGRES_PASSWORD=${postsql1_pwd}" \
-   -p $postsql1_port:5432 --name ${postsql1_name} --hostname ${postsql1_hostname} \
+   -p $postsql1_port:5432 --name ${postsql1_name} --network $NETWORK_NAME --hostname ${postsql1_hostname} \
    -d \
    postgres
 

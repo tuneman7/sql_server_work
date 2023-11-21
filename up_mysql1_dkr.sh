@@ -45,7 +45,7 @@ echo mysql1_pwd=$mysql1_pwd
 
 echo "about to create docker"
 docker run -v $mysql1_loc_dir:/var/lib/mysql -e "MYSQL_ROOT_PASSWORD=${mysql1_pwd}" \
-   -p $mysql1_port:3306 --name ${mysql1_name} --hostname ${mysql1_hostname} \
+   -p $mysql1_port:3306 --name ${mysql1_name} --network $NETWORK_NAME --hostname ${mysql1_hostname} \
    -d \
    mysql:latest
 

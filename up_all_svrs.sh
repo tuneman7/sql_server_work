@@ -179,9 +179,7 @@ fi
 #this will never exit.
 wait
 
-
 . ./do_exit.sh
-
 
 #check if the user wants to exit
 if [[ "$do_exit" -eq 1 ]]
