@@ -85,6 +85,10 @@ postsql1_apidir=$(pwd)/fastapi/finance
 finance_api_url="http://${postsql1_sn}:${postsql1_apiport}/"
 export finance_api_url=$finance_api_url
 
+#pyspark
+pyspark_name="spark_pyspark_jupyter"
+pyspark_sn="127.0.0.1"
+pyspark_port=8888
 
 #put fastapi urls into array:
 #array of all bash files to destroy docker instances
@@ -107,6 +111,8 @@ server_down_dkr_l_cmds=("down_mssql1_dkr.sh")
 server_down_dkr_l_cmds+=("down_mysql1_dkr.sh")
 server_down_dkr_l_cmds+=("down_postsql1_dkr.sh")
 server_down_dkr_l_cmds+=("down_redis_dkr.sh")
+server_down_dkr_l_cmds+=("down_jupyter_dkr.sh")
+
 
 
 
@@ -115,6 +121,7 @@ a_svr_dkr_img=($mssql1_name)
 a_svr_dkr_img+=($mysql1_name)
 a_svr_dkr_img+=($postsql1_name)
 a_svr_dkr_img+=($redis_name)
+a_svr_dkr_img+=("spark_pyspark_jupyter")
 
 #array of commands to check for sql server to be up
 a_server_up_inline_command=("${mssql1_up}")
@@ -160,4 +167,5 @@ export CUSTOMERS_API_URL="http://${mysql1_sn}:${mysql1_apiport}/docs"
 export FINANCE_API_URL="http://${postsql1_sn}:${postsql1_apiport}/docs"
 export DASHBOARD_URL="http://${dashboard_host}:${dashboard_port}"
 export DASHBOARD_JN_URL="http://${dashboard_jn_host}:${dashboard_jn_port}/?tree"
+export PYSPARK_JN_URL="http://${pyspark_sn}:${pyspark_port}/?tree"
 

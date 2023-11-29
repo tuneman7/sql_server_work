@@ -70,6 +70,7 @@ do
             echo "   ${m_url_doc}"
             echo "*                                *"
             echo "*********************************"
+            google-chrome "${m_url_doc}" &            
         else
             finished=false
         fi
@@ -78,3 +79,4 @@ do
     
 
 done
+

@@ -24,3 +24,4 @@ while ! $finished; do
     fi
 done
 
+google-chrome "http://127.0.0.1:8027/tree" &

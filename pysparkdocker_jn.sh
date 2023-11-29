@@ -36,19 +36,19 @@ run_container() {
     check_and_remove_container
     docker run -p 8888:8888 -v "$PWD":/workspace -d --name ${CONTAINER_NAME} --network $NETWORK_NAME $IMAGE_NAME
 }
-
+docker stop $CONTAINER_NAME
 # Main script logic
 if check_image_exists; then
-    while true; do
-        echo "*********************************"
-        read -p "* Image $IMAGE_NAME exists. Remove and rebuild? (y/n) " answer
-        echo "*********************************"
-        case $answer in
-            [Yy]* ) remove_image; build_image; echo "Image $IMAGE_NAME has been rebuilt."; break;;
-            [Nn]* ) echo "Using existing image to run the container."; break;;
-            * ) echo "Please answer 'y' or 'n'.";;
-        esac
-    done
+    # while true; do
+    #     echo "*********************************"
+    #     read -p "* Image $IMAGE_NAME exists. Remove and rebuild? (y/n) " answer
+    #     echo "*********************************"
+    #     case $answer in
+    #         [Yy]* ) remove_image; build_image; echo "Image $IMAGE_NAME has been rebuilt."; break;;
+    #         [Nn]* ) echo "Using existing image to run the container."; break;;
+    #         * ) echo "Please answer 'y' or 'n'.";;
+    #     esac
+    # done
     run_container
     echo "Container with image $IMAGE_NAME is running."
 else
@@ -87,20 +87,20 @@ google-chrome "$URL1" &
 
 
 
-while true; do
-    echo "*********************************"
-    echo "*                               *"
-    echo "*    Do you wish to exit?       *"
-    echo "* (this will shut down Jupyter) *"
-    echo "*                               *"
-    echo "*********************************"
-    read -p "Do you wish to exit? [y/n]:" yn
-    case $yn in
-        [Yy]* ) echo "Exiting..."; docker stop $CONTAINER_NAME; break;;
-        [Nn]* ) echo "Continuing..."; break;;
-        * ) echo "Please answer 'y' or 'n'.";;
-    esac
-done
+# while true; do
+#     echo "*********************************"
+#     echo "*                               *"
+#     echo "*    Do you wish to exit?       *"
+#     echo "* (this will shut down Jupyter) *"
+#     echo "*                               *"
+#     echo "*********************************"
+#     read -p "Do you wish to exit? [y/n]:" yn
+#     case $yn in
+#         [Yy]* ) echo "Exiting..."; docker stop $CONTAINER_NAME; break;;
+#         [Nn]* ) echo "Continuing..."; break;;
+#         * ) echo "Please answer 'y' or 'n'.";;
+#     esac
+# done
 
 
 

@@ -33,6 +33,15 @@ echo "****************"
 done
 
 #docker ps --filter "name=${mssql1_name}"
+echo "****************"
+echo "Bringing up pyspark docker image"
+echo "****************"
+
+. ./pysparkdocker_jn.sh
+
+echo "****************"
+echo "Finished bringing up pyspark docker image"
+echo "****************"
 
 #wait for a few seoncds then query docker to make sure they're up.
 
@@ -154,6 +163,7 @@ echo "****************"
 echo "Completed up FASTAPI front-ends"
 echo "****************"
 
+
 echo "****************"
 echo "Spinning up DASHBOARD"
 echo "****************"
@@ -177,9 +187,10 @@ fi
 
 #because there are background port forwarding commands running continually
 #this will never exit.
-wait
+#wait
 
 . ./do_exit.sh
+
 
 #check if the user wants to exit
 if [[ "$do_exit" -eq 1 ]]

@@ -1,12 +1,5 @@
 #!/bin/bash
 
-#view this link
-#https://learn.microsoft.com/en-us/sql/linux/quickstart-install-connect-docker?view=sql-server-ver16&pivots=cs1-bash
-#and this one
-#https://learn.microsoft.com/en-us/sql/linux/sql-server-linux-docker-container-configure?view=sql-server-ver16&pivots=cs1-bash
-
-#the link says you need to run the docker run as sa -- inaccurate.
-
 #get variables
 source ./env.sh
 

@@ -19,7 +19,8 @@ def consume_fastapi_start():
         "CUSTOMERS_API_URL": os.getenv("CUSTOMERS_API_URL", "http://127.0.0.1:8024/docs"),
         "FINANCE_API_URL": os.getenv("FINANCE_API_URL", "http://127.0.0.1:8025/docs"),
         "DASHBOARD_URL": os.getenv("DASHBOARD_URL", "http://127.0.0.1:8026/"),
-        "DASHBOARD_JN_URL": os.getenv("DASHBOARD_JN_URL", "http://127.0.0.1:8027/?tree")
+        "DASHBOARD_JN_URL": os.getenv("DASHBOARD_JN_URL", "http://127.0.0.1:8027/?tree"),
+        "PYSPARK_JN_URL": os.getenv("PYSPARK_JN_URL", "http://127.0.0.1:8027/?tree")
         }
 
         url_status = {}

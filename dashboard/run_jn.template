@@ -24,3 +24,4 @@ while ! $finished; do
     fi
 done
 
+google-chrome "$dashboard_jn_url/tree" &
