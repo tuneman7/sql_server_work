@@ -185,6 +185,9 @@ else
    echo "No override letting it through."
 fi
 
+#open up bigquery
+google-chrome "https://console.cloud.google.com/bigquery?hl=en&project=brave-sonar-367918&ws=!1m0" &
+
 #because there are background port forwarding commands running continually
 #this will never exit.
 #wait
