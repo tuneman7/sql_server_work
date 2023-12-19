@@ -34,7 +34,7 @@
                      "dbo": {
                         "tables": {
                            "dbo.product_views.sql": "/data/school/MIDS/sql_server_work/dbs/servers/bigquery/bigquery1/dbs/customer_traffic/schemas/dbo/tables/dbo.product_views.sql",
-                           "dbo.product_views.sql_content": "CREATE OR REPLACE TABLE `site_traffic.product_views`\n(\n  product_id INT64,\n  customer_id INT64,\n  view_start DATE,\n  view_end DATE,\n  view_id INT64,\n  geography_id INT64\n);\n"
+                           "dbo.product_views.sql_content": "CREATE OR REPLACE TABLE `site_traffic.product_views`\n(\n  product_id INT64,\n  customer_id INT64,\n  view_start DATETIME,\n  view_end DATETIME,\n  view_id INT64,\n  geography_id INT64\n);\n"
                         }
                      }
                   },
