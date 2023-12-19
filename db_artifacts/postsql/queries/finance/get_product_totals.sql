@@ -2,4 +2,4 @@
 	product_id
 	from public.fin_account_activity
 	group by product_id
-	order by sum desc;
+	order by product_total desc;
