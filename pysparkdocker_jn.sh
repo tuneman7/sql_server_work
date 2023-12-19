@@ -8,6 +8,8 @@ NETWORK_NAME="ENTERPRISE_NETWORK1"
 export NETWORK_NAME=$NETWORK_NAME
 docker network create $NETWORK_NAME
 
+sudo chmod -R 777 ./
+
 # Function to check if a Docker image exists
 check_image_exists() {
     docker image inspect $IMAGE_NAME > /dev/null 2>&1
