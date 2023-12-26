@@ -1,24 +1,24 @@
 {
-   "customers": [
+   "products": [
       {
-         "get_customer_product_history1.sql": "/data/school/MIDS/sql_server_work/dashboard/db_artifacts/mysql/queries/customers/get_customer_product_history1.sql",
-         "get_customer_product_history1.sql_content": "\nselect * from \n(\nselect \n    c.id,\n    c.f_name, \n    c.l_name,\n    cp.product_id,\n    cp.purchase_dt,\n    cp.expiration_dt,\n    cp.created_dt\nfrom \n    customer_info c\njoin \n    customer_product cp\non \n    c.id = cp.customer_id\nUNION ALL\nselect \n    c.id,\n    c.f_name, \n    c.l_name,\n    cp.product_id,\n    cp.purchase_dt,\n    cp.expiration_dt,\n    cp.created_dt\nfrom \n    customer_info c\njoin \n    customer_product_history cp\non \n    c.id = cp.customer_id\n)a order by id asc, purchase_dt desc\n\n"
+         "get_tables.sql": "/data/school/MIDS/sql_server_work/dashboard/db_artifacts/mssql/queries/products/get_tables.sql",
+         "get_tables.sql_content": "select name from sysobjects where type = 'u'\nexec sp_help products\nexec sp_help product_type\n\n\n"
       },
       {
-         "populate_customer_product_history.sql": "/data/school/MIDS/sql_server_work/dashboard/db_artifacts/mysql/queries/customers/populate_customer_product_history.sql",
-         "populate_customer_product_history.sql_content": "INSERT INTO customers.customer_product_history\n    (product_id, customer_id, product_type_desc, purchase_dt, expiration_dt, created_by, created_dt, updated_by, updated_dt)\nSELECT\n    product_id,\n    customer_id,\n    product_type_desc,\n    (expiration_dt - INTERVAL (DATEDIFF(expiration_dt, purchase_dt) + 1) DAY) AS purchase_dt,\n    (purchase_dt) AS expiration_dt,\n    created_by,\n    created_dt,\n    updated_by,\n    updated_dt\nFROM\n    customers.customer_product\nWHERE\n    RAND() <= 0.8; -- Select 80% of records randomly    \n\n"
+         "get_product_info.sql": "/data/school/MIDS/sql_server_work/dashboard/db_artifacts/mssql/queries/products/get_product_info.sql",
+         "get_product_info.sql_content": "SELECT\n    p.id,\n    p.product_name,\n    pt.product_type_desc as product_type\nfrom products p\nJOIN\n    product_type pt\n--on pt.id = p.id\non pt.id = p.product_type_id\n"
       },
       {
-         "get_customer_products.sql": "/data/school/MIDS/sql_server_work/dashboard/db_artifacts/mysql/queries/customers/get_customer_products.sql",
-         "get_customer_products.sql_content": "select * from customer_info limit 10;\nselect * from customer_product limit 10 ;\nselect * from customer_product_history limit 10 "
+         "simple_join_example.sql": "/data/school/MIDS/sql_server_work/dashboard/db_artifacts/mssql/queries/products/simple_join_example.sql",
+         "simple_join_example.sql_content": "SELECT\n    p.id,\n    p.product_name,\n    pt.product_type_desc as product_type\nfrom products p\nJOIN\n    product_type pt\n--on pt.id = p.id\non pt.id = p.product_type_id\n"
       },
       {
-         "get_customer_product_history.sql": "/data/school/MIDS/sql_server_work/dashboard/db_artifacts/mysql/queries/customers/get_customer_product_history.sql",
-         "get_customer_product_history.sql_content": "-- select * from customer_info limit 10;\n-- select * from customer_product limit 10;\n-- select * from customer_product_history limit 10;\n\n-- DROP TEMPORARY TABLE IF EXISTS tmp_product_history;\n\n-- CREATE TEMPORARY TABLE IF NOT EXISTS tmp_product_history as \n-- (\nselect \n    c.id,\n    c.f_name, \n    c.l_name,\n    cp.product_id,\n    cp.purchase_dt,\n    cp.expiration_dt,\n    cp.created_dt\nfrom \n    customer_info c\njoin \n    customer_product cp\non \n    c.id = cp.customer_id\nUNION ALL\nselect \n    c.id,\n    c.f_name, \n    c.l_name,\n    cp.product_id,\n    cp.purchase_dt,\n    cp.expiration_dt,\n    cp.created_dt\nfrom \n    customer_info c\njoin \n    customer_product_history cp\non \n    c.id = cp.customer_id\n-- );\n\n--select * from tmp_product_history ORDER BY id, product_id DESC, purchase_dt ASC;"
+         "get_product_id_and_product_type.sql": "/data/school/MIDS/sql_server_work/dashboard/db_artifacts/mssql/queries/products/get_product_id_and_product_type.sql",
+         "get_product_id_and_product_type.sql_content": "SELECT\n    p.id AS product_id,\n    p.product_name,\n    pt.id AS product_type_id,\n    pt.product_type_desc\nFROM\n    products p\nJOIN\n    product_type pt ON p.product_type_id = pt.id;\n"
       },
       {
-         "look_at_tables.sql": "/data/school/MIDS/sql_server_work/dashboard/db_artifacts/mysql/queries/customers/look_at_tables.sql",
-         "look_at_tables.sql_content": "-- select * from customer_info limit 10;\n-- select * from customer_product limit 10;\n-- select * from customer_product_history limit 10;\n\nDROP TEMPORARY TABLE IF EXISTS tmp_product_history;\n\nCREATE TEMPORARY TABLE IF NOT EXISTS tmp_product_history as \n(\nselect \n    c.id,\n    c.f_name, \n    c.l_name,\n    cp.product_id,\n    cp.purchase_dt,\n    cp.expiration_dt,\n    cp.created_dt\nfrom \n    customer_info c\njoin \n    customer_product cp\non \n    c.id = cp.customer_id\nUNION ALL\nselect \n    c.id,\n    c.f_name, \n    c.l_name,\n    cp.product_id,\n    cp.purchase_dt,\n    cp.expiration_dt,\n    cp.created_dt\nfrom \n    customer_info c\njoin \n    customer_product_history cp\non \n    c.id = cp.customer_id\n);\n\nselect * from tmp_product_history ORDER BY id, product_id DESC, purchase_dt ASC;"
+         "populate_product_price_history.sql": "/data/school/MIDS/sql_server_work/dashboard/db_artifacts/mssql/queries/products/populate_product_price_history.sql",
+         "populate_product_price_history.sql_content": "-- Insert data into product_price_history from product_price\nINSERT INTO [dbo].[product_price_history] (product_id, usd_price, pricing_start_dt, pricing_end_dt, created_by, created_dt, updated_by, updated_dt)\nSELECT\n    p.product_id,\n    ROUND(p.usd_price * 0.8, 2), -- 20% lower usd_price\n    p.pricing_start_dt,\n    DATEADD(DAY, -1, p.pricing_start_dt) AS pricing_end_dt, -- One day before pricing_start_dt\n    p.created_by,\n    p.created_dt,\n    p.updated_by,\n    p.updated_dt\nFROM\n    [dbo].[product_price] p;\n"
       }
    ]
 }

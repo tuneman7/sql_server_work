@@ -22,7 +22,7 @@
       },
       {
          "get_product_totals.sql": "/data/school/MIDS/sql_server_work/fastapi/finance/db_artifacts/postsql/queries/finance/get_product_totals.sql",
-         "get_product_totals.sql_content": "\tselect SUM(amt_usd) as product_total,\n\tproduct_id\n\tfrom public.fin_account_activity\n\tgroup by product_id\n\torder by sum desc;\n"
+         "get_product_totals.sql_content": "\tselect SUM(amt_usd) as product_total,\n\tproduct_id\n\tfrom public.fin_account_activity\n\tgroup by product_id\n\torder by product_total desc;\n"
       }
    ]
 }
