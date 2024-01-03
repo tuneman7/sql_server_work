@@ -24,6 +24,11 @@ COPY /mysql-connector-j_8.2.0-1ubuntu22.04_all_repacked.deb .
 RUN dpkg -i --force-overwrite mysql-connector-j_8.2.0-1ubuntu22.04_all_repacked.deb
 RUN rm mysql-connector-j_8.2.0-1ubuntu22.04_all_repacked.deb
 
+# Download JDBC Drivers for BigQuery
+RUN wget -O spark-bigquery-latest_2.12.jar https://storage.googleapis.com/spark-lib/bigquery/spark-bigquery-latest_2.12.jar
+RUN mv spark-bigquery-latest_2.12.jar /usr/share/java/
+
+
 
 # Set environment variables for Spark
 ENV SPARK_VERSION=3.5.0
