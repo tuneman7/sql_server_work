@@ -94,3 +94,4 @@ hide_code
 jupyterlab-hide-code
 redis
 boto3
+redshift_connector

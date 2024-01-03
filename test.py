@@ -33,6 +33,10 @@ AWS_redshift_admin_user = credentials.get('redshift_admin_user')
 AWS_redshift_admin_pw = credentials.get('redshift_admin_pw')
 bucket_name = credentials.get('bucket_name')
 
+redshift_endpoint = credentials.get('redshift_endpoint')
+
+redshift_port = credentials.get('redshift_port')
+
 #S3 Bucket Details
 bucket_name = bucket_name
 object_name = 'your-object-name.csv'
@@ -42,10 +46,10 @@ csv_buffer = StringIO()
 result_df.to_csv(csv_buffer, index=False)
 
 # Create S3 client
-s3_client = boto3.client('s3', aws_access_key_id=AWS_redshift_access_key, aws_secret_access_key=AWS_redshift_secret_access_key)
+#s3_client = boto3.client('s3', aws_access_key_id=AWS_redshift_access_key, aws_secret_access_key=AWS_redshift_secret_access_key)
 
 # Upload the DataFrame to S3
-s3_client.put_object(Bucket=bucket_name, Body=csv_buffer.getvalue(), Key=object_name)
+#s3_client.put_object(Bucket=bucket_name, Body=csv_buffer.getvalue(), Key=object_name)
 
 
 print("completed the s3 upload")
@@ -53,43 +57,39 @@ print("completed the s3 upload")
 
 import psycopg2
 
-# JDBC URL details
-jdbc_url = "jdbc:redshift://shift4-example.789668808708.us-west-2.redshift-serverless.amazonaws.com:5439/dev"
-split_url = jdbc_url.split("//")[1].split(":")
-redshift_endpoint = split_url[0]
-redshift_port = split_url[1].split("/")[0]
-AWS_redshift_database = split_url[1].split("/")[1]
+import redshift_connector
+conn = redshift_connector.connect(
+     host='final-test.789668808708.us-west-2.redshift-serverless.amazonaws.com',
+     database='dev',
+     user='admin',
+     password=AWS_redshift_admin_pw,
+     timeout=5
+  )
 
-# Establish a connection to Redshift
-conn = psycopg2.connect(
-    dbname=AWS_redshift_database,
-    user=AWS_redshift_admin_user,
-    password=AWS_redshift_admin_pw,
-    host=redshift_endpoint,
-    port=redshift_port
-)
-cursor = conn.cursor()
+
 
 create_table_sql = f"""
 CREATE TABLE IF NOT EXISTS financial_data
 (
-  customer_id BIGINT,
-  f_name VARCHAR(255),
-  l_name VARCHAR(255),
-  product_name VARCHAR(255),
-  product_type VARCHAR(255),
-  amt_usd VARCHAR(255),
-  post_date TIMESTAMP,
-  channel_desc VARCHAR(255),
-  partner_desc VARCHAR(255),
-  location_name VARCHAR(255),
-  account_name VARCHAR(255),
-  account_type VARCHAR(255)
+customer_id BIGINT,
+f_name VARCHAR(500),
+l_name VARCHAR(500),
+product_name VARCHAR(500),
+product_type VARCHAR(500),
+amt_usd VARCHAR(500),
+post_date TIMESTAMP,
+channel_desc VARCHAR(500),
+partner_desc VARCHAR(500),
+location_name VARCHAR(500),
+account_name VARCHAR(500),
+account_type VARCHAR(500)
 );
 """
-
+cursor = conn.cursor()
 # Execute the create table command
 cursor.execute(create_table_sql)
+conn.commit()
+table_name = "financial_data"
 
 s3_path = f"s3://{bucket_name}/{object_name}"
 
@@ -99,15 +99,19 @@ COPY {table_name}
 FROM '{s3_path}'
 ACCESS_KEY_ID '{AWS_redshift_access_key}'
 SECRET_ACCESS_KEY '{AWS_redshift_secret_access_key}'
+IGNOREHEADER 1
 CSV;  -- Assuming the file is in CSV format, modify if necessary
 """
 
+print(copy_cmd)
+
+#result_df.to_sql(table_name,conn,index=False,if_exists='append')
 
 # Execute the COPY command
 cursor.execute(copy_cmd)
-conn.commit()
 
-# Close the connection
-cursor.close()
+
+conn.commit()
 conn.close()
 
+    
