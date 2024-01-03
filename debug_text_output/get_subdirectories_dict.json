@@ -1,5 +1,10 @@
 {
    "servers": {
+      "redshift": {
+         "test_data": {
+            "tokens": {}
+         }
+      },
       "mssql": {
          "mssql1": {
             "dbs": {
