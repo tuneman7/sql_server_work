@@ -1,5 +1,8 @@
 sql_data_files/
 sql_server_env/
+backups_sql_df/
+
+redshift_iam.json
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
