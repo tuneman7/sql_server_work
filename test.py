@@ -1,6 +1,5 @@
 from libraries.utility import Utility as mutil
 import boto3 
-import psycopg2
 import pandas as pd
 import os
 

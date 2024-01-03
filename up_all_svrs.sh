@@ -188,6 +188,12 @@ fi
 #open up bigquery
 google-chrome "https://console.cloud.google.com/bigquery?hl=en&project=brave-sonar-367918&ws=!1m0" &
 
+sleep 1
+#open redshift
+google-chrome "https://us-west-2.console.aws.amazon.com/sqlworkbench/home?region=us-west-2#/client" &
+
+sleep 1
+
 #because there are background port forwarding commands running continually
 #this will never exit.
 #wait
