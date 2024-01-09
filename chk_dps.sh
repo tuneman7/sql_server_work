@@ -2,6 +2,30 @@
 
 export all_deps=1
 
+git-crypt --version --version>/dev/null
+if [ $? -eq 0 ]; then
+    echo "git-crypt --version is installed"
+else
+    echo "*********************************"
+    echo "git-crypt --version is not installed -- exiting"
+    echo " run sudo apt install git-crypt "
+    echo "*********************************"
+all_deps=0
+    #return
+fi
+redis-cli --version>/dev/null
+if [ $? -eq 0 ]; then
+    echo "redis-cli is installed"
+else
+    echo "*********************************"
+    echo "redis-cli is not installed -- exiting"
+    echo " run sudo apt install redis-tools "
+    echo "*********************************"
+all_deps=0
+    #return
+fi
+
+
 redis-cli --version>/dev/null
 if [ $? -eq 0 ]; then
     echo "redis-cli is installed"
