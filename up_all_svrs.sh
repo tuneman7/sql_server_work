@@ -204,10 +204,12 @@ sleep 1
 #check if the user wants to exit
 if [[ "$do_exit" -eq 1 ]]
 then
-
+rm server_ports_used.txt
+touch server_ports_used.txt
     #If yess, kill all the processes running fastapi / guinicorn
     for m_port in "${server_ports_used[@]}"
     do
+        echo $m_port >>server_ports_used.txt
 
         pid_to_kill=$(lsof -t -i :$m_port -s TCP:LISTEN)
 
@@ -222,6 +224,6 @@ then
         fi
 
     done
-
+. down_all_servers.sh
 fi
 

@@ -15,7 +15,7 @@ VENV_NAME=sql_server_env
 #individual database setups
 
 #bigquery
-bigquery_keyfile="$(pwd)/dbs/servers/bigquery/tokens/brave-sonar-367918-74b1d5b6db90.json"
+bigquery_keyfile="$(pwd)/dbs/servers/bigquery/bigquery1/tokens/brave-sonar-367918-74b1d5b6db90.json"
 
 bigquery_name=bigquery1
 bigquery_hostname=bigquery1
