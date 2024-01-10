@@ -224,6 +224,6 @@ touch server_ports_used.txt
         fi
 
     done
-. down_all_servers.sh
+. down_all_svrs.sh
 fi
 
