@@ -41,7 +41,7 @@ if [ -f "$redshift_keyfile_dc" ]; then
 fi
 
 #end of key creation. ...
-chmod -R 777 ./
+sudo chmod -R 777 ./
 
 NETWORK_NAME="ENTERPRISE_NETWORK1"
 export NETWORK_NAME=$NETWORK_NAME
