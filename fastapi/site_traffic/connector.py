@@ -10,7 +10,7 @@ from libraries.db_base import db_base
 
 #ToDo:Change project name and dataset name.
 #Provide the path to a service account JSON file
-engine = create_engine('bigquery://', credentials_path='/data/school/MIDS/sql_server_work/dbs/servers/bigquery/bigquery1/tokens/brave-sonar-367918-74b1d5b6db90.json')
+engine = create_engine('bigquery://', credentials_path='/data/school/MIDS/sql_server_work/dbs/servers/bigquery/bigquery1/tokens/bigquery-token.json')
 
 db = SQLAlchemy()
 

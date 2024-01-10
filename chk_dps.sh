@@ -2,7 +2,7 @@
 
 export all_deps=1
 
-git-crypt --version --version>/dev/null
+git-crypt --version>/dev/null
 if [ $? -eq 0 ]; then
     echo "git-crypt --version is installed"
 else
