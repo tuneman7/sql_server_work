@@ -88,24 +88,6 @@ URL1="http://localhost:8888"
 google-chrome "$URL1" &
 
 
-
-# while true; do
-#     echo "*********************************"
-#     echo "*                               *"
-#     echo "*    Do you wish to exit?       *"
-#     echo "* (this will shut down Jupyter) *"
-#     echo "*                               *"
-#     echo "*********************************"
-#     read -p "Do you wish to exit? [y/n]:" yn
-#     case $yn in
-#         [Yy]* ) echo "Exiting..."; docker stop $CONTAINER_NAME; break;;
-#         [Nn]* ) echo "Continuing..."; break;;
-#         * ) echo "Please answer 'y' or 'n'.";;
-#     esac
-# done
-
-
-
 sudo chmod -R 777 ./
 
 #microk8s kubectl get pods | grep $CONTAINER_NAME
