@@ -50,6 +50,10 @@ RUN wget -q https://downloads.apache.org/spark/spark-$SPARK_VERSION/spark-$SPARK
 # Install PySpark and Jupyter
 RUN pip3 install pyspark==$SPARK_VERSION jupyter
 
+# Install spark-submit
+RUN pip3 install spark-submit
+
+
 #COPY THE ODBC CONNECTORS TO THE CORRECT LOCATION
 RUN cp /usr/share/java/postgresql.jar /spark/jars/
 RUN cp /usr/share/java/sqljdbc_12.4/enu/jars/mssql-jdbc-12.4.2.jre11.jar /spark/jars/
